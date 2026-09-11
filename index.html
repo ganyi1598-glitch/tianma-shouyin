@@ -463,7 +463,7 @@ nav.tabbar{
     <div class="sec-t">手机之间传数据 · 扫一扫最快</div>
     <div class="btn-row">
       <button class="btn sm pri" id="btnScan">扫一扫导入</button>
-      <button class="btn sm" id="btnGenCode">显示二维码</button>
+      <button class="btn sm" id="btnGenCode">生成同步码 / 二维码</button>
     </div>
     <div class="btn-row" style="margin-top:9px">
       <button class="btn sm" id="btnPasteCode">粘贴同步码导入</button>
@@ -490,6 +490,27 @@ nav.tabbar{
     <div class="btn-row" style="margin-top:10px"><button class="btn" id="btnReport" data-report="1">生成当月经营简报图</button></div>
     <p class="hint" id="backupInfo" style="margin-top:13px" data-page-node-id="Li8tjxFi27xMf5Al4qx4QB"></p>
     <div class="btn-row" style="margin-top:10px"><button class="btn sm" id="btnCheckUpdate">检查更新（拉取最新版）</button></div>
+  </div>
+
+  <div class="card" id="cloudCard" style="display:none">
+    <h2>云备份 <span class="tag">换手机也不怕</span></h2>
+    <div id="cloudSetup">
+      <p class="hint" style="margin:0 0 11px">设一个只有你知道的「<b>备份口令</b>」（建议 8 位以上，别用生日）。以后换手机、删掉应用、清了浏览器，输入同一个口令就能把记录找回来。</p>
+      <div class="fld"><label>设置备份口令</label><input type="text" id="cloudPass" placeholder="例如 tianma2026（记牢它）" autocomplete="off"></div>
+      <div class="btn-row"><button class="btn pri" id="btnCloudSave">保存口令并启用云备份</button></div>
+    </div>
+    <div id="cloudPanel" style="display:none">
+      <p class="hint" id="cloudInfo" style="margin:0 0 11px"></p>
+      <div class="btn-row">
+        <button class="btn pri" id="btnCloudUp">备份到云</button>
+        <button class="btn" id="btnCloudDown">从云恢复</button>
+      </div>
+      <div class="btn-row" style="margin-top:9px">
+        <button class="btn sm" id="btnCloudDel">删除云端备份</button>
+        <button class="btn sm ghost" id="btnCloudReset">换个口令</button>
+      </div>
+      <p class="hint" id="cloudMsg" style="margin-top:11px"></p>
+    </div>
   </div>
 
   <div class="card">
@@ -2465,6 +2486,196 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
   window.addEventListener("pagehide", stopScan);
   document.addEventListener("visibilitychange", function(){ if(document.hidden) stopScan(); });
 
+  /* ---------------- 云备份（EdgeOne Blob 后端，仅正式网址可用） ---------------- */
+  var CLOUD_PASS_KEY = "jizhang_cloud_pass";
+  var cloudReady = false, cloudPass = "";
+  var CLOUD_KEEP_YEARS = 2;
+
+  function b64enc(bytes){
+    var s = "", i;
+    for(i = 0; i < bytes.length; i++) s += String.fromCharCode(bytes[i]);
+    return btoa(s);
+  }
+  function b64dec(str){
+    var bin = atob(str), out = new Uint8Array(bin.length), i;
+    for(i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
+    return out;
+  }
+  function cryptoOK(){
+    try{ return !!(window.crypto && crypto.subtle && crypto.subtle.importKey && window.TextEncoder); }catch(e){ return false; }
+  }
+  /* 口令 → 云端的存放名（只做散列，不把口令本身发出去） */
+  function passKeyOf(pass){
+    var s = String(pass) + "|tianma-shouyin-key";
+    var h1 = 0x811c9dc5, h2 = 0x12345678, i;
+    for(i = 0; i < s.length; i++){
+      h1 ^= s.charCodeAt(i); h1 = (h1 * 0x01000193) >>> 0;
+      h2 = ((h2 << 5) - h2 + s.charCodeAt(i)) >>> 0;
+    }
+    var out = h1.toString(16) + h2.toString(16) + s.length.toString(16);
+    while(out.length < 32) out += "0";
+    return out.slice(0, 32);
+  }
+  function deriveAesKey(pass){
+    var enc = new TextEncoder();
+    return crypto.subtle.importKey("raw", enc.encode(pass), "PBKDF2", false, ["deriveKey"])
+      .then(function(km){
+        return crypto.subtle.deriveKey(
+          { name:"PBKDF2", salt: enc.encode("tianma-shouyin-v1"), iterations: 100000, hash:"SHA-256" },
+          km, { name:"AES-GCM", length:256 }, false, ["encrypt", "decrypt"]
+        );
+      });
+  }
+  function encryptText(pass, plain){
+    return deriveAesKey(pass).then(function(key){
+      var iv = crypto.getRandomValues(new Uint8Array(12));
+      return crypto.subtle.encrypt({ name:"AES-GCM", iv:iv }, key, new TextEncoder().encode(plain))
+        .then(function(ct){ return b64enc(iv) + "." + b64enc(new Uint8Array(ct)); });
+    });
+  }
+  function decryptText(pass, payload){
+    var parts = String(payload).split(".");
+    if(parts.length !== 2) return Promise.reject(new Error("数据格式不对"));
+    return deriveAesKey(pass).then(function(key){
+      return crypto.subtle.decrypt({ name:"AES-GCM", iv:b64dec(parts[0]) }, key, b64dec(parts[1]))
+        .then(function(pt){ return new TextDecoder().decode(pt); });
+    });
+  }
+  /* 云端只留最近 2 年；但所有还没结清的单一定保留，避免漏账 */
+  function cloudSlice(){
+    var cut = new Date();
+    cut.setFullYear(cut.getFullYear() - CLOUD_KEEP_YEARS);
+    var cs = cut.getFullYear() + "-" + pad(cut.getMonth() + 1) + "-" + pad(cut.getDate());
+    var kept = [], dropped = 0;
+    db.orders.forEach(function(o){
+      var inRange = (o.date || "") >= cs;
+      var unsettled = (o.pay !== "已付清");
+      if(inRange || unsettled){ kept.push(o); } else { dropped++; }
+    });
+    return { orders:kept, dropped:dropped, cutoff:cs };
+  }
+  function cloudInfoRefresh(){
+    if(!cloudReady) return;
+    var info = $("cloudInfo");
+    if(!info) return;
+    var t = localStorage.getItem("jizhang_cloud_last");
+    var n = localStorage.getItem("jizhang_cloud_n");
+    var s = "口令已设置。";
+    if(t){
+      s += "上次备份：" + new Date(Number(t)).toLocaleString("zh-CN") + (n ? "（" + n + " 条）" : "") + "。";
+    }else{
+      s += "还没有备份过，建议现在就点一下「备份到云」。";
+    }
+    var sl = cloudSlice();
+    s += "<br>云端范围：最近 " + CLOUD_KEEP_YEARS + " 年（" + sl.cutoff + " 起）";
+    if(sl.dropped > 0) s += "，另有 " + sl.dropped + " 条更早的只看本地";
+    s += "。";
+    info.innerHTML = s;
+    var msg = $("cloudMsg");
+    if(msg){
+      var near = db.orders.filter(function(o){
+        if(!o.date || o.pay !== "已付清") return false;
+        var d = new Date(o.date + "T00:00:00");
+        var months = (Date.now() - d.getTime()) / 2592000000;
+        return months >= 21 && months < 24;
+      }).length;
+      msg.innerHTML = near > 0
+        ? '<span style="color:var(--amber)">⚠️ 有 ' + near + " 条记录半年内将超出云端范围，建议用「备份（存微信收藏 / 文件）」单独存一份。</span>"
+        : "";
+    }
+  }
+  function cloudShowPanel(){
+    $("cloudSetup").style.display = "none";
+    $("cloudPanel").style.display = "";
+    cloudInfoRefresh();
+  }
+  function cloudInit(){
+    if(!cloudReady) return;
+    $("cloudCard").style.display = "";
+    cloudPass = localStorage.getItem(CLOUD_PASS_KEY) || "";
+    if(cloudPass && cryptoOK()) cloudShowPanel();
+  }
+  function cloudReq(method, body, query){
+    var opt = { method: method, headers: { "Content-Type":"application/json" } };
+    if(body) opt.body = JSON.stringify(body);
+    return fetch("/api/backup" + (query || ""), opt).then(function(r){ return r.json(); });
+  }
+
+  $("btnCloudSave").onclick = function(){
+    var v = ($("cloudPass").value || "").trim();
+    if(v.length < 6){ alert("口令至少 6 位，建议 8 位以上，别用生日。"); return; }
+    if(!cryptoOK()){ alert("当前环境不支持加密（需要 https 网址），请在手机上的正式地址里操作。"); return; }
+    localStorage.setItem(CLOUD_PASS_KEY, v);
+    cloudPass = v;
+    cloudShowPanel();
+    toast("口令已设置，可以备份了");
+  };
+  $("btnCloudReset").onclick = function(){
+    if(!confirm("换口令后，云端原来那份备份要用旧口令才能恢复。确定要换吗？")) return;
+    localStorage.removeItem(CLOUD_PASS_KEY);
+    cloudPass = "";
+    $("cloudPanel").style.display = "none";
+    $("cloudSetup").style.display = "";
+    $("cloudPass").value = "";
+  };
+  $("btnCloudUp").onclick = function(){
+    if(!cloudPass){ toast("请先设置备份口令"); return; }
+    if(!db.orders.length){ toast("还没有记录"); return; }
+    var btn = this;
+    btn.disabled = true;
+    $("cloudMsg").textContent = "正在上传…";
+    var sl = cloudSlice();
+    var payload = { app:"jizhang", v:1, orders:sl.orders, opts:db.opts, meta:{ shop:db.meta.shop || "" }, at:Date.now() };
+    var packed = "LZ2:" + LZString.compressToBase64(JSON.stringify(payload));
+    encryptText(cloudPass, packed).then(function(enc){
+      return cloudReq("POST", { key: passKeyOf(cloudPass), blob: enc, n: payload.orders.length });
+    }).then(function(d){
+      btn.disabled = false;
+      if(d && d.ok){
+        localStorage.setItem("jizhang_cloud_last", String(Date.now()));
+        localStorage.setItem("jizhang_cloud_n", String(payload.orders.length));
+        cloudInfoRefresh();
+        $("cloudMsg").textContent = "✅ 已备份 " + payload.orders.length + " 条到云端" + (sl.dropped ? "（另有 " + sl.dropped + " 条更早的未上传）" : "");
+        toast("云备份完成");
+      }else{
+        $("cloudMsg").textContent = "备份失败：" + ((d && d.msg) || "请稍后再试");
+      }
+    }).catch(function(e){
+      btn.disabled = false;
+      $("cloudMsg").textContent = "备份失败：" + (e && e.message ? e.message : "网络错误");
+    });
+  };
+  $("btnCloudDown").onclick = function(){
+    if(!cloudPass){ toast("请先设置备份口令"); return; }
+    var btn = this;
+    btn.disabled = true;
+    $("cloudMsg").textContent = "正在读取云端…";
+    cloudReq("GET", null, "?key=" + encodeURIComponent(passKeyOf(cloudPass))).then(function(d){
+      btn.disabled = false;
+      if(!d || !d.ok){ $("cloudMsg").textContent = "读取失败：" + ((d && d.msg) || "云端还没有这份备份"); return; }
+      return decryptText(cloudPass, d.blob).then(function(packed){
+        var o = null;
+        try{ o = JSON.parse(fromCode(packed)); }catch(e){ o = null; }
+        if(!o || !Array.isArray(o.orders)){ $("cloudMsg").textContent = "解不开云端数据，请确认口令是否正确。"; return; }
+        $("cloudMsg").textContent = "云端有 " + o.orders.length + " 条记录，正在合并…";
+        doImport(JSON.stringify(o));
+      });
+    }).catch(function(e){
+      btn.disabled = false;
+      $("cloudMsg").textContent = "读取失败：" + (e && e.message ? e.message : "口令不对或网络错误");
+    });
+  };
+  $("btnCloudDel").onclick = function(){
+    if(!cloudPass){ toast("请先设置备份口令"); return; }
+    if(!confirm("删除云端备份？本地记录不受影响，但云端那份就没了。")) return;
+    cloudReq("DELETE", null, "?key=" + encodeURIComponent(passKeyOf(cloudPass))).then(function(d){
+      localStorage.removeItem("jizhang_cloud_last");
+      localStorage.removeItem("jizhang_cloud_n");
+      cloudInfoRefresh();
+      $("cloudMsg").textContent = (d && d.ok) ? "已删除云端备份" : "删除失败，请稍后再试";
+    }).catch(function(){ $("cloudMsg").textContent = "删除失败，请稍后再试"; });
+  };
+
   /* ---------------- 初始化 ---------------- */
   function renderAll(){
     renderQuick();
@@ -2499,6 +2710,12 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
     pick.day = todayStr();
     resetForm(true);
     renderAll();
+    /* 探测云备份后端（只有正式网址才有，GitHub 版会自动隐藏这块） */
+    try{
+      fetch("/api/backup?ping=1").then(function(r){ return r.json(); }).then(function(d){
+        if(d && d.ping){ cloudReady = true; cloudInit(); }
+      }).catch(function(){});
+    }catch(e){}
   }
   init();
 
