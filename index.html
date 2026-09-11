@@ -104,6 +104,9 @@ input[type=date],input[type=month]{min-height:48px}
 }
 .chip:active{transform:scale(.96)}
 .chip.on{background:var(--primary);border-color:var(--primary);color:#fff;font-weight:600}
+.note-chipbar{display:flex;gap:7px;align-items:center;margin-top:9px}
+.note-chipbar .chips{flex:1;min-width:0}
+.note-add{flex:none;color:var(--primary);border-style:dashed;font-weight:600}
 .btn{
   font-family:inherit;font-size:14.5px;font-weight:600;border:1.5px solid var(--line);background:#fff;color:var(--text);
   border-radius:12px;padding:12px 16px;cursor:pointer;transition:.15s;display:inline-flex;align-items:center;
@@ -358,7 +361,10 @@ nav.tabbar{
   <div class="card" data-page-node-id="e4lgbFhQA36yFjq0D55G5q">
     <h2 data-page-node-id="44E1tokFortZIsmuBQFjFd">备注</h2>
     <textarea id="f_note" rows="3" placeholder="想记什么就记什么，比如：开盘换头、客户急、明天交付"></textarea>
-    <div class="chips" id="noteChips" style="margin-top:9px"></div>
+    <div class="note-chipbar">
+      <div class="chips" id="noteChips"></div>
+      <button class="chip note-add" data-notemgr="1">＋ 自定义</button>
+    </div>
   </div>
 
   <div class="card">
@@ -471,8 +477,9 @@ nav.tabbar{
   <div class="card">
     <h2>提醒 <span class="tag">加到手机日历</span></h2>
     <p class="hint" style="margin:0 0 12px">网页关掉后没法自己弹消息（浏览器限制）。但可以把提醒写进你手机的「日历」——每天 20:00 提醒记账，每周日 10:00 提醒核对尾款，到点系统会响。</p>
-    <div class="btn-row"><button class="btn pri" id="btnIcs">把提醒加到手机日历</button></div>
-    <p class="hint" style="margin-top:10px">点完会下载一个「天马记账提醒.ics」文件，用手机点开它 → 选「添加到日历」。具体时间导入后可在日历里随时改。</p>
+    <div class="btn-row"><button class="btn pri" id="btnIcs">一键加入手机日历</button></div>
+    <div class="btn-row" style="margin-top:9px"><button class="btn sm" id="btnIcsDl">下载日历文件（备选）</button></div>
+    <p class="hint" style="margin-top:10px">点第一下会直接唤起手机的「日历」并问你是否订阅，同意就行。若没反应（个别安卓机型），就用下面那个下载文件的方式。</p>
   </div>
 
   <div class="card" data-page-node-id="4KVLuHCAXLxD2gZ6FvN1wG">
@@ -648,10 +655,10 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
   }
   function inputMoney(el){ return el ? parseMoney(el.value) : 0; }
 
-  /* 未收金额 = 账单价 − 定金（已付清、已流失的不算）
-     注：按门店规则「付清尾款才算成交」，所以未收主要落在还没成交的单上 */
+  /* 未收金额 = 账单价 − 定金（只对已成交的单算；已付清 = 收齐了）
+     注：门店规则「付了定金就算成交」，所以未收 = 已答应做、但尾款还没齐的钱 */
   function unpaidOf(o){
-    if(o.status === "已流失") return 0;
+    if(o.status !== "已成交") return 0;
     var a = parseMoney(o.amount), d = parseMoney(o.deposit);
     if(!a) return 0;
     if(o.pay === "已付清") return 0;
@@ -959,8 +966,8 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
     if(!editId && !o.customer && !o.amount){
       if(!confirm("这一笔还没填「客户称呼」和「账单价」。\n\n确定就这样保存吗？")) return;
     }
-    if(o.status === "已成交" && o.pay !== "已付清"){
-      if(!confirm("这笔还没付清尾款。\n\n按你的规则，只有付完尾款才算成交。\n确定要算作「已成交」吗？")) return;
+    if(o.status === "已成交" && o.pay === "未付款"){
+      if(!confirm("这笔还是「未付款」。\n\n付了定金才算成交，确定要算作「已成交」吗？")) return;
     }
     if(editId){
       for(var i = 0; i < db.orders.length; i++){
@@ -1821,6 +1828,21 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
     openInfo("记录操作", html);
   }
 
+  /* ---------------- 快捷收款（不进编辑模式） ---------------- */
+  function quickPay(id){
+    var o = null;
+    for(var i = 0; i < db.orders.length; i++) if(db.orders[i].id === id) o = db.orders[i];
+    if(!o) return;
+    openSheet("pay", o.pay, function(v){
+      if(!v) return;
+      o.pay = v;
+      if(v === "已付清" || v === "已付定金"){ o.status = "已成交"; }
+      else if(v === "未付款" && o.status === "已成交"){ o.status = "跟进中"; }
+      save(); renderAll();
+      toast(v === "已付清" ? "已收清，这笔算成交了" : "收款情况已改为「" + v + "」");
+    }, { title: "收款：" + (o.customer || "这一单") + (parseMoney(o.amount) ? "（" + money(o.amount) + "）" : "") });
+  }
+
   /* ---------------- 首用引导 / 待跟进 ---------------- */
   function renderGuide(){
     var g = $("guideCard");
@@ -1879,7 +1901,7 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
         (o.status ? '<span class="pill p-a">' + esc(o.status) + '</span>' : '') + '</div>' +
         '<div class="rec-f"><span style="flex:1;font-size:12.5px;color:var(--faint)">' + esc(o.contact || "未填联系方式") + '</span>' +
         '<span class="acts">' + (o.contact ? '<button class="btn sm ghost" data-call="' + esc(o.contact) + '">催款</button>' : '') +
-        '<button class="btn sm ghost" data-edit="' + o.id + '">收款</button></span></div></div>';
+        '<button class="btn sm ghost" data-quickpay="' + o.id + '">收款</button></span></div></div>';
     }).join("") + (list.length > 6 ? '<p class="hint" style="margin:2px 0 0">还有 ' + (list.length - 6) + ' 单没收上来</p>' : "");
   }
 
@@ -1896,12 +1918,12 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
     openSheet("pay", form.pay, function(v){
       form.pay = v;
       paintPick("p_pay", v);
-      if(v === "已付清"){
+      if(v === "已付清" || v === "已付定金"){
         if(form.status !== "已成交"){ form.status = "已成交"; paintPick("p_status", "已成交"); }
-      }else if(form.status === "已成交"){
+      }else if(v === "未付款" && form.status === "已成交"){
         form.status = "跟进中";
         paintPick("p_status", "跟进中");
-        toast("未付清尾款，状态已回到「跟进中」");
+        toast("还没收到钱，状态已回到「跟进中」");
       }
       updateMoneyHint();
     });
@@ -1991,7 +2013,7 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
     if(!box) return;
     box.innerHTML = notePhrases().map(function(p){
       return '<button class="chip" data-note="' + esc(p) + '">' + esc(p) + '</button>';
-    }).join("") + '<button class="chip" data-notemgr="1" style="color:var(--primary);border-style:dashed">＋ 自定义</button>';
+    }).join("");
   }
   function insertNote(v){
     v = String(v || "").trim();
@@ -2027,10 +2049,18 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
   /* 顶栏备份提醒小铃铛 → 跳「更多」页 */
   if($("btnBackupBell")) $("btnBackupBell").onclick = function(){ switchTab("more"); };
 
-  /* 日历提醒：生成 .ics（每天记账 + 每周核对尾款） */
+  /* 日历提醒：一键唤起系统日历订阅（webcal），备选下载 .ics */
+  var ICS_URL = "https://ganyi1598-glitch.github.io/tianma-shouyin/reminder.ics";
   $("btnIcs").onclick = function(){
+    var a = document.createElement("a");
+    a.href = ICS_URL.replace(/^https?:\/\//, "webcal://");
+    a.rel = "noopener";
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    toast("若没自动打开日历，请点下面「下载日历文件」");
+  };
+  $("btnIcsDl").onclick = function(){
     download("天马记账提醒.ics", buildReminderIcs(), "text/calendar");
-    toast("已生成日历文件，用手机点开它选「添加到日历」");
+    toast("已下载，点开这个文件选「添加到日历」");
   };
 
   document.addEventListener("click", function(e){
@@ -2058,6 +2088,7 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
       }
       if(t.dataset.note){ insertNote(t.dataset.note); return; }
       if(t.dataset.notemgr){ openNoteMgr(); return; }
+      if(t.dataset.quickpay){ quickPay(t.dataset.quickpay); return; }
       if(t.dataset.actions){ openActions(t.dataset.actions); return; }
       if(t.dataset.report){ closeSheet(); var rp = buildMonthlyReport(); canvasToImage(rp.canvas, rp.name); return; }
       if(t.dataset.ticket){
