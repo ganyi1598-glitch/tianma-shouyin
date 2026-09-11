@@ -3,7 +3,8 @@
 <head data-page-node-id="QmTMtQMKKseGwAXU1W8V0S">
 <meta charset="UTF-8" data-page-node-id="aeP4a0AVqsCOz6zxURbrGi">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover" data-page-node-id="jJ9YAXY6Wbkv6iOpeNrXJ4">
-<meta name="theme-color" content="#2f6fed" data-page-node-id="n9EqUSSU8QvsEU2UrNhrgN">
+<meta name="theme-color" content="#2f6fed" media="(prefers-color-scheme:light)" data-page-node-id="n9EqUSSU8QvsEU2UrNhrgN">
+<meta name="theme-color" content="#0f141b" media="(prefers-color-scheme:dark)">
 <meta name="apple-mobile-web-app-capable" content="yes" data-page-node-id="m73AS5e7oyehnAHv3ov3e8">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" data-page-node-id="2tYAmVKM6Sbas61jC8NkoF">
 <meta name="apple-mobile-web-app-title" content="天马收银系统" data-page-node-id="c7psOZrKPoDS0WRN90keG1">
@@ -45,19 +46,23 @@ header.hd{
 .hd-logo svg{width:22px;height:22px}
 .hd-t{min-width:0;flex:1}
 .hd-t h1{margin:0;font-size:15.5px;font-weight:700;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.hd-t .sub{font-size:11.5px;color:var(--faint);line-height:1.25;display:block}
+.hd-t .sub{font-size:12.5px;color:var(--faint);line-height:1.25;display:block}
 .hd-t .sub b{color:var(--amber)}
+.hd-bell{position:relative;flex:none;width:38px;height:38px;border-radius:11px;border:1.5px solid var(--line);background:#fff;color:var(--amber);display:grid;place-items:center;cursor:pointer;padding:0}
+.hd-bell svg{width:20px;height:20px}
+.hd-bell i{position:absolute;top:7px;right:8px;width:7px;height:7px;border-radius:50%;background:var(--red);border:1.5px solid #fff}
+.hd-bell:active{background:var(--line2)}
 main{max-width:760px;margin:0 auto;padding:0 14px 118px}
 .pane{display:none}
 .pane.on{display:block;animation:fade .22s ease}
 @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh);padding:16px;margin:13px 0}
 .card>h2{margin:0 0 13px;font-size:14.5px;font-weight:700;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.card>h2 .tag{font-size:11.5px;font-weight:500;color:var(--muted);background:var(--line2);padding:2px 8px;border-radius:20px}
+.card>h2 .tag{font-size:12px;font-weight:500;color:var(--muted);background:var(--line2);padding:2px 8px;border-radius:20px}
 .card>h2 .sp{margin-left:auto;display:flex;gap:8px;align-items:center}
 .fld{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
 .fld.last,.fld:last-child{margin-bottom:0}
-.fld label{font-size:12.5px;color:var(--muted);font-weight:600;display:flex;align-items:center;gap:5px}
+.fld label{font-size:13px;color:var(--muted);font-weight:600;display:flex;align-items:center;gap:5px}
 .fld label .req{color:var(--red)}
 input,textarea{
   font-family:inherit;font-size:16px;color:var(--text);background:#fff;
@@ -110,7 +115,7 @@ nav.tabbar{
 .tb-in{max-width:760px;margin:0 auto;display:flex}
 .tb-in button{
   flex:1;border:0;background:transparent;padding:8px 4px 9px;display:flex;flex-direction:column;align-items:center;gap:3px;
-  color:var(--faint);font:inherit;font-size:10.5px;font-weight:600;cursor:pointer;transition:color .15s;position:relative
+  color:var(--faint);font:inherit;font-size:11px;font-weight:600;cursor:pointer;transition:color .15s;position:relative
 }
 .tb-in button svg{width:23px;height:23px;stroke-width:1.9;fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round}
 .tb-in button.on{color:var(--primary)}
@@ -119,47 +124,47 @@ nav.tabbar{
 .rec{background:var(--surface);border:1px solid var(--line);border-radius:13px;padding:12px 13px;margin-bottom:9px;box-shadow:0 1px 2px rgba(16,24,40,.04)}
 .rec-h{display:flex;align-items:center;gap:8px;margin-bottom:6px}
 .rec-h .who{font-size:15px;font-weight:700;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.rec-h .dt{font-size:11.5px;color:var(--faint);flex:none;font-variant-numeric:tabular-nums}
+.rec-h .dt{font-size:12px;color:var(--faint);flex:none;font-variant-numeric:tabular-nums}
 .rec-b{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:7px}
 .rec-m{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin-bottom:8px;padding-bottom:8px;border-bottom:1px dashed var(--line)}
 .rec-m .amt{font-size:19px;font-weight:700;letter-spacing:-.5px;font-variant-numeric:tabular-nums;color:var(--text);margin-right:3px}
 .rec-f{display:flex;align-items:center;gap:8px}
 .rec-f .tel{font-size:13.5px;color:var(--primary-dark);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:pointer}
 .rec-f .acts{display:flex;gap:4px;flex:none}
-.pill{display:inline-flex;align-items:center;padding:2.5px 9px;border-radius:20px;font-size:11.5px;font-weight:600;white-space:nowrap;line-height:1.5}
+.pill{display:inline-flex;align-items:center;padding:2.5px 9px;border-radius:20px;font-size:12px;font-weight:600;white-space:nowrap;line-height:1.5}
 .p-g{background:var(--green-soft);color:var(--green)}
 .p-r{background:var(--red-soft);color:var(--red)}
 .p-a{background:var(--amber-soft);color:var(--amber)}
 .p-n{background:var(--line2);color:var(--muted)}
 .p-b{background:var(--primary-soft);color:var(--primary-dark)}
-.rec-note{font-size:12.5px;color:var(--muted);margin-top:7px;padding-top:7px;border-top:1px dashed var(--line);line-height:1.6;word-break:break-word}
+.rec-note{font-size:13px;color:var(--muted);margin-top:7px;padding-top:7px;border-top:1px dashed var(--line);line-height:1.6;word-break:break-word}
 .stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
 @media(min-width:560px){.stats{grid-template-columns:repeat(3,1fr)}}
 .stat{background:var(--surface);border:1px solid var(--line);border-radius:13px;padding:12px 13px;min-width:0}
-.stat .k{font-size:11.5px;color:var(--muted);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stat .k{font-size:12px;color:var(--muted);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .stat .v{font-size:23px;font-weight:700;letter-spacing:-.6px;margin-top:3px;font-variant-numeric:tabular-nums;line-height:1.15}
-.stat .d{font-size:11.5px;color:var(--faint);margin-top:3px}
+.stat .d{font-size:12px;color:var(--faint);margin-top:3px}
 .stat.pri{background:linear-gradient(150deg,#3b7cf6,#1f57d0);border-color:transparent;color:#fff}
 .stat.pri .k,.stat.pri .d{color:rgba(255,255,255,.82)}
 .bl{display:flex;flex-direction:column;gap:13px}
 .bl-top{display:flex;align-items:baseline;gap:8px;font-size:13.5px;margin-bottom:5px}
 .bl-top .nm{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:500}
 .bl-top .vl{font-size:13px;font-weight:700;font-variant-numeric:tabular-nums}
-.bl-top .pc{font-size:11.5px;color:var(--faint);font-variant-numeric:tabular-nums;flex:none}
+.bl-top .pc{font-size:12px;color:var(--faint);font-variant-numeric:tabular-nums;flex:none}
 .bl-track{height:8px;background:var(--line2);border-radius:20px;overflow:hidden}
 .bl-fill{height:100%;border-radius:20px;transition:width .5s cubic-bezier(.2,.8,.3,1)}
 .chart{overflow-x:auto;overflow-y:hidden;margin:0 -4px;padding:0 4px}
 .plot{display:flex;align-items:flex-end;gap:5px;height:158px;padding-top:22px}
 .col{flex:1;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;min-width:0}
-.col .cv{font-size:10px;color:var(--muted);font-variant-numeric:tabular-nums;margin-bottom:3px;white-space:nowrap}
+.col .cv{font-size:10.5px;color:var(--muted);font-variant-numeric:tabular-nums;margin-bottom:3px;white-space:nowrap}
 .col .cb{width:100%;max-width:38px;border-radius:6px 6px 3px 3px;background:linear-gradient(180deg,#5b93f8,#2f6fed);min-height:2px;transition:height .45s cubic-bezier(.2,.8,.3,1)}
 .col .cb.g{background:linear-gradient(180deg,#3fc38c,#12a06a)}
 .col .cb.a{background:linear-gradient(180deg,#f5bd53,#e0930f)}
 .axis{display:flex;gap:5px;margin-top:6px}
-.axis span{flex:1;text-align:center;font-size:10.5px;color:var(--faint);white-space:nowrap;overflow:hidden}
+.axis span{flex:1;text-align:center;font-size:11px;color:var(--faint);white-space:nowrap;overflow:hidden}
 .empty{text-align:center;padding:44px 20px;color:var(--faint)}
 .empty svg{width:50px;height:50px;stroke:currentColor;fill:none;stroke-width:1.4;opacity:.45;margin-bottom:12px}
-.empty p{margin:0;font-size:13.5px;line-height:1.9}
+.empty p{margin:0;font-size:14px;line-height:1.9}
 .mask{position:fixed;inset:0;background:rgba(15,23,38,.42);z-index:60;opacity:0;pointer-events:none;transition:opacity .24s}
 .mask.on{opacity:1;pointer-events:auto}
 .sheet{
@@ -188,17 +193,17 @@ nav.tabbar{
 .sh-ft{padding:12px 16px;border-top:1px solid var(--line2);display:flex;gap:10px;flex:none}
 .toast{
   position:fixed;left:50%;bottom:calc(78px + var(--safe-b));transform:translateX(-50%) translateY(16px);
-  background:#151f2d;color:#fff;padding:11px 19px;border-radius:22px;font-size:13.5px;font-weight:500;
+  background:#151f2d;color:#fff;padding:11px 19px;border-radius:22px;font-size:14px;font-weight:500;
   opacity:0;pointer-events:none;transition:.26s;z-index:90;max-width:88vw;text-align:center;
   box-shadow:0 12px 32px -10px rgba(0,0,0,.45)
 }
 .toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
-.hint{font-size:12.5px;color:var(--muted);line-height:1.85;margin:0}
+.hint{font-size:13px;color:var(--muted);line-height:1.85;margin:0}
 .hint b{color:var(--text)}
-.warn{background:var(--amber-soft);border:1px solid #f5dfb3;color:#8a5c00;border-radius:12px;padding:12px 14px;font-size:12.5px;line-height:1.85}
+.warn{background:var(--amber-soft);border:1px solid #f5dfb3;color:#8a5c00;border-radius:12px;padding:12px 14px;font-size:13px;line-height:1.85}
 .warn b{color:#6d4900}
 .hr{height:1px;background:var(--line2);margin:15px 0}
-.sec-t{font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.5px;margin:16px 0 10px}
+.sec-t{font-size:12.5px;font-weight:700;color:var(--muted);letter-spacing:.5px;margin:16px 0 10px}
 .seg{display:flex;gap:6px;overflow-x:auto;padding:3px 0;scrollbar-width:none;margin:13px 0}
 .seg::-webkit-scrollbar{display:none}
 .seg button{
@@ -207,11 +212,42 @@ nav.tabbar{
 }
 .seg button.on{background:var(--primary);border-color:var(--primary);color:#fff}
 .codebox{
-  font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px;line-height:1.5;
+  font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;line-height:1.5;
   background:#f8fafd;border:1px solid var(--line);border-radius:11px;padding:11px;
   word-break:break-all;max-height:150px;overflow-y:auto;color:var(--muted);-webkit-user-select:all;user-select:all
 }
   .codein{width:100%;min-height:120px;font:12px/1.5 ui-monospace,Menlo,Consolas,monospace;color:var(--text);background:#f8fafd;border:1.5px solid var(--line);border-radius:11px;padding:11px;resize:vertical;word-break:break-all}
+
+/* ============ 深色模式（跟随系统） ============ */
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg:#0f141b; --surface:#182029; --line:#2a3542; --line2:#212b36;
+    --text:#e8eef6; --muted:#9aabbd; --faint:#6c7d91;
+    --primary:#4a86f7; --primary-dark:#8fb4ff; --primary-soft:#1b2c49;
+    --green:#2fbd86; --green-soft:#12352a;
+    --red:#f2686c; --red-soft:#3b1f21;
+    --amber:#e8a838; --amber-soft:#3a2e15;
+    --violet:#9b82ff;
+    --sh:0 1px 2px rgba(0,0,0,.35), 0 8px 24px -14px rgba(0,0,0,.55);
+  }
+  header.hd{background:rgba(20,26,34,.92)}
+  nav.tabbar{background:rgba(20,26,34,.95)}
+  .sheet{background:var(--surface)}
+  input,textarea,.pickbtn,.btn,.chip,.seg button{background:#1e2732;color:var(--text)}
+  input::placeholder,textarea::placeholder{color:#5f7186}
+  .pickbtn:active,.btn:active,.opt:active{background:#26313e}
+  .btn.ghost:active{background:var(--line2)}
+  .btn.pri{background:var(--primary);border-color:var(--primary);color:#fff}
+  .chip.on,.seg button.on{background:var(--primary);border-color:var(--primary);color:#fff}
+  .btn.danger{border-color:#5a2c2e}
+  .codebox,.codein{background:#141b23;color:var(--text)}
+  .warn{background:var(--amber-soft);border-color:#4a3a18;color:#f0c15e}
+  .warn b{color:#ffd685}
+  .toast{background:#e8eef6;color:#101820}
+  .stat.pri{background:linear-gradient(150deg,#3b7cf6,#1c4fc4);color:#fff}
+  .bl-track{background:#232d38}
+  .hd-bell{background:#1e2732}
+}
 </style>
 </head>
 <body data-page-node-id="LUgbCWjhDZXWGkRUBihqnm">
@@ -227,8 +263,12 @@ nav.tabbar{
     </div>
     <div class="hd-t" data-page-node-id="qAgTXRgYBHlOOmLVQ6QCBi">
       <h1 id="hdTitle" data-page-node-id="TAnolj7QDTdVcBuGsmxVm7">天马收银系统</h1>
-      <span class="sub" id="hdSub" data-page-node-id="vmZcMblNFmNKtkgd7IC92z">天马专业数据恢复中心</span>
+      <span class="sub" id="hdSub" data-page-node-id="vmZcMblNFmNKtkgd7IC92z">数据只存本机</span>
     </div>
+    <button class="hd-bell" id="btnBackupBell" title="该备份数据了（点这里）" style="display:none">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M12 3.2a6 6 0 0 0-6 6v3L4.7 15.4A1 1 0 0 0 5.6 17h12.8a1 1 0 0 0 .9-1.6L18 12.2v-3a6 6 0 0 0-6-6Z" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/><path d="M9.6 20a2.6 2.6 0 0 0 4.8 0" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>
+      <i></i>
+    </button>
   </div>
 </header>
 
@@ -242,6 +282,16 @@ nav.tabbar{
     </div>
   </div>
 
+  <div class="card" id="guideCard" style="display:none">
+    <h2>三步上手</h2>
+    <p class="hint" style="margin:0">① 填「客户称呼」和「账单价」，其它都可以不填<br>② 点最下面绿色「保存这一笔」<br>③ 切到「统计」看本月汇总，记得每隔一两周做一次备份</p>
+  </div>
+
+  <div class="card" id="followCard" style="display:none;border-color:var(--amber)">
+    <h2>待跟进 <span class="tag" id="followTag"></span></h2>
+    <div id="followBox"></div>
+  </div>
+
   <div class="card" data-page-node-id="lSEHtIrxGaQHmT1n1QH7Il">
     <h2 data-page-node-id="lqUiWKkxIk8D92QUFjNnfr">接单日期 <span class="tag" id="dateTag" data-page-node-id="o0uPc8GLt8OEcJDP7srYnK"></span></h2>
     <div class="chips" id="dateChips" style="margin-bottom:10px" data-page-node-id="Tb9gpew5kKeTCvxXVB9k8w"></div>
@@ -251,11 +301,34 @@ nav.tabbar{
   <div class="card" data-page-node-id="3cxotiIECO3FygtERt2zNZ">
     <h2 data-page-node-id="CxBOf7kGd20ceyPuyyHYmY">客户信息</h2>
     <div class="f2" data-page-node-id="f4hqqTXzWdKtyhtVaiRwIY">
-      <div class="fld" data-page-node-id="1pb4kxzt69orLJ91bsEj73"><label data-page-node-id="9tdcICQ2AMO9kNrwfUwYec">客户称呼</label><input id="f_customer" placeholder="张先生 / 王姐" autocomplete="off" data-page-node-id="L1hY1LlZae20CNVt3KOa3m"></div>
+      <div class="fld" data-page-node-id="1pb4kxzt69orLJ91bsEj73"><label data-page-node-id="9tdcICQ2AMO9kNrwfUwYec">客户称呼</label><input id="f_customer" list="custList" placeholder="张先生 / 王姐（可点历史客户）" autocomplete="off" data-page-node-id="L1hY1LlZae20CNVt3KOa3m"></div>
       <div class="fld" data-page-node-id="PQosvFCxDmQ4Jx6bszUJHX"><label data-page-node-id="na5LW0f1AdPmckO4K8gYYT">联系方式</label><input id="f_contact" placeholder="电话 / 微信" autocomplete="off" inputmode="tel" data-page-node-id="GKpCNTHpoR2yqBqiHEqTzz"></div>
     </div>
   </div>
 
+  <div class="card" data-page-node-id="DG3i3HWGKWTzoyM7BE5qEq">
+    <h2 data-page-node-id="bb4JPSvgGvIGj1PXCi2B2V">金额 <span class="tag" data-page-node-id="0szrGE4rbwIfhYZXLxQDvT">都可以不填</span></h2>
+    <div class="fld" data-page-node-id="tVBtr1GnJj0kV3FjLBtR1m">
+      <label data-page-node-id="A9QURZPlUnxla2sEi96OiU">账单价（元）</label>
+      <input type="text" id="f_amount" inputmode="decimal" placeholder="0.00" autocomplete="off" data-page-node-id="ogQXzCMVxupvo2DejO0Mmb">
+    </div>
+    <div class="f2" data-page-node-id="3iqQMbVCyvvwOCo8SDrwIx">
+      <div class="fld" data-page-node-id="hKDEHmsiCT9po8JfwnkAzr"><label data-page-node-id="tRCRegV4GsF035o5TfLtfM">定金（元）</label><input type="text" id="f_deposit" inputmode="decimal" placeholder="选填" autocomplete="off" data-page-node-id="QzXC5lHnXOt6AVCfM2krf9"></div>
+      <div class="fld" data-page-node-id="iqVl244Gm2oNA9cGYdSxzR"><label data-page-node-id="oKhUjrixmqntxwSDyHjuGc">收款情况</label><button class="pickbtn" id="p_pay" data-page-node-id="nFkoytf1hDPN2OW58NEtva"><span class="v ph" data-page-node-id="CylHXQvZR9sAnw8lf4NGo1">请选择</span><svg viewBox="0 0 24 24" fill="none" data-page-node-id="UmeQmCVSZF1AlPQ1p2giD0"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" data-page-node-id="6APvzDLjdz2zHfFpHpl0rq"/></svg></button></div>
+    </div>
+    <div id="moneyMore" style="display:none">
+      <div class="f2" data-page-node-id="4HzDEKwlBC3Ijx6A7h7pkn">
+        <div class="fld" data-page-node-id="ViF5Hpp2twI0bORpMwvDJA"><label data-page-node-id="FsqsQAmjyuz1XiYxS2B2fT">尾款（元）</label><input type="text" id="f_final" inputmode="decimal" placeholder="自动算" autocomplete="off" data-page-node-id="Z2huBqWsdXjCNAvyc1eHCO"></div>
+        <div class="fld" data-page-node-id="dV6PepDgJtm7D8hNDgCGxr"><label data-page-node-id="CgQPjUeRvnKLiYcg0Ky15q">成本（元）</label><input type="text" id="f_cost" inputmode="decimal" placeholder="选填" autocomplete="off" data-page-node-id="vP239jXHfLnK8uEFOBWDYy"></div>
+      </div>
+      <div class="fld last"><label>其中：配件成本（选填）</label><input type="text" id="f_costmat" inputmode="decimal" placeholder="填了就能看出配件花了多少，人工 = 成本 − 配件" autocomplete="off"></div>
+    </div>
+    <button class="btn ghost sm" id="btnMoneyMore" style="margin-top:2px">展开：尾款 / 成本 ▾</button>
+    <p class="hint" id="moneyHint" style="margin-top:11px;display:none" data-page-node-id="CFfOWHwtKE7mkfA5jEQryn"></p>
+  </div>
+
+
+  <div id="advBox" style="display:none">
   <div class="card" data-page-node-id="gmMVVg4Wj7E8IF3iuhbtAl">
     <h2 data-page-node-id="KURKaHWdA6HAOBSS04ngeM">业务信息</h2>
     <div class="f2" data-page-node-id="o56bFYDigagXABeCE3PH9V">
@@ -271,31 +344,21 @@ nav.tabbar{
     <div class="fld last" data-page-node-id="PCDDs465ExMJhz9gxahgsK"><label data-page-node-id="ya1IAOwvAQDYWxl78uShS8">恢复结果</label><button class="pickbtn" id="p_result" data-page-node-id="ZgSqM8FwH0XVv22m2Y9LVa"><span class="v ph" data-page-node-id="BjohKcP7hzXEf4kcAObW3k">请选择</span><svg viewBox="0 0 24 24" fill="none" data-page-node-id="AZZva6HsdFRv8cDW7uS1FS"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" data-page-node-id="UtyqYSiT0G7pCVLReKV4Ip"/></svg></button></div>
   </div>
 
-  <div class="card" data-page-node-id="DG3i3HWGKWTzoyM7BE5qEq">
-    <h2 data-page-node-id="bb4JPSvgGvIGj1PXCi2B2V">金额 <span class="tag" data-page-node-id="0szrGE4rbwIfhYZXLxQDvT">都可以不填</span></h2>
-    <div class="fld" data-page-node-id="tVBtr1GnJj0kV3FjLBtR1m">
-      <label data-page-node-id="A9QURZPlUnxla2sEi96OiU">账单价（元）</label>
-      <input type="text" id="f_amount" inputmode="decimal" placeholder="0.00" autocomplete="off" data-page-node-id="ogQXzCMVxupvo2DejO0Mmb">
-    </div>
-    <div class="f2" data-page-node-id="3iqQMbVCyvvwOCo8SDrwIx">
-      <div class="fld" data-page-node-id="hKDEHmsiCT9po8JfwnkAzr"><label data-page-node-id="tRCRegV4GsF035o5TfLtfM">定金（元）</label><input type="text" id="f_deposit" inputmode="decimal" placeholder="选填" autocomplete="off" data-page-node-id="QzXC5lHnXOt6AVCfM2krf9"></div>
-      <div class="fld" data-page-node-id="ViF5Hpp2twI0bORpMwvDJA"><label data-page-node-id="FsqsQAmjyuz1XiYxS2B2fT">尾款（元）</label><input type="text" id="f_final" inputmode="decimal" placeholder="自动算" autocomplete="off" data-page-node-id="Z2huBqWsdXjCNAvyc1eHCO"></div>
-    </div>
-    <div class="f2" data-page-node-id="4HzDEKwlBC3Ijx6A7h7pkn">
-      <div class="fld" data-page-node-id="dV6PepDgJtm7D8hNDgCGxr"><label data-page-node-id="CgQPjUeRvnKLiYcg0Ky15q">成本（元）</label><input type="text" id="f_cost" inputmode="decimal" placeholder="选填" autocomplete="off" data-page-node-id="vP239jXHfLnK8uEFOBWDYy"></div>
-      <div class="fld" data-page-node-id="iqVl244Gm2oNA9cGYdSxzR"><label data-page-node-id="oKhUjrixmqntxwSDyHjuGc">收款情况</label><button class="pickbtn" id="p_pay" data-page-node-id="nFkoytf1hDPN2OW58NEtva"><span class="v ph" data-page-node-id="CylHXQvZR9sAnw8lf4NGo1">请选择</span><svg viewBox="0 0 24 24" fill="none" data-page-node-id="UmeQmCVSZF1AlPQ1p2giD0"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" data-page-node-id="6APvzDLjdz2zHfFpHpl0rq"/></svg></button></div>
-    </div>
-    <p class="hint" id="moneyHint" style="margin-top:11px;display:none" data-page-node-id="CFfOWHwtKE7mkfA5jEQryn"></p>
-  </div>
-
   <div class="card" data-page-node-id="e4lgbFhQA36yFjq0D55G5q">
     <h2 data-page-node-id="44E1tokFortZIsmuBQFjFd">备注</h2>
     <textarea id="f_note" rows="3" placeholder="想记什么就记什么，比如：开盘换头、客户急、明天交付"></textarea>
-    <div class="btn-row" style="margin-top:16px" data-page-node-id="YUeV0ayBoIPcX2GSmR1vD1">
+    <div class="chips" id="noteChips" style="margin-top:9px"></div>
+  </div>
+  </div>
+  <button class="btn ghost sm" id="btnAdv" style="margin:2px 0 0">补充信息：来源 / 设备 / 故障 / 进度 / 备注 ▾</button>
+
+  <div class="card">
+    <div class="btn-row">
       <button class="btn" id="btnReset" data-page-node-id="jt9j6oveZ4Y7MfVV4luy4J">清空</button>
       <button class="btn pri" id="btnSave" style="flex:1.6" data-page-node-id="qBGfF15ORs2ciP3R0kCKa9">保存这一笔</button>
     </div>
-    <p class="hint" id="formMsg" style="margin-top:10px;text-align:center;min-height:18px" data-page-node-id="BP4DgVVvNCg1ddxN69szQ5"></p>
+    <p class="hint" id="formMsg" style="margin-top:10px;text-align:center;min-height:18px" data-page-node-id="BP4DgVVvNCg1dcxN69szQ5"></p>
+    <div id="lastSaved" style="display:none;margin-top:9px"></div>
   </div>
 
   <div class="card" data-page-node-id="5MELRq6vuVQ7BKT0rT1fkh">
@@ -305,6 +368,10 @@ nav.tabbar{
 </section>
 
 <section class="pane" id="pane-stat" data-page-node-id="AaViGCtWdGv8v9DNYuSp81">
+  <div class="card" style="padding:11px 12px;margin-top:13px;display:flex;gap:9px;align-items:center">
+    <input id="topSearch" placeholder="搜索：客户 / 电话 / 备注 / 故障" autocomplete="off" style="flex:1;min-height:44px;padding:10px 12px">
+    <button class="btn sm" id="btnJumpList" style="flex:none;min-height:44px;white-space:nowrap">明细 ↓</button>
+  </div>
   <div class="seg" id="segs" data-page-node-id="Ah9NrCE7yvP79C9Z8HJQTL">
     <button data-s="day" data-page-node-id="aMoqrcJjEgDLjAF7MsAb4h">按天</button>
     <button data-s="month" class="on" data-page-node-id="SpjrFhhkpVjvuXdrTx1tNT">按月</button>
@@ -326,11 +393,11 @@ nav.tabbar{
   </div>
 
   <div class="card" data-page-node-id="tgJKXdSSXnbuT1jQyptmuZ">
-    <h2 id="statTableTitle" data-page-node-id="31wsk6OMgmzyNdEJmm0BOw">明细汇总</h2>
+    <h2 id="statTableTitle" data-page-node-id="31wsk6OMgmzyNdEJmm0BOw">汇总</h2>
     <div id="statTable" data-page-node-id="dcnyjvXfC3K6cLyv6iNQxK"></div>
   </div>
 
-  <div class="sec-t" style="margin-top:24px">接单明细</div>
+  <div class="sec-t" id="secList" style="margin-top:24px;scroll-margin-top:78px">全部记录</div>
   <div class="card" data-page-node-id="fu56ASgG8VYi4XACYFNyHq">
     <h2 data-page-node-id="kVm39LhC9wGYCsIcYJHNQO">筛选 <span class="sp" data-page-node-id="wmMuzNYXCZC0w0bmzEgAhR"><button class="btn sm ghost" id="btnClearFilter" data-page-node-id="fL9faa4sofL1N0Ohdapdvq">重置</button></span></h2>
     <div class="fld" data-page-node-id="D52JfB776WOjLkXr9mAZxK"><label data-page-node-id="MvcvHNuDwYcdDHzgENA38B">月份</label><input type="month" id="q_month" data-page-node-id="ceKEnGrMFGqlgqyiB9MbeM"></div>
@@ -356,7 +423,7 @@ nav.tabbar{
 
   <div class="card" data-page-node-id="GSFCpCPTs5KJF7OkLCJEDY">
     <h2 data-page-node-id="fZ7CHLUqQo7axGqlYqVdfw">换手机 / 备份数据 <span class="tag" data-page-node-id="zuEU2VC1Z9cN799ZMp5y6Y">重要</span></h2>
-    <div class="warn" data-page-node-id="fZ7CHLUqQo7axGqlYqVdfw">
+    <div class="warn" data-page-node-id="fZ7CHLUqQo7axGqlYqVdfw-warn">
       记录只存在<b data-page-node-id="tF12W3CzO2vg1nJXYTGOzY">这台手机的这个浏览器</b>里。换手机、清理浏览器数据、卸载浏览器都会丢失。<br data-page-node-id="iwGjqdJJAN1lTX4enLe48C">
       请每隔一两周做一次「导出备份文件」，存到微信收藏或网盘。
     </div>
@@ -388,12 +455,18 @@ nav.tabbar{
     </div>
     <div class="hr" data-page-node-id="SZzYJX5Bg1v5jdqENr7lFD"></div>
     <div class="btn-row" data-page-node-id="gPXbG01M9OfvYrJ326HUUr"><button class="btn" id="btnCsvAll" data-page-node-id="8yvktisMB8h970eCdV6rik">导出全部（Excel 可打开）</button></div>
+    <div class="btn-row" style="margin-top:10px"><button class="btn" id="btnReport" data-report="1">生成当月经营简报图</button></div>
     <p class="hint" id="backupInfo" style="margin-top:13px" data-page-node-id="Li8tjxFi27xMf5Al4qx4QB"></p>
   </div>
 
   <div class="card" data-page-node-id="4KVLuHCAXLxD2gZ6FvN1wG">
     <h2 data-page-node-id="iS2T7FUMHoV8yYtnZvZHor">选项怎么改</h2>
     <p class="hint" style="margin-top:-4px" data-page-node-id="DAhzmFXFdsK4kZrFFaquVk">不用来这里改。记账时点开「客户来源 / 送修设备 / 故障类型」，<b data-page-node-id="FtodXD73jNODeMdbGvTRp5">直接输入新选项</b>就会自动存下来；每个选项右边的 <b data-page-node-id="5oUFMaUvi8Q3bd0l5GJ35w">删</b> 按钮可以去掉不要的。历史记录不受影响。</p>
+  </div>
+
+  <div class="card">
+    <h2>最近删除 <span class="tag" id="trashTag">0 条</span> <span class="sp"><button class="btn sm ghost" id="btnClearTrash">清空</button></span></h2>
+    <div id="trashBox"></div>
   </div>
 
   <div class="card" data-page-node-id="T4SsFrdRmjOwVDNX4rHqk0">
@@ -441,6 +514,7 @@ nav.tabbar{
 </div>
 
 <div class="toast" id="toast" data-page-node-id="ADwQ9a2ml3dijxxb9s7Jdp"></div>
+<datalist id="custList"></datalist>
 
 <script>
 var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",n="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-$",e={};function t(r,o){if(!e[r]){e[r]={};for(var n=0;n<r.length;n++)e[r][r.charAt(n)]=n}return e[r][o]}var i={compressToBase64:function(r){if(null==r)return"";var n=i._compress(r,6,function(r){return o.charAt(r)});switch(n.length%4){default:case 0:return n;case 1:return n+"===";case 2:return n+"==";case 3:return n+"="}},decompressFromBase64:function(r){return null==r?"":""==r?null:i._decompress(r.length,32,function(n){return t(o,r.charAt(n))})},compressToUTF16:function(o){return null==o?"":i._compress(o,15,function(o){return r(o+32)})+" "},decompressFromUTF16:function(r){return null==r?"":""==r?null:i._decompress(r.length,16384,function(o){return r.charCodeAt(o)-32})},compressToUint8Array:function(r){for(var o=i.compress(r),n=new Uint8Array(2*o.length),e=0,t=o.length;e<t;e++){var s=o.charCodeAt(e);n[2*e]=s>>>8,n[2*e+1]=s%256}return n},decompressFromUint8Array:function(o){if(null==o)return i.decompress(o);for(var n=new Array(o.length/2),e=0,t=n.length;e<t;e++)n[e]=256*o[2*e]+o[2*e+1];var s=[];return n.forEach(function(o){s.push(r(o))}),i.decompress(s.join(""))},compressToEncodedURIComponent:function(r){return null==r?"":i._compress(r,6,function(r){return n.charAt(r)})},decompressFromEncodedURIComponent:function(r){return null==r?"":""==r?null:(r=r.replace(/ /g,"+"),i._decompress(r.length,32,function(o){return t(n,r.charAt(o))}))},compress:function(o){return i._compress(o,16,function(o){return r(o)})},_compress:function(r,o,n){if(null==r)return"";var e,t,i,s={},u={},a="",p="",c="",l=2,f=3,h=2,d=[],m=0,v=0;for(i=0;i<r.length;i+=1)if(a=r.charAt(i),Object.prototype.hasOwnProperty.call(s,a)||(s[a]=f++,u[a]=!0),p=c+a,Object.prototype.hasOwnProperty.call(s,p))c=p;else{if(Object.prototype.hasOwnProperty.call(u,c)){if(c.charCodeAt(0)<256){for(e=0;e<h;e++)m<<=1,v==o-1?(v=0,d.push(n(m)),m=0):v++;for(t=c.charCodeAt(0),e=0;e<8;e++)m=m<<1|1&t,v==o-1?(v=0,d.push(n(m)),m=0):v++,t>>=1}else{for(t=1,e=0;e<h;e++)m=m<<1|t,v==o-1?(v=0,d.push(n(m)),m=0):v++,t=0;for(t=c.charCodeAt(0),e=0;e<16;e++)m=m<<1|1&t,v==o-1?(v=0,d.push(n(m)),m=0):v++,t>>=1}0==--l&&(l=Math.pow(2,h),h++),delete u[c]}else for(t=s[c],e=0;e<h;e++)m=m<<1|1&t,v==o-1?(v=0,d.push(n(m)),m=0):v++,t>>=1;0==--l&&(l=Math.pow(2,h),h++),s[p]=f++,c=String(a)}if(""!==c){if(Object.prototype.hasOwnProperty.call(u,c)){if(c.charCodeAt(0)<256){for(e=0;e<h;e++)m<<=1,v==o-1?(v=0,d.push(n(m)),m=0):v++;for(t=c.charCodeAt(0),e=0;e<8;e++)m=m<<1|1&t,v==o-1?(v=0,d.push(n(m)),m=0):v++,t>>=1}else{for(t=1,e=0;e<h;e++)m=m<<1|t,v==o-1?(v=0,d.push(n(m)),m=0):v++,t=0;for(t=c.charCodeAt(0),e=0;e<16;e++)m=m<<1|1&t,v==o-1?(v=0,d.push(n(m)),m=0):v++,t>>=1}0==--l&&(l=Math.pow(2,h),h++),delete u[c]}else for(t=s[c],e=0;e<h;e++)m=m<<1|1&t,v==o-1?(v=0,d.push(n(m)),m=0):v++,t>>=1;0==--l&&(l=Math.pow(2,h),h++)}for(t=2,e=0;e<h;e++)m=m<<1|1&t,v==o-1?(v=0,d.push(n(m)),m=0):v++,t>>=1;for(;;){if(m<<=1,v==o-1){d.push(n(m));break}v++}return d.join("")},decompress:function(r){return null==r?"":""==r?null:i._decompress(r.length,32768,function(o){return r.charCodeAt(o)})},_decompress:function(o,n,e){var t,i,s,u,a,p,c,l=[],f=4,h=4,d=3,m="",v=[],g={val:e(0),position:n,index:1};for(t=0;t<3;t+=1)l[t]=t;for(s=0,a=Math.pow(2,2),p=1;p!=a;)u=g.val&g.position,g.position>>=1,0==g.position&&(g.position=n,g.val=e(g.index++)),s|=(u>0?1:0)*p,p<<=1;switch(s){case 0:for(s=0,a=Math.pow(2,8),p=1;p!=a;)u=g.val&g.position,g.position>>=1,0==g.position&&(g.position=n,g.val=e(g.index++)),s|=(u>0?1:0)*p,p<<=1;c=r(s);break;case 1:for(s=0,a=Math.pow(2,16),p=1;p!=a;)u=g.val&g.position,g.position>>=1,0==g.position&&(g.position=n,g.val=e(g.index++)),s|=(u>0?1:0)*p,p<<=1;c=r(s);break;case 2:return""}for(l[3]=c,i=c,v.push(c);;){if(g.index>o)return"";for(s=0,a=Math.pow(2,d),p=1;p!=a;)u=g.val&g.position,g.position>>=1,0==g.position&&(g.position=n,g.val=e(g.index++)),s|=(u>0?1:0)*p,p<<=1;switch(c=s){case 0:for(s=0,a=Math.pow(2,8),p=1;p!=a;)u=g.val&g.position,g.position>>=1,0==g.position&&(g.position=n,g.val=e(g.index++)),s|=(u>0?1:0)*p,p<<=1;l[h++]=r(s),c=h-1,f--;break;case 1:for(s=0,a=Math.pow(2,16),p=1;p!=a;)u=g.val&g.position,g.position>>=1,0==g.position&&(g.position=n,g.val=e(g.index++)),s|=(u>0?1:0)*p,p<<=1;l[h++]=r(s),c=h-1,f--;break;case 2:return v.join("")}if(0==f&&(f=Math.pow(2,d),d++),l[c])m=l[c];else{if(c!==h)return null;m=i+i.charAt(0)}v.push(m),l[h++]=i+m.charAt(0),i=m,0==--f&&(f=Math.pow(2,d),d++)}}};return i}();"function"==typeof define&&define.amd?define(function(){return LZString}):"undefined"!=typeof module&&null!=module?module.exports=LZString:"undefined"!=typeof angular&&null!=angular&&angular.module("LZString",[]).factory("LZString",function(){return LZString});
@@ -449,7 +523,7 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
   "use strict";
 
   var KEY = "jizhang_v1";
-  var DATA_VER = 1;
+  var DATA_VER = 2;
 
   var DEF_SOURCE = ["到店直客","电话咨询","微信","淘宝","闲鱼","小红书","抖音","老客户介绍","同行转介","企业客户","其他"];
   var DEF_DEVICE = ["机械硬盘","固态硬盘","移动硬盘","U盘/闪存卡","服务器/RAID","NAS","监控存储","手机","笔记本","其他"];
@@ -458,13 +532,17 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
   var RESULT = ["正在恢复","等待配件","客户考虑中","成功","部分成功","失败","客户放弃","未开始"];
   var PAY    = ["未付款","已付定金","已付清","货到付款"];
 
-  var db = { orders: [], opts: {}, meta: { shop:"", lastBackup:null } };
+  var db = { orders: [], opts: {}, meta: { shop:"", lastBackup:null }, trash: [] };
   var editId = null, curTab = "add", curStat = "month";
   var filter = { month:"", source:"", device:"", status:"", kw:"" };
   var pick = { month:"", year:0, day:"" };
-  var form = { source:"", device:"", fault:"", status:"已成交", result:"成功", pay:"已付清" };
+  function defForm(){
+    return { source:"", device:"", fault:"", status:"跟进中", result:"正在恢复", pay:"未付款" };
+  }
+  var form = defForm();
   var sheetFor = null, sheetVal = "";
   var finalManual = false;
+  var advancedOpen = false;
 
   /* ---------------- 工具 ---------------- */
   var $ = function(id){ return document.getElementById(id); };
@@ -509,12 +587,14 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
     if(!db.orders) db.orders = [];
     if(!db.opts) db.opts = {};
     if(!db.meta) db.meta = { shop:"", lastBackup:null };
+    if(!Array.isArray(db.trash)) db.trash = [];
   }
   function migrate(o){
     o = o || {};
     if(!Array.isArray(o.orders)) o.orders = [];
     if(!o.opts) o.opts = {};
     if(!o.meta) o.meta = { shop:"", lastBackup:null };
+    if(!Array.isArray(o.trash)) o.trash = [];
     o.v = DATA_VER;
     return o;
   }
@@ -677,6 +757,8 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
       inp.style.display = "none";
     }
     $("shClear").textContent = cfg.clearText || "清空这一项";
+    $("shClear").style.display = "";
+    $("shOk").textContent = "确定";
 
     $("shBody").onclick = function(e){
       var del = e.target.closest ? e.target.closest("[data-delopt]") : null;
@@ -788,12 +870,17 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
     $("f_customer").value = "";
     $("f_contact").value = "";
     $("f_note").value = "";
-    ["f_amount","f_deposit","f_final","f_cost"].forEach(function(id){ $(id).value = ""; });
-    form = { source:"", device:"", fault:"", status:"已成交", result:"正在恢复", pay:"未付款" };
+    ["f_amount","f_deposit","f_final","f_cost","f_costmat"].forEach(function(id){ $(id).value = ""; });
+    $("moneyMore").style.display = "none";
+    $("btnMoneyMore").textContent = "展开：尾款 / 成本 ▾";
+    $("advBox").style.display = "none";
+    $("btnAdv").textContent = "补充信息：来源 / 设备 / 故障 / 进度 / 备注 ▾";
+    if($("lastSaved")) $("lastSaved").style.display = "none";
+    form = defForm();
     paintPick("p_source", "", "请选择");
     paintPick("p_device", "", "请选择");
     paintPick("p_fault",  "", "请选择");
-    paintPick("p_status", "已成交");
+    paintPick("p_status", "跟进中");
     paintPick("p_result", "正在恢复");
     paintPick("p_pay",    "未付款");
     updateMoneyHint();
@@ -836,13 +923,15 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
       source: form.source,
       device: form.device,
       fault: form.fault,
-      status: form.status || "已成交",
+      status: form.status || "跟进中",
       result: form.result || "正在恢复",
       pay: form.pay || "未付款",
       amount: a,
       deposit: d,
       rest: finVal === "" ? Math.max(0, a - d) : parseMoney(finVal),
       cost: inputMoney($("f_cost")),
+      costMat: inputMoney($("f_costmat")),
+      costLab: Math.max(0, inputMoney($("f_cost")) - inputMoney($("f_costmat"))),
       note: $("f_note").value.trim()
     };
   }
@@ -850,6 +939,9 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
   function doSave(){
     var o = collect();
     if(!o.date){ $("formMsg").textContent = "请先选接单日期"; return; }
+    if(!editId && !o.customer && !o.amount){
+      if(!confirm("这一笔还没填「客户称呼」和「账单价」。\n\n确定就这样保存吗？")) return;
+    }
     if(editId){
       for(var i = 0; i < db.orders.length; i++){
         if(db.orders[i].id === editId){
@@ -867,8 +959,15 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
       toast("记好了一笔");
     }
     save();
+    var savedId = o.id;
     $("f_date").value = o.date;
     resetForm(true);
+    var ls = $("lastSaved");
+    if(ls){
+      ls.style.display = "";
+      ls.innerHTML = '<div class="hint" style="text-align:center">刚保存：<b>' + (esc(o.customer) || "未填客户") + '</b> ' + money(o.amount) +
+        ' · <span data-edit="' + savedId + '" style="color:var(--primary);font-weight:600;cursor:pointer">修改</span></div>';
+    }
     renderAll();
   }
 
@@ -894,6 +993,13 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
     $("f_deposit").value = o.deposit ? o.deposit : "";
     $("f_final").value   = (o.rest != null && o.rest !== "") ? o.rest : "";
     $("f_cost").value    = o.cost ? o.cost : "";
+    $("f_costmat").value = o.costMat ? o.costMat : "";
+    if(parseMoney(o.rest) || parseMoney(o.cost)){
+      $("moneyMore").style.display = "";
+      $("btnMoneyMore").textContent = "收起：尾款 / 成本 ▴";
+    }
+    $("advBox").style.display = "";
+    $("btnAdv").textContent = "补充信息：来源 / 设备 / 故障 / 进度 / 备注 ▴";
     paintPick("p_source", form.source, "请选择");
     paintPick("p_device", form.device, "请选择");
     paintPick("p_fault",  form.fault,  "请选择");
@@ -911,10 +1017,13 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
     var o = null;
     for(var i = 0; i < db.orders.length; i++) if(db.orders[i].id === id) o = db.orders[i];
     if(!o) return;
-    if(!confirm("确定删除这条记录？\n\n" + o.date + "　" + (o.customer || "无客户名"))) return;
+    if(!confirm("把这条记录移到「最近删除」吗？\n\n" + o.date + "　" + (o.customer || "无客户名") + "\n\n（之后可在「更多」页恢复）")) return;
     db.orders = db.orders.filter(function(x){ return x.id !== id; });
+    if(!Array.isArray(db.trash)) db.trash = [];
+    db.trash.unshift({ order:o, at:new Date().toISOString() });
+    if(db.trash.length > 50) db.trash.length = 50;
     save();
-    toast("已删除");
+    toast("已移到「最近删除」");
     if(editId === id) resetForm(true);
     renderAll();
   }
@@ -1012,8 +1121,7 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
         (o.contact ? esc(o.contact) : '<span style="color:var(--faint)">未填联系方式</span>') + "</span>" +
         '<span class="acts">' +
           (o.contact ? '<button class="btn sm ghost" data-call="' + esc(o.contact) + '">拨打</button>' : "") +
-          '<button class="btn sm ghost" data-edit="' + o.id + '">改</button>' +
-          '<button class="btn sm ghost" data-del="' + o.id + '" style="color:var(--red)">删</button>' +
+          '<button class="btn sm ghost" data-actions="' + o.id + '">⋯</button>' +
         "</span></div>";
     var moneyRow = "";
     if(amt){
@@ -1028,7 +1136,7 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
       moneyRow = '<div class="rec-m"><span class="pill p-n">未填金额</span>' + payPill(o.pay) + "</div>";
     }
     return '<div class="rec">' +
-      '<div class="rec-h"><span class="who">' + (esc(o.customer) || '<span style="color:var(--faint)">未填客户</span>') + "</span>" +
+      '<div class="rec-h"><span class="who"' + (o.customer ? ' data-cust="' + esc(o.customer) + '" style="cursor:pointer"' : '') + '>' + (esc(o.customer) || '<span style="color:var(--faint)">未填客户</span>') + "</span>" +
       '<span class="dt">' + esc(o.date) + "</span></div>" +
       '<div class="rec-b">' + b.join("") + "</div>" +
       moneyRow +
@@ -1140,7 +1248,7 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
     var cols = items.map(function(i, idx){
       var h = Math.max(i.value > 0 ? 3 : 0, Math.round(i.value / max * 100));
       var lab = i.value > 0 ? (moneyShort(i.value) === "0" ? "" : moneyShort(i.value)) : "";
-      return '<div class="col"><div class="cv">' + (idx % step === 0 ? lab : "") + "</div>" +
+      return '<div class="col"' + (i.key ? ' data-key="' + i.key + '" style="cursor:pointer"' : "") + '><div class="cv">' + (idx % step === 0 ? lab : "") + "</div>" +
         '<div class="cb' + (i.cls ? " " + i.cls : "") + '" style="height:' + h + '%"></div></div>';
     }).join("");
     var axis = items.map(function(i){ return "<span>" + esc(i.label) + "</span>"; }).join("");
@@ -1157,6 +1265,7 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
     var rate = all.length ? Math.round(done / all.length * 100) : 0;
     var income = sumBy(doneList, function(o){ return parseMoney(o.amount); });
     var cost = sumBy(doneList, function(o){ return parseMoney(o.cost); });
+    var costMat = sumBy(doneList, function(o){ return parseMoney(o.costMat); });
     var profit = income - cost;
     var unpaid = sumBy(all, unpaidOf);
 
@@ -1171,6 +1280,9 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
     var cards = statCard("收入", money(income), "接单 " + all.length + " 单 · 成交 " + done + " 单", "pri");
     if(cost > 0){
       cards += statCard("毛利", money(profit), income ? "毛利率 " + Math.round(profit / income * 100) + "%" : "");
+    }
+    if(costMat > 0){
+      cards += statCard("配件成本", money(costMat), cost ? "占成本 " + Math.round(costMat / cost * 100) + "%" : "");
     }
     if(unpaid > 0){
       cards += statCard("未收", money(unpaid), unpaid > 0 ? "记得催一下" : "");
@@ -1195,7 +1307,7 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
         var v = 0;
         db.orders.forEach(function(o){ if(o.date === ds && o.status === "已成交") v += parseMoney(o.amount); });
         dailyMax = Math.max(dailyMax, v);
-        raw.push({ label:d + "", value:v });
+        raw.push({ label:d + "", value:v, key:(m.replace(/-/g, "") + pad(d)) });
       }
       items = [];
       for(var i = 0; i < raw.length; i++){
@@ -1212,10 +1324,10 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
         var mm = yy + "-" + pad(i2), v2 = 0;
         db.orders.forEach(function(o){ if((o.date||"").slice(0,7) === mm && o.status === "已成交") v2 += parseMoney(o.amount); });
         moMax = Math.max(moMax, v2);
-        rawY.push({ label:i2 + "月", value:v2 });
+        rawY.push({ label:i2 + "月", value:v2, key:(yy + pad(i2)) });
       }
       items = rawY.map(function(x){
-        return { label:x.label, value:x.value, cls: x.value >= moMax && moMax > 0 ? "g" : "" };
+        return { label:x.label, value:x.value, key:x.key, cls: x.value >= moMax && moMax > 0 ? "g" : "" };
       });
     }else{
       $("statChartCard").style.display = "none";
@@ -1226,10 +1338,10 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
     // 表格
     var field = curStat === "source" || curStat === "device" || curStat === "fault" || curStat === "result" ? curStat : null;
     if(field){
-      $("statTableTitle").textContent = "按" + TITLE[field] + "统计";
+      $("statTableTitle").textContent = "按" + TITLE[field] + "汇总";
       $("statTable").innerHTML = barsList(groupCount(all, field));
     }else{
-      $("statTableTitle").textContent = (curStat === "year" ? "每月" : "每日") + "明细";
+      $("statTableTitle").textContent = (curStat === "year" ? "每月" : "每日") + "汇总";
       $("statTable").innerHTML = curStat === "year" ? yearRows() : dayRows();
     }
   }
@@ -1271,13 +1383,25 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
     return any ? out.join("") : emptyHtml("这一年还没有记录");
   }
 
+  function setStat(name){
+    curStat = name;
+    var all = $("segs").querySelectorAll("button");
+    for(var i = 0; i < all.length; i++) all[i].classList.toggle("on", all[i].getAttribute("data-s") === name);
+    renderStat();
+  }
   $("segs").onclick = function(e){
     var b = e.target.closest("button");
     if(!b) return;
-    curStat = b.getAttribute("data-s");
-    var all = $("segs").querySelectorAll("button");
-    for(var i = 0; i < all.length; i++) all[i].classList.toggle("on", all[i] === b);
-    renderStat();
+    setStat(b.getAttribute("data-s"));
+  };
+  /* 点柱子下钻：日柱 → 按天，月柱 → 按月 */
+  $("statChart").onclick = function(e){
+    var c = e.target.closest ? e.target.closest(".col") : null;
+    if(!c) return;
+    var k = c.getAttribute("data-key");
+    if(!k) return;
+    if(k.length === 8){ pick.day = k.slice(0,4) + "-" + k.slice(4,6) + "-" + k.slice(6,8); setStat("day"); }
+    else if(k.length === 6){ pick.month = k.slice(0,4) + "-" + k.slice(4,6); setStat("month"); }
   };
   // 统计页导航
   $("statCtrl").addEventListener("click", function(e){
@@ -1362,6 +1486,152 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
     toast("已导出 " + list.length + " 条");
   }
 
+  /* ---------------- 生成图片（经营简报 / 接单凭证） ---------------- */
+  function roundRect(g, x, y, w, h, r){
+    g.beginPath();
+    g.moveTo(x + r, y);
+    g.arcTo(x + w, y, x + w, y + h, r);
+    g.arcTo(x + w, y + h, x, y + h, r);
+    g.arcTo(x, y + h, x, y, r);
+    g.arcTo(x, y, x + w, y, r);
+    g.closePath();
+  }
+  function canvasToImage(c, filename){
+    function fallback(){
+      var a = document.createElement("a");
+      a.href = c.toDataURL("image/png"); a.download = filename;
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      toast("图片已保存到下载");
+    }
+    if(!c.toBlob){ fallback(); return; }
+    c.toBlob(function(blob){
+      var file = null;
+      try{ file = new File([blob], filename, { type:"image/png" }); }catch(e){ file = null; }
+      if(file && navigator.canShare && navigator.canShare({ files:[file] }) && navigator.share){
+        navigator.share({ files:[file], title:filename }).catch(function(){});
+      }else{
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement("a");
+        a.href = url; a.download = filename;
+        document.body.appendChild(a); a.click(); document.body.removeChild(a);
+        setTimeout(function(){ URL.revokeObjectURL(url); }, 4000);
+        toast("图片已保存到下载");
+      }
+    }, "image/png");
+  }
+  function buildMonthlyReport(){
+    var m = pick.month || thisMonth();
+    var list = db.orders.filter(function(o){ return (o.date || "").slice(0,7) === m; });
+    var doneList = list.filter(function(o){ return o.status === "已成交"; });
+    var income = sumBy(doneList, function(o){ return parseMoney(o.amount); });
+    var cost = sumBy(doneList, function(o){ return parseMoney(o.cost); });
+    var profit = income - cost;
+    var unpaid = sumBy(list, unpaidOf);
+    var okN = 0; list.forEach(function(o){ if(o.result === "成功") okN++; });
+    var W = 720, H = 1180;
+    var c = document.createElement("canvas");
+    c.width = W; c.height = H;
+    var g = c.getContext("2d");
+    var FONT = " -apple-system,BlinkMacSystemFont,PingFang SC,Helvetica,sans-serif";
+    var grad = g.createLinearGradient(0, 0, W, 420);
+    grad.addColorStop(0, "#3b7cf6"); grad.addColorStop(1, "#1c4fc4");
+    g.fillStyle = grad; g.fillRect(0, 0, W, 420);
+    g.fillStyle = "#ffffff"; g.fillRect(0, 420, W, H - 420);
+    g.fillStyle = "rgba(255,255,255,.85)"; g.font = "600 26px" + FONT;
+    g.fillText(db.meta.shop || "天马专业数据恢复中心", 56, 92);
+    g.fillStyle = "#fff"; g.font = "800 54px" + FONT;
+    g.fillText(m.replace("-", " 年 ") + " 月", 56, 170);
+    g.fillStyle = "rgba(255,255,255,.82)"; g.font = "500 26px" + FONT;
+    g.fillText("经营简报", 56, 212);
+    g.fillStyle = "#fff"; g.font = "800 84px" + FONT;
+    g.fillText(money(income), 56, 330);
+    g.fillStyle = "rgba(255,255,255,.82)"; g.font = "500 24px" + FONT;
+    g.fillText("本月成交收入", 56, 372);
+    var items = [
+      ["接单总数", list.length + " 单"],
+      ["成交单数", doneList.length + " 单"],
+      ["客单价", doneList.length ? money(income / doneList.length) : "—"],
+      ["毛利率", income ? Math.round(profit / income * 100) + "%" : "—"],
+      ["恢复成功", okN + " 单"],
+      ["未收款", money(unpaid)]
+    ];
+    var x0 = 56, y0 = 470, cw = 296, ch = 130, gapX = 16, gapY = 16;
+    items.forEach(function(it, i){
+      var r = Math.floor(i / 2), col = i % 2;
+      var x = x0 + col * (cw + gapX), y = y0 + r * (ch + gapY);
+      g.fillStyle = "#f4f7fc"; roundRect(g, x, y, cw, ch, 18); g.fill();
+      g.fillStyle = "#6c7b91"; g.font = "500 22px" + FONT;
+      g.fillText(it[0], x + 24, y + 46);
+      g.fillStyle = "#151f2d"; g.font = "800 40px" + FONT;
+      g.fillText(it[1], x + 24, y + 98);
+    });
+    var yb = y0 + 3 * (ch + gapY) + 30;
+    g.fillStyle = "#151f2d"; g.font = "700 28px" + FONT;
+    g.fillText("客户来源 TOP 3", x0, yb);
+    var bySrc = {};
+    list.forEach(function(o){ var k = o.source || "未填写"; bySrc[k] = (bySrc[k] || 0) + 1; });
+    var tops = Object.keys(bySrc).map(function(k){ return { k:k, n:bySrc[k] }; })
+      .sort(function(a, b){ return b.n - a.n; }).slice(0, 3);
+    var yy = yb + 56;
+    tops.forEach(function(t, i){
+      g.fillStyle = "#2f6fed"; g.font = "800 26px" + FONT;
+      g.fillText("#" + (i + 1), x0, yy);
+      g.fillStyle = "#151f2d"; g.font = "600 26px" + FONT;
+      g.fillText(String(t.k), x0 + 58, yy);
+      g.fillStyle = "#6c7b91"; g.font = "600 24px" + FONT;
+      g.textAlign = "right"; g.fillText(t.n + " 单", W - 56, yy); g.textAlign = "left";
+      yy += 50;
+    });
+    if(!tops.length){
+      g.fillStyle = "#9aa8bb"; g.font = "500 24px" + FONT;
+      g.fillText("本月还没有记录", x0, yy);
+    }
+    g.fillStyle = "#9aa8bb"; g.font = "500 22px" + FONT;
+    g.fillText("生成时间：" + new Date().toLocaleString("zh-CN"), x0, H - 56);
+    return { canvas:c, name:"天马经营简报_" + m + ".png" };
+  }
+  function buildTicket(o){
+    var W = 720, H = 900;
+    var c = document.createElement("canvas");
+    c.width = W; c.height = H;
+    var g = c.getContext("2d");
+    var FONT = " -apple-system,BlinkMacSystemFont,PingFang SC,Helvetica,sans-serif";
+    g.fillStyle = "#fff"; g.fillRect(0, 0, W, H);
+    g.fillStyle = "#2f6fed"; g.fillRect(0, 0, W, 150);
+    g.fillStyle = "#fff"; g.font = "800 40px" + FONT;
+    g.fillText("接单凭证", 56, 78);
+    g.fillStyle = "rgba(255,255,255,.85)"; g.font = "500 24px" + FONT;
+    g.fillText(db.meta.shop || "天马专业数据恢复中心", 56, 118);
+    var rows = [
+      ["接单日期", o.date || "—"],
+      ["客户称呼", o.customer || "—"],
+      ["联系方式", o.contact || "—"],
+      ["送修设备", o.device || "—"],
+      ["故障类型", o.fault || "—"],
+      ["订单状态", o.status || "—"],
+      ["恢复结果", o.result || "—"],
+      ["账单价", money(o.amount)],
+      ["定金", money(o.deposit)],
+      ["尾款", money(o.rest != null && o.rest !== "" ? o.rest : Math.max(0, parseMoney(o.amount) - parseMoney(o.deposit)))],
+      ["备注", o.note || "—"]
+    ];
+    var y = 226;
+    rows.forEach(function(r, i){
+      if(i % 2 === 0){ g.fillStyle = "#f8fafd"; g.fillRect(40, y - 40, W - 80, 62); }
+      g.fillStyle = "#6c7b91"; g.font = "500 24px" + FONT;
+      g.fillText(r[0], 64, y);
+      g.fillStyle = "#151f2d"; g.font = "600 26px" + FONT;
+      var txt = String(r[1]);
+      if(txt.length > 22) txt = txt.slice(0, 22) + "…";
+      g.fillText(txt, 250, y);
+      y += 62;
+    });
+    g.fillStyle = "#9aa8bb"; g.font = "500 22px" + FONT;
+    g.fillText("本凭证为接单记录，最终以实际检测结果为准", 56, H - 96);
+    g.fillText("打印时间：" + new Date().toLocaleString("zh-CN"), 56, H - 58);
+    return { canvas:c, name:"接单凭证_" + (o.customer || "客户").replace(/[\\/:*?"<>|\s]/g, "") + "_" + (o.date || "") + ".png" };
+  }
+
   function doImport(text, silent){
     var o = null;
     try{ o = JSON.parse(text); }catch(e){ alert("导入失败：内容不是有效的备份数据。"); return; }
@@ -1405,11 +1675,126 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
     }
     $("backupInfo").textContent = txt;
     var need = n > 0 && (!t || (Date.now() - new Date(t).getTime()) > 7 * 86400000);
-    var sub = $("hdSub");
-    sub.innerHTML = need ? "<b>该备份了，点这里</b>" : (db.meta.shop ? esc(db.meta.shop) + " · 数据只存本机" : "天马专业数据恢复中心");
     $("hdTitle").textContent = db.meta.shop || "天马收银系统";
-    sub.onclick = need ? function(){ switchTab("more"); } : null;
-    $("hdSub").style.cursor = need ? "pointer" : "";
+    $("hdSub").textContent = (db.meta.shop ? db.meta.shop + " · " : "") + "数据只存本机";
+    var bell = $("btnBackupBell");
+    if(bell) bell.style.display = need ? "" : "none";
+  }
+
+  /* ---------------- 最近删除（暂存区） ---------------- */
+  function renderTrash(){
+    var t = Array.isArray(db.trash) ? db.trash : [];
+    var tag = $("trashTag"), box = $("trashBox");
+    if(!tag || !box) return;
+    tag.textContent = t.length + " 条";
+    if(!t.length){
+      box.innerHTML = '<p class="hint">删除的记录会先放到这里，可随时恢复（最多保留最近 50 条）。</p>';
+      return;
+    }
+    box.innerHTML = t.map(function(it, i){
+      var o = it.order || {};
+      var d = new Date(it.at);
+      return '<div class="rec" style="margin-bottom:8px">' +
+        '<div class="rec-h"><span class="who">' + (esc(o.customer) || '<span style="color:var(--faint)">未填客户</span>') + '</span>' +
+        '<span class="dt">' + esc(o.date || "") + '</span></div>' +
+        '<div class="rec-f"><span style="flex:1;font-size:12px;color:var(--faint)">删除于 ' + d.toLocaleString("zh-CN") + '</span>' +
+        '<span class="acts">' +
+          '<button class="btn sm ghost" data-restore="' + i + '">恢复</button>' +
+          '<button class="btn sm ghost" data-purge="' + i + '" style="color:var(--red)">彻底删</button>' +
+        '</span></div></div>';
+    }).join("");
+  }
+
+  /* ---------------- 只读信息弹层（客户档案用） ---------------- */
+  function openInfo(title, html){
+    $("shTitle").textContent = title;
+    $("shInp").style.display = "none";
+    $("shBody").innerHTML = html;
+    $("shBody").onclick = null;
+    $("shClear").style.display = "none";
+    $("shOk").textContent = "关闭";
+    $("shOk").onclick = closeSheet;
+    $("mask").classList.add("on");
+    $("sheet").classList.add("on");
+  }
+
+  /* ---------------- 客户档案 ---------------- */
+  function showCustomer(name){
+    name = String(name || "").trim();
+    if(!name) return;
+    var list = db.orders.filter(function(o){ return (o.customer || "") === name; })
+      .sort(function(a, b){ return (b.date || "").localeCompare(a.date || ""); });
+    if(!list.length) return;
+    var total = 0, done = 0, unpaid = 0;
+    list.forEach(function(o){
+      if(o.status === "已成交"){ done++; total += parseMoney(o.amount); }
+      unpaid += unpaidOf(o);
+    });
+    var head = '<div style="padding:2px 6px 4px;font-size:13px;color:var(--muted)">共 ' + list.length + ' 单 · 成交 ' + done +
+      ' 单 · 累计 ' + money(total) + (unpaid > 0 ? ' · <span style="color:var(--red)">未收 ' + money(unpaid) + '</span>' : '') + '</div>';
+    var rows = list.map(function(o){
+      return '<div class="rec" style="margin:9px 4px"><div class="rec-h"><span class="who">' + esc(o.device || "未填设备") +
+        '</span><span class="dt">' + esc(o.date || "") + '</span></div>' +
+        '<div class="rec-b">' + statusPill(o.status) + resultPill(o.result) + '</div>' +
+        '<div style="font-size:15px;font-weight:700;margin-bottom:4px">' + money(o.amount) + '</div>' +
+        (o.note ? '<div class="rec-note">' + esc(o.note) + '</div>' : '') + '</div>';
+    }).join("");
+    openInfo("客户：" + name, head + rows);
+  }
+
+  /* ---------------- 单条记录操作（⋯ 菜单） ---------------- */
+  function openActions(id){
+    var o = null;
+    for(var i = 0; i < db.orders.length; i++) if(db.orders[i].id === id) o = db.orders[i];
+    if(!o) return;
+    var html = '<div style="padding:8px 6px 2px">' +
+      '<div style="font-size:13.5px;color:var(--muted);margin-bottom:12px;line-height:1.7">' +
+        esc(o.date || "") + '　' + (esc(o.customer) || "未填客户") + '　<b style="color:var(--text)">' + money(o.amount) + '</b></div>' +
+      '<button class="btn wide" data-edit="' + o.id + '" style="margin-bottom:9px">修改这条</button>' +
+      '<button class="btn wide" data-ticket="' + o.id + '" style="margin-bottom:9px">生成接单凭证图</button>' +
+      (o.contact ? '<button class="btn wide" data-copy="' + esc(o.contact) + '" style="margin-bottom:9px">复制联系方式</button>' : '') +
+      '<button class="btn wide danger" data-del="' + o.id + '">移到最近删除</button>' +
+      '</div>';
+    openInfo("记录操作", html);
+  }
+
+  /* ---------------- 首用引导 / 待跟进 ---------------- */
+  function renderGuide(){
+    var g = $("guideCard");
+    if(g) g.style.display = db.orders.length ? "none" : "";
+  }
+  function renderCustList(){
+    var dl = $("custList");
+    if(!dl) return;
+    var names = uniq(db.orders.map(function(o){ return o.customer; }).filter(Boolean)).sort();
+    dl.innerHTML = names.slice(0, 300).map(function(n){ return '<option value="' + esc(n) + '"></option>'; }).join("");
+  }
+  var PENDING_ST = ["跟进中","等待配件","客户考虑中"];
+  function renderFollow(){
+    var card = $("followCard"), box = $("followBox"), tag = $("followTag");
+    if(!card || !box) return;
+    var now = new Date();
+    var list = db.orders.filter(function(o){
+      if(PENDING_ST.indexOf(o.status) < 0) return false;
+      if(!o.date) return false;
+      var d = new Date(o.date + "T00:00:00");
+      return Math.floor((now - d) / 86400000) >= 3;
+    }).sort(function(a, b){ return (a.date || "").localeCompare(b.date || ""); });
+    if(!list.length){ card.style.display = "none"; return; }
+    card.style.display = "";
+    if(tag) tag.textContent = list.length + " 单";
+    box.innerHTML = list.slice(0, 8).map(function(o){
+      var d = new Date(o.date + "T00:00:00");
+      var days = Math.floor((now - d) / 86400000);
+      return '<div class="rec" style="margin-bottom:8px"><div class="rec-h"><span class="who">' +
+        (esc(o.customer) || '<span style="color:var(--faint)">未填客户</span>') +
+        '</span><span class="dt">' + esc(o.date || "") + '</span></div>' +
+        '<div class="rec-b">' + statusPill(o.status) + '<span class="pill p-a">放了 ' + days + ' 天</span>' +
+        (parseMoney(o.amount) ? '<span class="pill p-n">' + money(o.amount) + '</span>' : '') + '</div>' +
+        '<div class="rec-f"><span style="flex:1;font-size:12.5px;color:var(--faint)">' + esc(o.contact || "未填联系方式") + '</span>' +
+        '<span class="acts">' + (o.contact ? '<button class="btn sm ghost" data-call="' + esc(o.contact) + '">拨打</button>' : '') +
+        '<button class="btn sm ghost" data-edit="' + o.id + '">跟进</button></span></div></div>';
+    }).join("") + (list.length > 8 ? '<p class="hint" style="margin:2px 0 0">还有 ' + (list.length - 8) + ' 单，可在「统计」页查看全部</p>' : "");
   }
 
   /* ---------------- 选项编辑（已改为在录入面板内直接管理，见 openSheet/removeOption） ---------------- */
@@ -1423,7 +1808,7 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
   bindFormPick("p_pay",    "pay");
 
   /* 金额框实时算尾款 / 毛利 */
-  ["f_amount","f_deposit","f_cost"].forEach(function(id){
+  ["f_amount","f_deposit","f_cost","f_costmat"].forEach(function(id){
     $(id).addEventListener("input", function(){
       this.value = this.value.replace(/[^\d.]/g, "").replace(/(\..*)\./g, "$1");
       updateMoneyHint();
@@ -1463,15 +1848,112 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
     renderList();
   };
   $("btnExportFiltered").onclick = function(){
-    exportCsv(filtered(), "接单明细");
+    exportCsv(filtered(), "全部记录");
   };
+
+  /* 统计页顶部：搜索框 + 跳到明细 */
+  $("topSearch").oninput = function(){
+    filter.kw = this.value;
+    if($("q_kw")) $("q_kw").value = this.value;
+    renderList();
+  };
+  $("topSearch").onkeydown = function(e){
+    if(e.key === "Enter"){ e.preventDefault(); $("btnJumpList").click(); }
+  };
+  $("btnJumpList").onclick = function(){
+    var el = $("secList");
+    if(el && el.scrollIntoView) el.scrollIntoView({ behavior:"smooth", block:"start" });
+  };
+
+  /* 最近删除：清空暂存区 */
+  $("btnClearTrash").onclick = function(){
+    if(!db.trash || !db.trash.length){ toast("暂存区是空的"); return; }
+    if(!confirm("确定清空「最近删除」吗？清空后无法恢复。")) return;
+    db.trash = []; save(); renderTrash(); toast("已清空最近删除");
+  };
+
+  /* 金额卡：展开 / 收起「尾款 & 成本」 */
+  $("btnMoneyMore").onclick = function(){
+    var box = $("moneyMore");
+    var open = box.style.display === "none";
+    box.style.display = open ? "" : "none";
+    this.textContent = open ? "收起：尾款 / 成本 ▴" : "展开：尾款 / 成本 ▾";
+  };
+
+  /* 补充信息：展开 / 收起（来源 / 设备 / 故障 / 进度 / 备注） */
+  $("btnAdv").onclick = function(){
+    var box = $("advBox");
+    var open = box.style.display === "none";
+    box.style.display = open ? "" : "none";
+    this.textContent = open ? "补充信息：来源 / 设备 / 故障 / 进度 / 备注 ▴" : "补充信息：来源 / 设备 / 故障 / 进度 / 备注 ▾";
+  };
+
+  /* 备注常用短语 */
+  var NOTE_PHRASES = ["客户急","开盘换头","等待配件","已恢复数据","需要报价","已通知取件","客户考虑中"];
+  (function(){
+    var box = $("noteChips");
+    if(box) box.innerHTML = NOTE_PHRASES.map(function(p){ return '<button class="chip" data-note="' + esc(p) + '">' + esc(p) + '</button>'; }).join("");
+  })();
+
+  /* 老客户识别：输入历史客户名，自动带出联系方式 */
+  $("f_customer").addEventListener("change", function(){
+    var name = this.value.trim();
+    if(!name || $("f_contact").value.trim()) return;
+    for(var i = db.orders.length - 1; i >= 0; i--){
+      var o = db.orders[i];
+      if((o.customer || "") === name && o.contact){
+        $("f_contact").value = o.contact;
+        toast("已带出「" + name + "」的联系方式");
+        break;
+      }
+    }
+  });
+
+  /* 顶栏备份提醒小铃铛 → 跳「更多」页 */
+  if($("btnBackupBell")) $("btnBackupBell").onclick = function(){ switchTab("more"); };
 
   document.addEventListener("click", function(e){
     var t = e.target;
     if(t.dataset){
-      if(t.dataset.edit){ startEdit(t.dataset.edit); return; }
-      if(t.dataset.del){ delOrder(t.dataset.del); return; }
+      if(t.dataset.restore){
+        var ri = parseInt(t.dataset.restore, 10);
+        var it = (db.trash || [])[ri];
+        if(it && it.order){
+          if(!it.order.id) it.order.id = uid();
+          db.orders.push(it.order);
+          db.trash.splice(ri, 1);
+          save(); renderAll(); toast("已恢复这一条");
+        }
+        return;
+      }
+      if(t.dataset.purge){
+        var pi = parseInt(t.dataset.purge, 10);
+        if((db.trash || [])[pi]){
+          if(!confirm("彻底删除后就找不回来了，确定吗？")) return;
+          db.trash.splice(pi, 1);
+          save(); renderTrash(); toast("已彻底删除");
+        }
+        return;
+      }
+      if(t.dataset.note){
+        var ta = $("f_note");
+        ta.value = (ta.value.trim() ? ta.value.replace(/\s+$/, "") + "，" : "") + t.dataset.note;
+        return;
+      }
+      if(t.dataset.actions){ openActions(t.dataset.actions); return; }
+      if(t.dataset.report){ closeSheet(); var rp = buildMonthlyReport(); canvasToImage(rp.canvas, rp.name); return; }
+      if(t.dataset.ticket){
+        closeSheet();
+        var tid = t.dataset.ticket, to = null;
+        for(var ti = 0; ti < db.orders.length; ti++) if(db.orders[ti].id === tid) to = db.orders[ti];
+        if(to){ var tk = buildTicket(to); canvasToImage(tk.canvas, tk.name); }
+        return;
+      }
+      if(t.dataset.cust){ showCustomer(t.dataset.cust); return; }
+      if(t.dataset.edit){ closeSheet(); startEdit(t.dataset.edit); return; }
+      if(t.dataset.del){ closeSheet(); delOrder(t.dataset.del); return; }
       if(t.dataset.copy){
+        closeSheet();
         var v = t.dataset.copy;
         if(v){
           if(navigator.clipboard && navigator.clipboard.writeText){
@@ -1509,13 +1991,88 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
     toast("已清空");
   };
 
-  /* ---------------- 同步码 ---------------- */
-  function toCode(str){
-    try{ return "LZ1:" + LZString.compressToBase64(str); }
-    catch(e){ try{ return btoa(unescape(encodeURIComponent(str))); }catch(e2){ return str; } }
+  /* ---------------- 同步码（LZ2：字典精简编码，码更短） ---------------- */
+  /* 用短键 + 枚举字典 + 数组行 + 日期转数字，把同步码压到最短；导入时还原为标准记录 */
+  function fpId(o){
+    var s = [o.date,o.customer,o.contact,o.amount,o.deposit,o.fault,o.device,o.note].join("|");
+    var h = 0;
+    for(var i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0;
+    return "h" + (h >>> 0).toString(36) + s.length.toString(36);
+  }
+  function packPayload(payload){
+    var orders = (payload && payload.orders) || [];
+    var dicts = { s:[], d:[], f:[], t:[], r:[], p:[] };
+    var maps  = { s:{}, d:{}, f:{}, t:{}, r:{}, p:{} };
+    function idx(k, v){
+      if(v == null || v === "") return 0;
+      var m = maps[k];
+      if(m[v] == null){ dicts[k].push(v); m[v] = dicts[k].length; }
+      return m[v];
+    }
+    function dateNum(d){
+      var s = String(d || "").replace(/[^\d]/g, "");
+      return s ? parseInt(s, 10) : 0;
+    }
+    var rows = orders.map(function(o){
+      var row = [
+        dateNum(o.date), o.customer || "", o.contact || "",
+        idx("s", o.source), idx("d", o.device), idx("f", o.fault),
+        idx("t", o.status), idx("r", o.result), idx("p", o.pay),
+        parseMoney(o.amount), parseMoney(o.deposit),
+        (o.rest == null || o.rest === "") ? 0 : parseMoney(o.rest),
+        parseMoney(o.cost), o.note || ""
+      ];
+      while(row.length > 1 && (row[row.length - 1] === 0 || row[row.length - 1] === "")) row.pop();
+      return row;
+    });
+    var out = { v:2, o:rows };
+    ["s","d","f","t","r","p"].forEach(function(k){ if(dicts[k].length) out[k] = dicts[k]; });
+    if(payload && payload.meta && payload.meta.shop) out.n = payload.meta.shop;
+    return out;
+  }
+  function unpackPayload(p){
+    if(!p || !Array.isArray(p.o)) return null;
+    var dicts = { s:p.s||[], d:p.d||[], f:p.f||[], t:p.t||[], r:p.r||[], p:p.p||[] };
+    function val(k, i){ return (i > 0 && dicts[k][i-1]) || ""; }
+    var orders = p.o.map(function(row){
+      row = row || [];
+      var date = row[0] ? String(row[0]) : "";
+      if(date.length === 8) date = date.slice(0,4) + "-" + date.slice(4,6) + "-" + date.slice(6,8);
+      var o = {
+        date: date, customer: row[1] || "", contact: row[2] || "",
+        source: val("s", row[3]), device: val("d", row[4]), fault: val("f", row[5]),
+        status: val("t", row[6]) || "跟进中",
+        result: val("r", row[7]) || "正在恢复",
+        pay:    val("p", row[8]) || "未付款",
+        amount: parseMoney(row[9]), deposit: parseMoney(row[10]),
+        rest: parseMoney(row[11]), cost: parseMoney(row[12]),
+        note: row[13] || ""
+      };
+      o.id = fpId(o);
+      o.createdAt = new Date().toISOString();
+      return o;
+    });
+    return { app:"jizhang", v:2, orders:orders, opts:{}, meta:{ shop:p.n || "" } };
+  }
+  function toCode(input){
+    var obj = null;
+    try{ obj = (typeof input === "string") ? JSON.parse(input) : input; }catch(e){ obj = null; }
+    try{
+      var packed = (obj && Array.isArray(obj.orders)) ? packPayload(obj) : obj;
+      return "LZ2:" + LZString.compressToBase64(JSON.stringify(packed));
+    }catch(e){ return ""; }
   }
   function fromCode(str){
     var s = String(str).replace(/\s+/g, "");
+    if(s.indexOf("LZ2:") === 0){
+      try{
+        var d2 = LZString.decompressFromBase64(s.slice(4));
+        if(d2){
+          var o2 = unpackPayload(JSON.parse(d2));
+          if(o2) return JSON.stringify(o2);
+        }
+      }catch(e){}
+    }
     if(s.indexOf("LZ1:") === 0){
       try{ var d = LZString.decompressFromBase64(s.slice(4)); if(d) return d; }catch(e){}
     }
@@ -1585,6 +2142,10 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
     renderList();
     renderStat();
     renderBackupInfo();
+    renderTrash();
+    renderGuide();
+    renderFollow();
+    renderCustList();
   }
 
   /* 多标签页同步：另一个标签页改了数据，当前页自动刷新 */
