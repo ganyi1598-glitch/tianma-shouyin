@@ -302,6 +302,11 @@ nav.tabbar{
     <p class="hint" style="margin:0">① 填「客户称呼」和「账单价」，其它都可以不填<br>② 点最下面绿色「保存这一笔」<br>③ 切到「统计」看本月汇总，记得每隔一两周做一次备份</p>
   </div>
 
+  <div class="card" id="unpaidCard" style="display:none;border-color:var(--red)">
+    <h2>未收尾款 <span class="tag" id="unpaidTag"></span></h2>
+    <div id="unpaidBox"></div>
+  </div>
+
   <div class="card" id="followCard" style="display:none;border-color:var(--amber)">
     <h2>待跟进 <span class="tag" id="followTag"></span></h2>
     <div id="followBox"></div>
@@ -377,8 +382,8 @@ nav.tabbar{
     <button class="btn sm" id="btnJumpList" style="flex:none;min-height:44px;white-space:nowrap">明细 ↓</button>
   </div>
   <div class="seg" id="segs" data-page-node-id="Ah9NrCE7yvP79C9Z8HJQTL">
-    <button data-s="day" data-page-node-id="aMoqrcJjEgDLjAF7MsAb4h">按天</button>
     <button data-s="month" class="on" data-page-node-id="SpjrFhhkpVjvuXdrTx1tNT">按月</button>
+    <button data-s="day" data-page-node-id="aMoqrcJjEgDLjAF7MsAb4h">按天</button>
     <button data-s="year" data-page-node-id="DKY8727iNJsC6777GudarU">按年</button>
     <button data-s="source" data-page-node-id="d9Zo7E0NWiH5b2AUOQhCYB">按来源</button>
     <button data-s="device" data-page-node-id="CyMRptSjj10bGP69CLh4U8">按设备</button>
@@ -463,6 +468,13 @@ nav.tabbar{
     <p class="hint" id="backupInfo" style="margin-top:13px" data-page-node-id="Li8tjxFi27xMf5Al4qx4QB"></p>
   </div>
 
+  <div class="card">
+    <h2>提醒 <span class="tag">加到手机日历</span></h2>
+    <p class="hint" style="margin:0 0 12px">网页关掉后没法自己弹消息（浏览器限制）。但可以把提醒写进你手机的「日历」——每天 20:00 提醒记账，每周日 10:00 提醒核对尾款，到点系统会响。</p>
+    <div class="btn-row"><button class="btn pri" id="btnIcs">把提醒加到手机日历</button></div>
+    <p class="hint" style="margin-top:10px">点完会下载一个「天马记账提醒.ics」文件，用手机点开它 → 选「添加到日历」。具体时间导入后可在日历里随时改。</p>
+  </div>
+
   <div class="card" data-page-node-id="4KVLuHCAXLxD2gZ6FvN1wG">
     <h2 data-page-node-id="iS2T7FUMHoV8yYtnZvZHor">选项怎么改</h2>
     <p class="hint" style="margin-top:-4px" data-page-node-id="DAhzmFXFdsK4kZrFFaquVk">不用来这里改。记账时点开「客户来源 / 送修设备 / 故障类型」，<b data-page-node-id="FtodXD73jNODeMdbGvTRp5">直接输入新选项</b>就会自动存下来；每个选项右边的 <b data-page-node-id="5oUFMaUvi8Q3bd0l5GJ35w">删</b> 按钮可以去掉不要的。历史记录不受影响。</p>
@@ -535,6 +547,7 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
   var STATUS = ["已成交","跟进中","已流失"];
   var RESULT = ["正在恢复","等待配件","客户考虑中","成功","部分成功","失败","客户放弃","未开始"];
   var PAY    = ["未付款","已付定金","已付清","货到付款"];
+  var DEF_NOTEPH = ["客户急","开盘换头","等待配件","已恢复数据","需要报价","已通知取件","客户考虑中"];
 
   var db = { orders: [], opts: {}, meta: { shop:"", lastBackup:null }, trash: [] };
   var editId = null, curTab = "add", curStat = "month";
@@ -635,9 +648,10 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
   }
   function inputMoney(el){ return el ? parseMoney(el.value) : 0; }
 
-  /* 未收金额 = 账单价 - 定金（只对已成交的单算） */
+  /* 未收金额 = 账单价 − 定金（已付清、已流失的不算）
+     注：按门店规则「付清尾款才算成交」，所以未收主要落在还没成交的单上 */
   function unpaidOf(o){
-    if(o.status !== "已成交") return 0;
+    if(o.status === "已流失") return 0;
     var a = parseMoney(o.amount), d = parseMoney(o.deposit);
     if(!a) return 0;
     if(o.pay === "已付清") return 0;
@@ -697,12 +711,13 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
 
   /* ---------------- 底部弹层 ---------------- */
   /* 哪些字段的候选可以自己增删（状态/结果/收款是固定语义，不开放删除） */
-  var EDITABLE_OPTS = { source:1, device:1, fault:1 };
+  var EDITABLE_OPTS = { source:1, device:1, fault:1, notePhrase:1 };
+  var OPTS_DEF = { source:DEF_SOURCE, device:DEF_DEVICE, fault:DEF_FAULT, notePhrase:DEF_NOTEPH };
 
   /* 把某个值从候选库里彻底删掉（记入 _removed，防止被历史记录带回） */
   function removeOption(field, value){
     if(!EDITABLE_OPTS[field] || !value) return;
-    var defs = { source:DEF_SOURCE, device:DEF_DEVICE, fault:DEF_FAULT };
+    var defs = OPTS_DEF;
     var cur = (db.opts[field] && db.opts[field].length) ? db.opts[field] : defs[field].slice();
     db.opts[field] = cur.filter(function(v){ return v !== value; });
     if(!db.opts._removed) db.opts._removed = {};
@@ -850,7 +865,7 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
   /* 用户手输的新值 → 永久收进候选库，下次直接可选 */
   function rememberOption(field, value){
     if(!EDITABLE_OPTS[field] || !value) return;
-    var defs = { source:DEF_SOURCE, device:DEF_DEVICE, fault:DEF_FAULT };
+    var defs = OPTS_DEF;
     var cur = (db.opts[field] && db.opts[field].length) ? db.opts[field].slice() : defs[field].slice();
     var removed = db.opts._removed || {};
     var gone = removed[field] || [];
@@ -1446,8 +1461,10 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
 
   /* ---------------- 下载 ---------------- */
   function download(name, content, type){
-    var blob = new Blob(["\ufeff" + content], { type: (type || "text/plain") + ";charset=utf-8" });
-    if(type === "application/json") blob = new Blob([content], { type:"application/json;charset=utf-8" });
+    var blob;
+    if(type === "application/json"){ blob = new Blob([content], { type:"application/json;charset=utf-8" }); }
+    else if(type === "text/calendar"){ blob = new Blob([content], { type:"text/calendar;charset=utf-8" }); }
+    else { blob = new Blob(["\ufeff" + content], { type: (type || "text/plain") + ";charset=utf-8" }); }
     var url = URL.createObjectURL(blob);
     var a = document.createElement("a");
     a.href = url; a.download = name;
@@ -1635,6 +1652,49 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
     return { canvas:c, name:"接单凭证_" + (o.customer || "客户").replace(/[\\/:*?"<>|\s]/g, "") + "_" + (o.date || "") + ".png" };
   }
 
+  /* ---------------- 日历提醒（.ics，完全离线、不依赖服务器） ---------------- */
+  function icsStamp(d){
+    function p(n){ return n < 10 ? "0" + n : "" + n; }
+    return d.getUTCFullYear() + p(d.getUTCMonth() + 1) + p(d.getUTCDate()) + "T" +
+           p(d.getUTCHours()) + p(d.getUTCMinutes()) + p(d.getUTCSeconds()) + "Z";
+  }
+  function buildReminderIcs(){
+    function p(n){ return n < 10 ? "0" + n : "" + n; }
+    function local(d){
+      return d.getFullYear() + p(d.getMonth() + 1) + p(d.getDate()) + "T" + p(d.getHours()) + p(d.getMinutes()) + "00";
+    }
+    var now = new Date();
+    var daily = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 20, 0, 0);
+    var weekly = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 10, 0, 0);
+    while(weekly.getDay() !== 0) weekly.setDate(weekly.getDate() + 1);
+    var t = now.getTime();
+    var L = [
+      "BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Tianma//Shouyin//CN","CALSCALE:GREGORIAN","METHOD:PUBLISH",
+      "BEGIN:VEVENT",
+      "UID:tianma-daily-" + t + "@tianma",
+      "DTSTAMP:" + icsStamp(now),
+      "DTSTART:" + local(daily),
+      "DURATION:PT15M",
+      "RRULE:FREQ=DAILY",
+      "SUMMARY:记今天的账（天马收银）",
+      "DESCRIPTION:打开记账页，把今天的接单补上",
+      "BEGIN:VALARM","TRIGGER:-PT0M","ACTION:DISPLAY","DESCRIPTION:记今天的账","END:VALARM",
+      "END:VEVENT",
+      "BEGIN:VEVENT",
+      "UID:tianma-weekly-" + t + "@tianma",
+      "DTSTAMP:" + icsStamp(now),
+      "DTSTART:" + local(weekly),
+      "DURATION:PT15M",
+      "RRULE:FREQ=WEEKLY;BYDAY=SU",
+      "SUMMARY:核对未收尾款（天马收银）",
+      "DESCRIPTION:看看有哪些客户的尾款还没收上来",
+      "BEGIN:VALARM","TRIGGER:-PT0M","ACTION:DISPLAY","DESCRIPTION:核对未收尾款","END:VALARM",
+      "END:VEVENT",
+      "END:VCALENDAR"
+    ];
+    return L.join("\r\n") + "\r\n";
+  }
+
   function doImport(text, silent){
     var o = null;
     try{ o = JSON.parse(text); }catch(e){ alert("导入失败：内容不是有效的备份数据。"); return; }
@@ -1800,6 +1860,29 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
     }).join("") + (list.length > 8 ? '<p class="hint" style="margin:2px 0 0">还有 ' + (list.length - 8) + ' 单，可在「统计」页查看全部</p>' : "");
   }
 
+  /* ---------------- 未收尾款提醒 ---------------- */
+  function renderUnpaid(){
+    var card = $("unpaidCard"), box = $("unpaidBox"), tag = $("unpaidTag");
+    if(!card || !box) return;
+    var list = db.orders.filter(function(o){ return unpaidOf(o) > 0; })
+      .sort(function(a, b){ return unpaidOf(b) - unpaidOf(a); });
+    if(!list.length){ card.style.display = "none"; return; }
+    card.style.display = "";
+    var total = sumBy(list, unpaidOf);
+    if(tag) tag.textContent = list.length + " 单 · " + money(total);
+    box.innerHTML = list.slice(0, 6).map(function(o){
+      return '<div class="rec" style="margin-bottom:8px"><div class="rec-h"><span class="who">' +
+        (esc(o.customer) || '<span style="color:var(--faint)">未填客户</span>') +
+        '</span><span class="dt">' + esc(o.date || "") + '</span></div>' +
+        '<div class="rec-b"><span class="pill p-r">未收 ' + money(unpaidOf(o)) + '</span>' +
+        (o.pay ? '<span class="pill p-n">' + esc(o.pay) + '</span>' : '') +
+        (o.status ? '<span class="pill p-a">' + esc(o.status) + '</span>' : '') + '</div>' +
+        '<div class="rec-f"><span style="flex:1;font-size:12.5px;color:var(--faint)">' + esc(o.contact || "未填联系方式") + '</span>' +
+        '<span class="acts">' + (o.contact ? '<button class="btn sm ghost" data-call="' + esc(o.contact) + '">催款</button>' : '') +
+        '<button class="btn sm ghost" data-edit="' + o.id + '">收款</button></span></div></div>';
+    }).join("") + (list.length > 6 ? '<p class="hint" style="margin:2px 0 0">还有 ' + (list.length - 6) + ' 单没收上来</p>' : "");
+  }
+
   /* ---------------- 选项编辑（已改为在录入面板内直接管理，见 openSheet/removeOption） ---------------- */
 
   /* ---------------- 绑定 ---------------- */
@@ -1897,12 +1980,35 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
     this.textContent = open ? "收起：尾款 / 成本 ▴" : "展开：尾款 / 成本 ▾";
   };
 
-  /* 备注常用短语 */
-  var NOTE_PHRASES = ["客户急","开盘换头","等待配件","已恢复数据","需要报价","已通知取件","客户考虑中"];
-  (function(){
+  /* 备注常用短语（可自定义、可删除） */
+  function notePhrases(){
+    var cur = (db.opts.notePhrase && db.opts.notePhrase.length) ? db.opts.notePhrase : DEF_NOTEPH;
+    var gone = (db.opts._removed || {}).notePhrase || [];
+    return cur.filter(function(v){ return gone.indexOf(v) < 0; });
+  }
+  function renderNoteChips(){
     var box = $("noteChips");
-    if(box) box.innerHTML = NOTE_PHRASES.map(function(p){ return '<button class="chip" data-note="' + esc(p) + '">' + esc(p) + '</button>'; }).join("");
-  })();
+    if(!box) return;
+    box.innerHTML = notePhrases().map(function(p){
+      return '<button class="chip" data-note="' + esc(p) + '">' + esc(p) + '</button>';
+    }).join("") + '<button class="chip" data-notemgr="1" style="color:var(--primary);border-style:dashed">＋ 自定义</button>';
+  }
+  function insertNote(v){
+    v = String(v || "").trim();
+    if(!v) return;
+    var ta = $("f_note");
+    ta.value = (ta.value.trim() ? ta.value.replace(/\s+$/, "") + "，" : "") + v;
+  }
+  function openNoteMgr(){
+    openSheet("notePhrase", "", function(v){
+      if(v){ rememberOption("notePhrase", v); renderNoteChips(); insertNote(v); }
+    }, {
+      title: "备注短语（点一下插入，✕ 删除）",
+      list: notePhrases,
+      ph: "输入新短语，回车添加",
+      clearText: "关闭"
+    });
+  }
 
   /* 老客户识别：输入历史客户名，自动带出联系方式 */
   $("f_customer").addEventListener("change", function(){
@@ -1920,6 +2026,12 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
 
   /* 顶栏备份提醒小铃铛 → 跳「更多」页 */
   if($("btnBackupBell")) $("btnBackupBell").onclick = function(){ switchTab("more"); };
+
+  /* 日历提醒：生成 .ics（每天记账 + 每周核对尾款） */
+  $("btnIcs").onclick = function(){
+    download("天马记账提醒.ics", buildReminderIcs(), "text/calendar");
+    toast("已生成日历文件，用手机点开它选「添加到日历」");
+  };
 
   document.addEventListener("click", function(e){
     var t = e.target;
@@ -1944,11 +2056,8 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
         }
         return;
       }
-      if(t.dataset.note){
-        var ta = $("f_note");
-        ta.value = (ta.value.trim() ? ta.value.replace(/\s+$/, "") + "，" : "") + t.dataset.note;
-        return;
-      }
+      if(t.dataset.note){ insertNote(t.dataset.note); return; }
+      if(t.dataset.notemgr){ openNoteMgr(); return; }
       if(t.dataset.actions){ openActions(t.dataset.actions); return; }
       if(t.dataset.report){ closeSheet(); var rp = buildMonthlyReport(); canvasToImage(rp.canvas, rp.name); return; }
       if(t.dataset.ticket){
@@ -2154,7 +2263,9 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
     renderTrash();
     renderGuide();
     renderFollow();
+    renderUnpaid();
     renderCustList();
+    renderNoteChips();
   }
 
   /* 多标签页同步：另一个标签页改了数据，当前页自动刷新 */
