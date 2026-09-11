@@ -84,6 +84,18 @@ input[type=date],input[type=month]{min-height:48px}
 .pickbtn .v{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .pickbtn .v.ph{color:#b6c2d2}
 .pickbtn svg{width:14px;height:14px;flex:none;opacity:.55}
+
+/* 紧凑格子：业务与进度（6 格两列，一屏看全、点格子即改） */
+.mini-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.mini{
+  display:flex;flex-direction:column;gap:2px;align-items:flex-start;text-align:left;
+  border:1.5px solid var(--line);border-radius:11px;background:#fff;
+  padding:8px 11px;min-height:47px;font-family:inherit;cursor:pointer;transition:.15s;overflow:hidden
+}
+.mini:active{background:#f7fafe}
+.mini .k{font-size:11.5px;color:var(--faint);font-weight:600;line-height:1.3;white-space:nowrap}
+.mini .v{font-size:14.5px;font-weight:700;color:var(--text);line-height:1.35;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mini .v.ph{color:#b6c2d2;font-weight:500}
 .chips{display:flex;gap:7px;overflow-x:auto;padding:2px 0 1px;scrollbar-width:none}
 .chips::-webkit-scrollbar{display:none}
 .chip{
@@ -247,6 +259,9 @@ nav.tabbar{
   .stat.pri{background:linear-gradient(150deg,#3b7cf6,#1c4fc4);color:#fff}
   .bl-track{background:#232d38}
   .hd-bell{background:#1e2732}
+  .mini{background:#1e2732}
+  .mini:active{background:#26313e}
+  .mini .v.ph{color:#5f7186}
 }
 </style>
 </head>
@@ -308,40 +323,31 @@ nav.tabbar{
 
   <div class="card" data-page-node-id="DG3i3HWGKWTzoyM7BE5qEq">
     <h2 data-page-node-id="bb4JPSvgGvIGj1PXCi2B2V">金额 <span class="tag" data-page-node-id="0szrGE4rbwIfhYZXLxQDvT">都可以不填</span></h2>
-    <div class="fld" data-page-node-id="tVBtr1GnJj0kV3FjLBtR1m">
-      <label data-page-node-id="A9QURZPlUnxla2sEi96OiU">账单价（元）</label>
-      <input type="text" id="f_amount" inputmode="decimal" placeholder="0.00" autocomplete="off" data-page-node-id="ogQXzCMVxupvo2DejO0Mmb">
-    </div>
-    <div class="f2" data-page-node-id="3iqQMbVCyvvwOCo8SDrwIx">
-      <div class="fld" data-page-node-id="hKDEHmsiCT9po8JfwnkAzr"><label data-page-node-id="tRCRegV4GsF035o5TfLtfM">定金（元）</label><input type="text" id="f_deposit" inputmode="decimal" placeholder="选填" autocomplete="off" data-page-node-id="QzXC5lHnXOt6AVCfM2krf9"></div>
-      <div class="fld" data-page-node-id="iqVl244Gm2oNA9cGYdSxzR"><label data-page-node-id="oKhUjrixmqntxwSDyHjuGc">收款情况</label><button class="pickbtn" id="p_pay" data-page-node-id="nFkoytf1hDPN2OW58NEtva"><span class="v ph" data-page-node-id="CylHXQvZR9sAnw8lf4NGo1">请选择</span><svg viewBox="0 0 24 24" fill="none" data-page-node-id="UmeQmCVSZF1AlPQ1p2giD0"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" data-page-node-id="6APvzDLjdz2zHfFpHpl0rq"/></svg></button></div>
+    <div class="f2">
+      <div class="fld"><label>账单价（元）</label><input type="text" id="f_amount" inputmode="decimal" placeholder="0.00" autocomplete="off"></div>
+      <div class="fld"><label>定金（元）</label><input type="text" id="f_deposit" inputmode="decimal" placeholder="选填" autocomplete="off"></div>
     </div>
     <div id="moneyMore" style="display:none">
-      <div class="f2" data-page-node-id="4HzDEKwlBC3Ijx6A7h7pkn">
-        <div class="fld" data-page-node-id="ViF5Hpp2twI0bORpMwvDJA"><label data-page-node-id="FsqsQAmjyuz1XiYxS2B2fT">尾款（元）</label><input type="text" id="f_final" inputmode="decimal" placeholder="自动算" autocomplete="off" data-page-node-id="Z2huBqWsdXjCNAvyc1eHCO"></div>
-        <div class="fld" data-page-node-id="dV6PepDgJtm7D8hNDgCGxr"><label data-page-node-id="CgQPjUeRvnKLiYcg0Ky15q">成本（元）</label><input type="text" id="f_cost" inputmode="decimal" placeholder="选填" autocomplete="off" data-page-node-id="vP239jXHfLnK8uEFOBWDYy"></div>
+      <div class="f2">
+        <div class="fld"><label>尾款（元）</label><input type="text" id="f_final" inputmode="decimal" placeholder="自动算" autocomplete="off"></div>
+        <div class="fld"><label>成本（元）</label><input type="text" id="f_cost" inputmode="decimal" placeholder="选填" autocomplete="off"></div>
       </div>
       <div class="fld last"><label>其中：配件成本（选填）</label><input type="text" id="f_costmat" inputmode="decimal" placeholder="填了就能看出配件花了多少，人工 = 成本 − 配件" autocomplete="off"></div>
     </div>
     <button class="btn ghost sm" id="btnMoneyMore" style="margin-top:2px">展开：尾款 / 成本 ▾</button>
-    <p class="hint" id="moneyHint" style="margin-top:11px;display:none" data-page-node-id="CFfOWHwtKE7mkfA5jEQryn"></p>
+    <p class="hint" id="moneyHint" style="margin-top:11px;display:none"></p>
   </div>
 
-
-  <div id="advBox" style="display:none">
-  <div class="card" data-page-node-id="gmMVVg4Wj7E8IF3iuhbtAl">
-    <h2 data-page-node-id="KURKaHWdA6HAOBSS04ngeM">业务信息</h2>
-    <div class="f2" data-page-node-id="o56bFYDigagXABeCE3PH9V">
-      <div class="fld" data-page-node-id="QwcEt0NQpX2Y3b92hOGC9B"><label data-page-node-id="xujBmnF6qkdQxGq8prfK0V">客户来源</label><button class="pickbtn" id="p_source" data-page-node-id="brc57HrJeHMkOvA5xPc9Wh"><span class="v ph" data-page-node-id="jYQUvq2kHjOu8kSnBxIeg1">请选择</span><svg viewBox="0 0 24 24" fill="none" data-page-node-id="GyyGOrzp669NiRJT64J6nT"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" data-page-node-id="G8A1lqKSH7rpHupIURAPBj"/></svg></button></div>
-      <div class="fld" data-page-node-id="7N5CufI6Pc0FxxKupvS7xw"><label data-page-node-id="Uhu6iJu7eO82mlY3GpcsDF">送修设备</label><button class="pickbtn" id="p_device" data-page-node-id="R5rJSILnv8MkLtIAREIIrP"><span class="v ph" data-page-node-id="X8enf1YFhRpQHMbrc7IGVP">请选择</span><svg viewBox="0 0 24 24" fill="none" data-page-node-id="J35TD1o1QUYUxYUgdt3k9a"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" data-page-node-id="ujGYTxjlfkjBxAY8MFJPiL"/></svg></button></div>
+  <div class="card">
+    <h2>业务与进度 <span class="tag">点格子就能改</span></h2>
+    <div class="mini-grid">
+      <button class="mini" id="p_source"><span class="k">客户来源</span><span class="v ph">请选择</span></button>
+      <button class="mini" id="p_device"><span class="k">送修设备</span><span class="v ph">请选择</span></button>
+      <button class="mini" id="p_fault"><span class="k">故障类型</span><span class="v ph">请选择</span></button>
+      <button class="mini" id="p_status"><span class="k">订单状态</span><span class="v">跟进中</span></button>
+      <button class="mini" id="p_result"><span class="k">恢复结果</span><span class="v">正在恢复</span></button>
+      <button class="mini" id="p_pay"><span class="k">收款情况</span><span class="v">未付款</span></button>
     </div>
-    <div class="fld last" data-page-node-id="NBxGHWmAubS9hCUB53gbYP"><label data-page-node-id="jOE2vkoq83e7w6lV4ijkLk">故障类型</label><button class="pickbtn" id="p_fault" data-page-node-id="RFLGtQokhcq6Ezmt4q3He0"><span class="v ph" data-page-node-id="ctJSKzq6wOqqFCxzEkYLGp">请选择</span><svg viewBox="0 0 24 24" fill="none" data-page-node-id="hBFiaNHkuFwnDLNVHuIsTx"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" data-page-node-id="LCx2GDNHLzsb3X5xJJmMsH"/></svg></button></div>
-  </div>
-
-  <div class="card" data-page-node-id="NypqkI9oYC4kK8LBFR6pLA">
-    <h2 data-page-node-id="DW1mxfNIxz7WBds9aOiqZF">进度</h2>
-    <div class="fld" data-page-node-id="ZKAIUkdgbW5pwt1szgRB0d"><label data-page-node-id="0FzGSVxsOgWCheMWPslFto">订单状态</label><button class="pickbtn" id="p_status" data-page-node-id="6lZ6v0Goy6UfFBPek5zBmQ"><span class="v ph" data-page-node-id="Q8cuqEDs5AWaNwQgm4ReMR">请选择</span><svg viewBox="0 0 24 24" fill="none" data-page-node-id="GufqcMxwTsbLn62ZicrNlZ"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" data-page-node-id="byCIy1dVCeKe5GGIBNAmIv"/></svg></button></div>
-    <div class="fld last" data-page-node-id="PCDDs465ExMJhz9gxahgsK"><label data-page-node-id="ya1IAOwvAQDYWxl78uShS8">恢复结果</label><button class="pickbtn" id="p_result" data-page-node-id="ZgSqM8FwH0XVv22m2Y9LVa"><span class="v ph" data-page-node-id="BjohKcP7hzXEf4kcAObW3k">请选择</span><svg viewBox="0 0 24 24" fill="none" data-page-node-id="AZZva6HsdFRv8cDW7uS1FS"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" data-page-node-id="UtyqYSiT0G7pCVLReKV4Ip"/></svg></button></div>
   </div>
 
   <div class="card" data-page-node-id="e4lgbFhQA36yFjq0D55G5q">
@@ -349,8 +355,6 @@ nav.tabbar{
     <textarea id="f_note" rows="3" placeholder="想记什么就记什么，比如：开盘换头、客户急、明天交付"></textarea>
     <div class="chips" id="noteChips" style="margin-top:9px"></div>
   </div>
-  </div>
-  <button class="btn ghost sm" id="btnAdv" style="margin:2px 0 0">补充信息：来源 / 设备 / 故障 / 进度 / 备注 ▾</button>
 
   <div class="card">
     <div class="btn-row">
@@ -873,8 +877,6 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
     ["f_amount","f_deposit","f_final","f_cost","f_costmat"].forEach(function(id){ $(id).value = ""; });
     $("moneyMore").style.display = "none";
     $("btnMoneyMore").textContent = "展开：尾款 / 成本 ▾";
-    $("advBox").style.display = "none";
-    $("btnAdv").textContent = "补充信息：来源 / 设备 / 故障 / 进度 / 备注 ▾";
     if($("lastSaved")) $("lastSaved").style.display = "none";
     form = defForm();
     paintPick("p_source", "", "请选择");
@@ -942,6 +944,9 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
     if(!editId && !o.customer && !o.amount){
       if(!confirm("这一笔还没填「客户称呼」和「账单价」。\n\n确定就这样保存吗？")) return;
     }
+    if(o.status === "已成交" && o.pay !== "已付清"){
+      if(!confirm("这笔还没付清尾款。\n\n按你的规则，只有付完尾款才算成交。\n确定要算作「已成交」吗？")) return;
+    }
     if(editId){
       for(var i = 0; i < db.orders.length; i++){
         if(db.orders[i].id === editId){
@@ -998,8 +1003,6 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
       $("moneyMore").style.display = "";
       $("btnMoneyMore").textContent = "收起：尾款 / 成本 ▴";
     }
-    $("advBox").style.display = "";
-    $("btnAdv").textContent = "补充信息：来源 / 设备 / 故障 / 进度 / 备注 ▴";
     paintPick("p_source", form.source, "请选择");
     paintPick("p_device", form.device, "请选择");
     paintPick("p_fault",  form.fault,  "请选择");
@@ -1805,7 +1808,21 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
   bindFormPick("p_fault",  "fault",  "请选择");
   bindFormPick("p_status", "status");
   bindFormPick("p_result", "result");
-  bindFormPick("p_pay",    "pay");
+  /* 收款情况 ↔ 订单状态 联动：业务规则 —— 只有付清尾款才算「已成交」 */
+  $("p_pay").onclick = function(){
+    openSheet("pay", form.pay, function(v){
+      form.pay = v;
+      paintPick("p_pay", v);
+      if(v === "已付清"){
+        if(form.status !== "已成交"){ form.status = "已成交"; paintPick("p_status", "已成交"); }
+      }else if(form.status === "已成交"){
+        form.status = "跟进中";
+        paintPick("p_status", "跟进中");
+        toast("未付清尾款，状态已回到「跟进中」");
+      }
+      updateMoneyHint();
+    });
+  };
 
   /* 金额框实时算尾款 / 毛利 */
   ["f_amount","f_deposit","f_cost","f_costmat"].forEach(function(id){
@@ -1878,14 +1895,6 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
     var open = box.style.display === "none";
     box.style.display = open ? "" : "none";
     this.textContent = open ? "收起：尾款 / 成本 ▴" : "展开：尾款 / 成本 ▾";
-  };
-
-  /* 补充信息：展开 / 收起（来源 / 设备 / 故障 / 进度 / 备注） */
-  $("btnAdv").onclick = function(){
-    var box = $("advBox");
-    var open = box.style.display === "none";
-    box.style.display = open ? "" : "none";
-    this.textContent = open ? "补充信息：来源 / 设备 / 故障 / 进度 / 备注 ▴" : "补充信息：来源 / 设备 / 故障 / 进度 / 备注 ▾";
   };
 
   /* 备注常用短语 */
