@@ -451,11 +451,12 @@ nav.tabbar{
     <h2 data-page-node-id="fZ7CHLUqQo7axGqlYqVdfw">换手机 / 备份数据 <span class="tag" data-page-node-id="zuEU2VC1Z9cN799ZMp5y6Y">重要</span></h2>
     <div class="warn" data-page-node-id="fZ7CHLUqQo7axGqlYqVdfw-warn">
       记录只存在<b>这台手机的这个浏览器</b>里。<b>把桌面图标删掉、清理浏览器数据、换手机，记录都可能一起消失。</b><br>
-      想长期留住数据：<b>每隔一两周点一次「导出备份文件」</b>，把文件存进<b>微信收藏</b>（微信收藏在云端，换手机也在）；换新手机时再「导入备份文件」就全回来了。
+      想长期留住数据：<b>每隔一两周点一次「备份」，把文件存进微信收藏</b>（微信收藏在云端，换手机也在）。<br>
+      <b>要删图标 / 换图标 / 换手机之前，务必先点一次「备份」</b>；新设备上再「导入备份文件」就全回来了。
     </div>
     <div class="hr" data-page-node-id="iHAbTctmqUWSt4t750A83m"></div>
     <div class="btn-row" data-page-node-id="wY4P6M0trZGpNkPUyB7CTS">
-      <button class="btn pri" id="btnBackup" data-page-node-id="ODeUCdV2MQZMHyGmgEVMC6">导出备份文件</button>
+      <button class="btn pri" id="btnBackup" data-page-node-id="ODeUCdV2MQZMHyGmgEVMC6">备份（存微信收藏 / 文件）</button>
       <button class="btn" id="btnImport" data-page-node-id="bdhaxMVcB3BZNpMcdgTdxC">导入备份文件</button>
     </div>
     <input type="file" id="fileImport" accept=".json,application/json" style="display:none" data-page-node-id="PVPhW8ESk6JZh1kLKqAPFr">
@@ -488,6 +489,7 @@ nav.tabbar{
     <div class="btn-row" data-page-node-id="gPXbG01M9OfvYrJ326HUUr"><button class="btn" id="btnCsvAll" data-page-node-id="8yvktisMB8h970eCdV6rik">导出全部（Excel 可打开）</button></div>
     <div class="btn-row" style="margin-top:10px"><button class="btn" id="btnReport" data-report="1">生成当月经营简报图</button></div>
     <p class="hint" id="backupInfo" style="margin-top:13px" data-page-node-id="Li8tjxFi27xMf5Al4qx4QB"></p>
+    <div class="btn-row" style="margin-top:10px"><button class="btn sm" id="btnCheckUpdate">检查更新（拉取最新版）</button></div>
   </div>
 
   <div class="card">
@@ -1517,12 +1519,27 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
     var s = (db.meta.shop || "").replace(/[\\/:*?"<>|\s]/g, "");
     return s ? "_" + s : "";
   }
-  function exportAll(){
+  function exportAll(share){
     var payload = { app:"jizhang", v:1, exportedAt:new Date().toISOString(), orders:db.orders, opts:db.opts, meta:db.meta };
     db.meta.lastBackup = new Date().toISOString();
     save();
-    download("接单记账备份" + shopTag() + "_" + stamp() + ".json", JSON.stringify(payload, null, 2), "application/json");
+    var name = "接单记账备份" + shopTag() + "_" + stamp() + ".json";
+    var content = JSON.stringify(payload, null, 2);
     renderBackupInfo();
+    /* 手机上优先弹出「分享」，可直接存进微信收藏 / 文件 App —— 一步备份 */
+    if(share){
+      try{
+        var file = new File([content], name, { type:"application/json" });
+        if(navigator.canShare && navigator.canShare({ files:[file] }) && navigator.share){
+          navigator.share({ files:[file], title:name }).then(function(){}, function(){
+            download(name, content, "application/json");
+            toast("已下载备份文件");
+          });
+          return;
+        }
+      }catch(e){}
+    }
+    download(name, content, "application/json");
     toast("备份文件已开始下载");
   }
   function csvCell(v){
@@ -2150,7 +2167,22 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
   });
 
   /* 备份按钮 */
-  $("btnBackup").onclick = exportAll;
+  $("btnBackup").onclick = function(){ exportAll(true); };
+
+  /* 检查更新：强制拉最新版（清缓存） */
+  $("btnCheckUpdate").onclick = function(){
+    toast("正在检查更新…");
+    var done = false;
+    function go(){ if(done) return; done = true; location.replace(location.pathname + "?u=" + Date.now()); }
+    try{
+      if("serviceWorker" in navigator && navigator.serviceWorker.getRegistrations){
+        navigator.serviceWorker.getRegistrations()
+          .then(function(rs){ return Promise.all(rs.map(function(r){ return r.update().catch(function(){}); })); })
+          .then(go).catch(go);
+      }
+    }catch(e){}
+    setTimeout(go, 1200);
+  };
   $("btnImport").onclick = function(){ $("fileImport").click(); };
   $("fileImport").onchange = function(e){
     var f = e.target.files && e.target.files[0];
@@ -2469,6 +2501,13 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
     renderAll();
   }
   init();
+
+  /* 注册 Service Worker：以后网页更新后打开即最新，不用再清后台 */
+  if("serviceWorker" in navigator){
+    window.addEventListener("load", function(){
+      navigator.serviceWorker.register("./sw.js").catch(function(){});
+    });
+  }
 })();
 </script>
 </body>
