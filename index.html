@@ -2174,13 +2174,15 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
       while(row.length > 1 && (row[row.length - 1] === 0 || row[row.length - 1] === "")) row.pop();
       return row;
     });
-    var out = { v:2, o:rows };
+    var out = { v:2, c:rows.length, o:rows };
     ["s","d","f","t","r","p"].forEach(function(k){ if(dicts[k].length) out[k] = dicts[k]; });
     if(payload && payload.meta && payload.meta.shop) out.n = payload.meta.shop;
     return out;
   }
   function unpackPayload(p){
     if(!p || !Array.isArray(p.o)) return null;
+    /* 记录数对不上 → 说明同步码被截断了，宁可报错也不要静默丢数据 */
+    if(p.c != null && p.o.length !== p.c) return null;
     var dicts = { s:p.s||[], d:p.d||[], f:p.f||[], t:p.t||[], r:p.r||[], p:p.p||[] };
     function val(k, i){ return (i > 0 && dicts[k][i-1]) || ""; }
     var orders = p.o.map(function(row){
@@ -2211,20 +2213,41 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
       return "LZ2:" + LZString.compressToBase64(JSON.stringify(packed));
     }catch(e){ return ""; }
   }
+  /* 从粘贴内容里把同步码「挖」出来：允许前后夹带文字、丢前缀、被换行切断 */
+  function extractCode(raw){
+    var s = String(raw || "");
+    var i = s.indexOf("LZ2:");
+    if(i < 0) i = s.indexOf("LZ1:");
+    if(i >= 0) return s.slice(i);
+    var m = s.match(/[A-Za-z0-9+/=]{60,}/g);
+    if(m && m.length){
+      m.sort(function(a, b){ return b.length - a.length; });
+      return m[0];
+    }
+    return s;
+  }
+  /* 不管有没有 LZ2:/LZ1: 前缀，都试着解一遍（微信里前缀很容易被丢掉） */
+  function decodeAny(body){
+    if(!body) return null;
+    try{
+      var d = LZString.decompressFromBase64(body);
+      if(!d) return null;
+      var obj = JSON.parse(d);
+      if(obj && Array.isArray(obj.o)){                 // LZ2 精简格式
+        var u = unpackPayload(obj);
+        if(u) return JSON.stringify(u);
+      }
+      if(obj && Array.isArray(obj.orders)){            // LZ1 / 旧格式
+        return d;
+      }
+    }catch(e){}
+    return null;
+  }
   function fromCode(str){
-    var s = String(str).replace(/\s+/g, "");
-    if(s.indexOf("LZ2:") === 0){
-      try{
-        var d2 = LZString.decompressFromBase64(s.slice(4));
-        if(d2){
-          var o2 = unpackPayload(JSON.parse(d2));
-          if(o2) return JSON.stringify(o2);
-        }
-      }catch(e){}
-    }
-    if(s.indexOf("LZ1:") === 0){
-      try{ var d = LZString.decompressFromBase64(s.slice(4)); if(d) return d; }catch(e){}
-    }
+    var s = extractCode(str).replace(/\s+/g, "");
+    var body = (s.indexOf("LZ2:") === 0 || s.indexOf("LZ1:") === 0) ? s.slice(4) : s;
+    var r = decodeAny(body);
+    if(r) return r;
     try{ return decodeURIComponent(escape(atob(s))); }
     catch(e){ return s; }
   }
@@ -2274,12 +2297,12 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
   $("btnDoImport").onclick = function(){
     var raw = ($("codeIn").value || "").trim();
     if(!raw){ toast("请先粘贴同步码"); return; }
-    var text = fromCode(raw);
     var o = null;
-    try{ o = JSON.parse(text); }catch(e){
-      try{ o = JSON.parse(raw); }catch(e2){ alert("同步码无效，请确认是否复制完整。"); return; }
+    try{ o = JSON.parse(fromCode(raw)); }catch(e){ o = null; }
+    if(!o || !Array.isArray(o.orders)){
+      alert("这段同步码没能解开。\n\n最常见的原因：同步码比较长，在微信里长按复制时容易漏掉开头或结尾的几个字符。\n\n更稳妥的办法：让对方点「导出备份文件」，把生成的文件直接发给你；你收到文件后点「导入备份文件」——文件传输不会被截断。");
+      return;
     }
-    if(!o || !o.orders){ alert("同步码无效，请确认是否复制完整。"); return; }
     doImport(JSON.stringify(o));
     $("pasteWrap").style.display = "none";
     $("codeIn").value = "";
