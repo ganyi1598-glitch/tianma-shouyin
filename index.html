@@ -14,6 +14,7 @@
 <title>天马收银系统</title>
 <style>
 *,*::before,*::after{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+img,svg{max-width:100%}
 :root{
   --bg:#f2f5fa; --surface:#fff; --line:#e4eaf3; --line2:#eff3f9;
   --text:#151f2d; --muted:#6c7b91; --faint:#9aa8bb;
@@ -41,7 +42,7 @@ header.hd{
 .hd-in{max-width:760px;margin:0 auto;padding:10px 14px;display:flex;align-items:center;gap:10px}
 .hd-logo{width:32px;height:32px;border-radius:9px;background:linear-gradient(140deg,#4a86f7,#1f57d0);display:flex;align-items:center;justify-content:center;flex:none;overflow:hidden}
 .hd-logo img{width:74%;height:74%;object-fit:contain;display:block}
-.hd-logo svg{width:18px;height:18px}
+.hd-logo svg{width:22px;height:22px}
 .hd-t{min-width:0;flex:1}
 .hd-t h1{margin:0;font-size:15.5px;font-weight:700;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .hd-t .sub{font-size:11.5px;color:var(--faint);line-height:1.25;display:block}
@@ -210,14 +211,19 @@ nav.tabbar{
   background:#f8fafd;border:1px solid var(--line);border-radius:11px;padding:11px;
   word-break:break-all;max-height:150px;overflow-y:auto;color:var(--muted);-webkit-user-select:all;user-select:all
 }
+  .codein{width:100%;min-height:120px;font:12px/1.5 ui-monospace,Menlo,Consolas,monospace;color:var(--text);background:#f8fafd;border:1.5px solid var(--line);border-radius:11px;padding:11px;resize:vertical;word-break:break-all}
 </style>
 </head>
 <body data-page-node-id="LUgbCWjhDZXWGkRUBihqnm">
 
 <header class="hd" data-page-node-id="mcJNGLZPmAyzDViCVMmFGa">
   <div class="hd-in" data-page-node-id="O9n7jWU1UeKCQh4tAacZux">
-    <div class="hd-logo" id="hdLogo" data-page-node-id="HRkhrZcjU3CakxpwhuglTA">
-      <img src="logo-white.png" alt="天马" onerror="this.style.display='none';this.parentNode.innerHTML='<svg viewBox=\'0 0 24 24\' fill=\'none\' data-page-node-id="zUz7et7a1FgwwLQMnnh8Ld"><path d=\'M4 5.5h16v13H4z\' stroke=\'#fff\' stroke-width=\'1.7\' stroke-linejoin=\'round\' data-page-node-id="ArqEvCdXAWrUdBSGoq59AZ"/><path d=\'M7.5 9.5h6M7.5 13h9M7.5 16.2h4\' stroke=\'#fff\' stroke-width=\'1.7\' stroke-linecap=\'round\' data-page-node-id="RHKBkKJ4TBsDSHamZSxfF4"/></svg>'">
+        <div class="hd-logo" id="hdLogo">
+      <svg viewBox="0 0 613.51 626.88" fill="#fff" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="天马">
+        <path d="M473.36,81.74l-5.1,8.04c-1.84,4.71-3.77,9.52-4.65,14.54-8.65,49.39,40.37,77.26,35.35,125.97l49.79-37.27c7.5-3.91,15.35-4.25,22.93-.27,6.07,3.18,33.94,36.1,38.03,43,7.73,13.05,2.04,30.6-2.7,43.95-7.04,19.82-18.42,40.04-31.28,56.49-4.97-11.84-11.63-27.78-10.66-40.86,1.13-15.22,22.12-22.2,18.86-38.08-1.12-5.45-16.15-20.89-21.04-23.73-4.31-2.5-9.56-2.56-13.95-.52-5.17,2.41-16.45,17.72-21.19,22.88-25.26,27.5-51.98,53.94-83.59,74.2-35.21,22.58-74.5,37.02-115.79,44.14-9.41,23.38-20.35,46.48-35.97,66.38-28.06,35.71-59.07,47.8-95.19,71.84-31.99,21.3-36.25,34.07-56.9,63.93-16.29,23.55-38.28,44.15-67.1,50.52,4.17-12.1,5.71-28.09,12.5-39.03,4.41-7.1,12.11-8.44,18.41-13.58,19.98-16.29,22.16-43.04,31.1-64.85,6.14-14.96,22.67-24.23,33.22-36.44,33.64-38.92,16.31-74.47,34.24-116.45,21.59-50.56,75.57-74.51,125.55-88.02,2.48-11.71-3.33-25.75-10.86-34.69-25.45-30.22-88.79-39.98-126-50.98-54.35-16.06-111.07-38.18-145.03-85.97-15.92-22.4-26.23-49.49-28.56-76.99,36.9,26.43,78.9,43.58,122.25,56.5,65.64,19.57,149.04,27.46,193.3,85.32,16.32,21.34,22.95,47.69,40.9,67.84l-7.82-23.45c-13.66-45.74-1.62-95.71,30.21-130.77l-30.21,12.78c-.48.15-.49-.59-.34-1.05,1.88-5.73,19.29-23.47,24.49-28.11,22.86-20.37,51.73-31.96,82.31-34.26,8.54-8.82,16.68-18.11,27.18-24.71l-.72,39.09c5.55,3.68,11.62,6.64,16.72,11,7.97,6.83,11.84,15.74,19.52,23.13,11.96,11.5,25.84,21.67,37.64,33.43,1.46,2.47,2.65,4.44,2.59,7.42-.07,3.53-2.68,20.28-4.37,22.69-1.92,2.73-17.13,2.95-20.6,2.22-4.63-.97-8.04-6.62-11.81-9.51-13.38-10.27-23.37-7.17-37.91-10.42-17.46-3.91-27.99-19.78-27.72-37.32Z"/>
+        <path d="M314.86,257.29c-14.15-6.46-29.71-7.76-45.12-7.1-26.06,1.12-47.56,5.67-74.15.22-47.52-9.74-89.62-46.05-111.72-88.35,10.39,4.97,20.31,10.95,30.79,15.76,46.02,21.07,84.61,22.92,131.98,34.34,26.35,6.35,56.63,18.86,68.22,45.14Z"/>
+        <path d="M198.3,342.58c-35.92,16.19-48.79,56.05-81.8,76.36-35.56,21.88-80.23,17.55-116.5-.3-.06-1.05,2.54-1.25,3.28-1.33,50.7-5.76,60.6-19.95,97.31-49.82,25.22-20.52,52.44-32.87,85.88-28.35,3.6.49,9.16,1.12,11.83,3.44Z"/>
+      </svg>
     </div>
     <div class="hd-t" data-page-node-id="qAgTXRgYBHlOOmLVQ6QCBi">
       <h1 id="hdTitle" data-page-node-id="TAnolj7QDTdVcBuGsmxVm7">天马收银系统</h1>
@@ -350,13 +356,13 @@ nav.tabbar{
   </div>
 
   <div class="card" data-page-node-id="WRk2edgLRWvEC2wPrwixQZ">
-    <h2 data-page-node-id="2r6BAAICAxntIJ6bjqYRWb">门店名称</h2>
+    <h2 data-page-node-id="hk3ZmnEsgLig5iYP7TCLnf">门店名称</h2>
     <input id="shopName" placeholder="天马专业数据恢复中心" maxlength="24" data-page-node-id="qXo5dA8AfOJfjZZ59wYv4M">
     <p class="hint" style="margin-top:9px" data-page-node-id="IMg0s28Y1bSRzcYeePqLxg">填了以后，顶栏和导出的文件名都会用它。留空则显示"天马收银系统"。</p>
   </div>
 
   <div class="card" data-page-node-id="GSFCpCPTs5KJF7OkLCJEDY">
-    <h2 data-page-node-id="hk3ZmnEsgLig5iYP7TCLnf">换手机 / 备份数据 <span class="tag" data-page-node-id="zuEU2VC1Z9cN799ZMp5y6Y">重要</span></h2>
+    <h2 data-page-node-id="fZ7CHLUqQo7axGqlYqVdfw">换手机 / 备份数据 <span class="tag" data-page-node-id="zuEU2VC1Z9cN799ZMp5y6Y">重要</span></h2>
     <div class="warn" data-page-node-id="fZ7CHLUqQo7axGqlYqVdfw">
       记录只存在<b data-page-node-id="tF12W3CzO2vg1nJXYTGOzY">这台手机的这个浏览器</b>里。换手机、清理浏览器数据、卸载浏览器都会丢失。<br data-page-node-id="iwGjqdJJAN1lTX4enLe48C">
       请每隔一两周做一次「导出备份文件」，存到微信收藏或网盘。
@@ -367,16 +373,24 @@ nav.tabbar{
       <button class="btn" id="btnImport" data-page-node-id="bdhaxMVcB3BZNpMcdgTdxC">导入备份文件</button>
     </div>
     <input type="file" id="fileImport" accept=".json,application/json" style="display:none" data-page-node-id="PVPhW8ESk6JZh1kLKqAPFr">
-    <div class="sec-t" data-page-node-id="QG0TFKe5vHKuc2hX8J4RNR">或者用同步码（复制粘贴即可，适合微信发送）</div>
-    <div class="btn-row" data-page-node-id="nEAAg0yKC3RBtQwzV7AHni">
-      <button class="btn sm" id="btnGenCode" data-page-node-id="AI5sQhJaS1fRVOUPAsGGvk">生成同步码</button>
-      <button class="btn sm" id="btnPasteCode" data-page-node-id="dPk5PVLiG9t91egI3IVzEO">粘贴同步码导入</button>
+    <div class="sec-t">或者用同步码（复制 / 分享即可，适合微信发送）</div>
+    <div class="btn-row">
+      <button class="btn sm" id="btnGenCode">生成同步码</button>
+      <button class="btn sm" id="btnPasteCode">粘贴同步码导入</button>
     </div>
-    <div id="codeWrap" style="display:none;margin-top:11px" data-page-node-id="HW4YowUnHyCFZ0qdvdJJR9">
-      <div class="codebox" id="codeOut" data-page-node-id="OmcvLl5D4OMUbwcKC9RZCb"></div>
-      <div class="btn-row" style="margin-top:10px" data-page-node-id="EUfhf2P8Btr5Idhu1rqb2v">
-        <button class="btn sm" id="btnCopyCode" data-page-node-id="VbMYADvpItxODhgTedKXYu">复制同步码</button>
-        <button class="btn sm" id="btnCloseCode" data-page-node-id="v1lydNDbVFPSJQJtCxtqaH">收起</button>
+    <div id="codeWrap" style="display:none;margin-top:11px">
+      <div class="codebox" id="codeOut"></div>
+      <div class="btn-row" style="margin-top:10px;flex-wrap:wrap;gap:8px">
+        <button class="btn sm" id="btnCopyCode">复制同步码</button>
+        <button class="btn sm" id="btnShareCode">分享 / 发给微信</button>
+        <button class="btn sm" id="btnCloseCode">收起</button>
+      </div>
+    </div>
+    <div id="pasteWrap" style="display:none;margin-top:11px">
+      <textarea id="codeIn" class="codein" placeholder="把另一台设备生成的同步码粘贴到这里"></textarea>
+      <div class="btn-row" style="margin-top:10px">
+        <button class="btn sm pri" id="btnDoImport">导入到这台设备</button>
+        <button class="btn sm" id="btnClosePaste">取消</button>
       </div>
     </div>
     <div class="hr" data-page-node-id="SZzYJX5Bg1v5jdqENr7lFD"></div>
@@ -440,10 +454,13 @@ nav.tabbar{
 <div class="toast" id="toast" data-page-node-id="ADwQ9a2ml3dijxxb9s7Jdp"></div>
 
 <script>
+var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",n="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-$",e={};function t(r,o){if(!e[r]){e[r]={};for(var n=0;n<r.length;n++)e[r][r.charAt(n)]=n}return e[r][o]}var i={compressToBase64:function(r){if(null==r)return"";var n=i._compress(r,6,function(r){return o.charAt(r)});switch(n.length%4){default:case 0:return n;case 1:return n+"===";case 2:return n+"==";case 3:return n+"="}},decompressFromBase64:function(r){return null==r?"":""==r?null:i._decompress(r.length,32,function(n){return t(o,r.charAt(n))})},compressToUTF16:function(o){return null==o?"":i._compress(o,15,function(o){return r(o+32)})+" "},decompressFromUTF16:function(r){return null==r?"":""==r?null:i._decompress(r.length,16384,function(o){return r.charCodeAt(o)-32})},compressToUint8Array:function(r){for(var o=i.compress(r),n=new Uint8Array(2*o.length),e=0,t=o.length;e<t;e++){var s=o.charCodeAt(e);n[2*e]=s>>>8,n[2*e+1]=s%256}return n},decompressFromUint8Array:function(o){if(null==o)return i.decompress(o);for(var n=new Array(o.length/2),e=0,t=n.length;e<t;e++)n[e]=256*o[2*e]+o[2*e+1];var s=[];return n.forEach(function(o){s.push(r(o))}),i.decompress(s.join(""))},compressToEncodedURIComponent:function(r){return null==r?"":i._compress(r,6,function(r){return n.charAt(r)})},decompressFromEncodedURIComponent:function(r){return null==r?"":""==r?null:(r=r.replace(/ /g,"+"),i._decompress(r.length,32,function(o){return t(n,r.charAt(o))}))},compress:function(o){return i._compress(o,16,function(o){return r(o)})},_compress:function(r,o,n){if(null==r)return"";var e,t,i,s={},u={},a="",p="",c="",l=2,f=3,h=2,d=[],m=0,v=0;for(i=0;i<r.length;i+=1)if(a=r.charAt(i),Object.prototype.hasOwnProperty.call(s,a)||(s[a]=f++,u[a]=!0),p=c+a,Object.prototype.hasOwnProperty.call(s,p))c=p;else{if(Object.prototype.hasOwnProperty.call(u,c)){if(c.charCodeAt(0)<256){for(e=0;e<h;e++)m<<=1,v==o-1?(v=0,d.push(n(m)),m=0):v++;for(t=c.charCodeAt(0),e=0;e<8;e++)m=m<<1|1&t,v==o-1?(v=0,d.push(n(m)),m=0):v++,t>>=1}else{for(t=1,e=0;e<h;e++)m=m<<1|t,v==o-1?(v=0,d.push(n(m)),m=0):v++,t=0;for(t=c.charCodeAt(0),e=0;e<16;e++)m=m<<1|1&t,v==o-1?(v=0,d.push(n(m)),m=0):v++,t>>=1}0==--l&&(l=Math.pow(2,h),h++),delete u[c]}else for(t=s[c],e=0;e<h;e++)m=m<<1|1&t,v==o-1?(v=0,d.push(n(m)),m=0):v++,t>>=1;0==--l&&(l=Math.pow(2,h),h++),s[p]=f++,c=String(a)}if(""!==c){if(Object.prototype.hasOwnProperty.call(u,c)){if(c.charCodeAt(0)<256){for(e=0;e<h;e++)m<<=1,v==o-1?(v=0,d.push(n(m)),m=0):v++;for(t=c.charCodeAt(0),e=0;e<8;e++)m=m<<1|1&t,v==o-1?(v=0,d.push(n(m)),m=0):v++,t>>=1}else{for(t=1,e=0;e<h;e++)m=m<<1|t,v==o-1?(v=0,d.push(n(m)),m=0):v++,t=0;for(t=c.charCodeAt(0),e=0;e<16;e++)m=m<<1|1&t,v==o-1?(v=0,d.push(n(m)),m=0):v++,t>>=1}0==--l&&(l=Math.pow(2,h),h++),delete u[c]}else for(t=s[c],e=0;e<h;e++)m=m<<1|1&t,v==o-1?(v=0,d.push(n(m)),m=0):v++,t>>=1;0==--l&&(l=Math.pow(2,h),h++)}for(t=2,e=0;e<h;e++)m=m<<1|1&t,v==o-1?(v=0,d.push(n(m)),m=0):v++,t>>=1;for(;;){if(m<<=1,v==o-1){d.push(n(m));break}v++}return d.join("")},decompress:function(r){return null==r?"":""==r?null:i._decompress(r.length,32768,function(o){return r.charCodeAt(o)})},_decompress:function(o,n,e){var t,i,s,u,a,p,c,l=[],f=4,h=4,d=3,m="",v=[],g={val:e(0),position:n,index:1};for(t=0;t<3;t+=1)l[t]=t;for(s=0,a=Math.pow(2,2),p=1;p!=a;)u=g.val&g.position,g.position>>=1,0==g.position&&(g.position=n,g.val=e(g.index++)),s|=(u>0?1:0)*p,p<<=1;switch(s){case 0:for(s=0,a=Math.pow(2,8),p=1;p!=a;)u=g.val&g.position,g.position>>=1,0==g.position&&(g.position=n,g.val=e(g.index++)),s|=(u>0?1:0)*p,p<<=1;c=r(s);break;case 1:for(s=0,a=Math.pow(2,16),p=1;p!=a;)u=g.val&g.position,g.position>>=1,0==g.position&&(g.position=n,g.val=e(g.index++)),s|=(u>0?1:0)*p,p<<=1;c=r(s);break;case 2:return""}for(l[3]=c,i=c,v.push(c);;){if(g.index>o)return"";for(s=0,a=Math.pow(2,d),p=1;p!=a;)u=g.val&g.position,g.position>>=1,0==g.position&&(g.position=n,g.val=e(g.index++)),s|=(u>0?1:0)*p,p<<=1;switch(c=s){case 0:for(s=0,a=Math.pow(2,8),p=1;p!=a;)u=g.val&g.position,g.position>>=1,0==g.position&&(g.position=n,g.val=e(g.index++)),s|=(u>0?1:0)*p,p<<=1;l[h++]=r(s),c=h-1,f--;break;case 1:for(s=0,a=Math.pow(2,16),p=1;p!=a;)u=g.val&g.position,g.position>>=1,0==g.position&&(g.position=n,g.val=e(g.index++)),s|=(u>0?1:0)*p,p<<=1;l[h++]=r(s),c=h-1,f--;break;case 2:return v.join("")}if(0==f&&(f=Math.pow(2,d),d++),l[c])m=l[c];else{if(c!==h)return null;m=i+i.charAt(0)}v.push(m),l[h++]=i+m.charAt(0),i=m,0==--f&&(f=Math.pow(2,d),d++)}}};return i}();"function"==typeof define&&define.amd?define(function(){return LZString}):"undefined"!=typeof module&&null!=module?module.exports=LZString:"undefined"!=typeof angular&&null!=angular&&angular.module("LZString",[]).factory("LZString",function(){return LZString});
+
 (function(){
   "use strict";
 
   var KEY = "jizhang_v1";
+  var DATA_VER = 1;
 
   var DEF_SOURCE = ["到店直客","电话咨询","微信","淘宝","闲鱼","小红书","抖音","老客户介绍","同行转介","企业客户","其他"];
   var DEF_DEVICE = ["机械硬盘","固态硬盘","移动硬盘","U盘/闪存卡","服务器/RAID","NAS","监控存储","手机","笔记本","其他"];
@@ -458,6 +475,7 @@ nav.tabbar{
   var pick = { month:"", year:0, day:"" };
   var form = { source:"", device:"", fault:"", status:"已成交", result:"成功", pay:"已付清" };
   var sheetFor = null, sheetVal = "";
+  var finalManual = false;
 
   /* ---------------- 工具 ---------------- */
   var $ = function(id){ return document.getElementById(id); };
@@ -496,12 +514,20 @@ nav.tabbar{
       var raw = localStorage.getItem(KEY);
       if(raw){
         var o = JSON.parse(raw);
-        if(o && Array.isArray(o.orders)) db = o;
+        if(o && Array.isArray(o.orders)) db = migrate(o);
       }
     }catch(e){ console.warn("读取失败", e); }
     if(!db.orders) db.orders = [];
     if(!db.opts) db.opts = {};
     if(!db.meta) db.meta = { shop:"", lastBackup:null };
+  }
+  function migrate(o){
+    o = o || {};
+    if(!Array.isArray(o.orders)) o.orders = [];
+    if(!o.opts) o.opts = {};
+    if(!o.meta) o.meta = { shop:"", lastBackup:null };
+    o.v = DATA_VER;
+    return o;
   }
   function save(){
     try{ localStorage.setItem(KEY, JSON.stringify(db)); return true; }
@@ -767,6 +793,7 @@ nav.tabbar{
 
   function resetForm(keepDate){
     editId = null;
+    finalManual = false;
     $("editCard").style.display = "none";
     $("btnSave").textContent = "保存这一笔";
     $("f_customer").value = "";
@@ -796,8 +823,12 @@ nav.tabbar{
     var parts = [];
     if(a){
       var rest = Math.max(0, a - d);
-      $("f_final").value = rest ? rest : (a ? "0" : "");
-      parts.push("尾款 " + money(rest));
+      if(finalManual){
+        parts.push("尾款 " + money(parseMoney($("f_final").value)));
+      }else{
+        $("f_final").value = rest ? rest : (a ? "0" : "");
+        parts.push("尾款 " + money(rest));
+      }
       if(c) parts.push("毛利 " + money(a - c) + (a ? "（" + Math.round((a - c) / a * 100) + "%）" : ""));
       if(d) parts.push("已收定金 " + money(d));
     }
@@ -817,7 +848,7 @@ nav.tabbar{
       device: form.device,
       fault: form.fault,
       status: form.status || "已成交",
-      result: form.result || "未开始",
+      result: form.result || "正在恢复",
       pay: form.pay || "未付款",
       amount: a,
       deposit: d,
@@ -1411,6 +1442,12 @@ nav.tabbar{
     });
     $(id).addEventListener("change", updateMoneyHint);
   });
+  /* 尾款手动输入：标记为用户手填，不再被自动计算覆盖 */
+  $("f_final").addEventListener("input", function(){
+    this.value = this.value.replace(/[^\d.]/g, "").replace(/(\..*)\./g, "$1");
+    finalManual = true;
+    updateMoneyHint();
+  });
   /* 订单状态改了要重算（未收只对已成交算） */
   (function(){
     var origStatus = null;
@@ -1473,7 +1510,7 @@ nav.tabbar{
     r.readAsText(f);
   };
   $("btnCsvAll").onclick = function(){
-    exportCsv(db.orders.slice().sort(function(a,b){ return (a.date||"").localeCompare(b.date||""); }), "全部账单");
+    exportCsv(db.orders.slice().sort(function(a,b){ return (a.date||"").localeCompare(b.date||"") }), "全部账单");
   };
   $("btnWipe").onclick = function(){
     if(!db.orders.length){ toast("本来就是空的"); return; }
@@ -1491,13 +1528,31 @@ nav.tabbar{
 
   /* ---------------- 同步码 ---------------- */
   function toCode(str){
-    try{ return btoa(unescape(encodeURIComponent(str))); }
-    catch(e){ return str; }
+    try{ return "LZ1:" + LZString.compressToBase64(str); }
+    catch(e){ try{ return btoa(unescape(encodeURIComponent(str))); }catch(e2){ return str; } }
   }
   function fromCode(str){
     var s = String(str).replace(/\s+/g, "");
+    if(s.indexOf("LZ1:") === 0){
+      try{ var d = LZString.decompressFromBase64(s.slice(4)); if(d) return d; }catch(e){}
+    }
     try{ return decodeURIComponent(escape(atob(s))); }
     catch(e){ return s; }
+  }
+  function copyText(text, okMsg, failMsg){
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(function(){ toast(okMsg); }, function(){ fallbackCopy(text, okMsg, failMsg); });
+    }else{ fallbackCopy(text, okMsg, failMsg); }
+  }
+  function fallbackCopy(text, okMsg, failMsg){
+    try{
+      var ta=document.createElement("textarea");
+      ta.value=text; ta.setAttribute("readonly",""); ta.style.position="fixed"; ta.style.top="-9999px"; ta.style.opacity="0";
+      document.body.appendChild(ta); ta.focus(); ta.select(); ta.setSelectionRange(0, text.length);
+      var ok=document.execCommand("copy");
+      document.body.removeChild(ta);
+      toast(ok?okMsg:(failMsg||"复制失败，请长按上面的框手动复制"));
+    }catch(e){ toast(failMsg||"复制失败，请长按上面的框手动复制"); }
   }
   $("btnGenCode").onclick = function(){
     if(!db.orders.length){ toast("还没有记录"); return; }
@@ -1505,25 +1560,40 @@ nav.tabbar{
     var code = toCode(JSON.stringify(payload));
     $("codeOut").textContent = code;
     $("codeWrap").style.display = "";
-    toast("已生成，点「复制同步码」发给另一台设备");
+    $("pasteWrap").style.display = "none";
+    toast("已生成，点「复制同步码」或「分享」发给另一台设备");
   };
   $("btnCloseCode").onclick = function(){ $("codeWrap").style.display = "none"; };
   $("btnCopyCode").onclick = function(){
     var code = $("codeOut").textContent;
     if(!code) return;
-    if(navigator.clipboard && navigator.clipboard.writeText){
-      navigator.clipboard.writeText(code).then(function(){ toast("同步码已复制"); }, function(){ toast("请长按上面的框手动复制"); });
-    }else{ toast("请长按上面的框手动复制"); }
+    copyText(code, "同步码已复制", "复制失败，请长按上面的框手动复制");
+  };
+  $("btnShareCode").onclick = function(){
+    var code = $("codeOut").textContent;
+    if(!code) return;
+    if(navigator.share){
+      navigator.share({ title:"天马收银同步码", text:code }).then(function(){}, function(){});
+    }else{ copyText(code, "同步码已复制", "当前环境不支持分享，已尝试复制"); }
   };
   $("btnPasteCode").onclick = function(){
-    var raw = prompt("把同步码粘贴到这里：");
-    if(!raw || !raw.trim()) return;
-    var text = fromCode(raw.trim());
+    $("pasteWrap").style.display = "";
+    $("codeWrap").style.display = "none";
+    setTimeout(function(){ try{ $("codeIn").focus(); }catch(e){} }, 60);
+  };
+  $("btnClosePaste").onclick = function(){ $("pasteWrap").style.display = "none"; };
+  $("btnDoImport").onclick = function(){
+    var raw = ($("codeIn").value || "").trim();
+    if(!raw){ toast("请先粘贴同步码"); return; }
+    var text = fromCode(raw);
     var o = null;
     try{ o = JSON.parse(text); }catch(e){
-      try{ o = JSON.parse(raw.trim()); }catch(e2){ alert("同步码无效，请确认是否复制完整。"); return; }
+      try{ o = JSON.parse(raw); }catch(e2){ alert("同步码无效，请确认是否复制完整。"); return; }
     }
+    if(!o || !o.orders){ alert("同步码无效，请确认是否复制完整。"); return; }
     doImport(JSON.stringify(o));
+    $("pasteWrap").style.display = "none";
+    $("codeIn").value = "";
   };
 
   /* ---------------- 初始化 ---------------- */
@@ -1533,6 +1603,15 @@ nav.tabbar{
     renderStat();
     renderBackupInfo();
   }
+
+  /* 多标签页同步：另一个标签页改了数据，当前页自动刷新 */
+  window.addEventListener("storage", function(e){
+    if(e.key === KEY){
+      load();
+      renderAll();
+      if(curTab === "more") renderBackupInfo();
+    }
+  });
 
   function init(){
     load();
