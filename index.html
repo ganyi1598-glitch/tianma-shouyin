@@ -2438,6 +2438,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
         (parseMoney(o.amount) ? '<span class="pill p-n">' + money(o.amount) + '</span>' : '') + '</div>' +
         '<div class="rec-f"><span style="flex:1;font-size:12.5px;color:var(--faint)">' + esc(o.contact || "未填联系方式") + '</span>' +
         '<span class="acts">' + (o.contact ? '<button class="btn sm ghost" data-call="' + esc(o.contact) + '">拨打</button>' : '') +
+        (totalPaidOf(o) > 0 ? '<button class="btn sm ghost" data-refund="' + o.id + '" style="color:var(--red)">退款</button>' : '') +
         '<button class="btn sm ghost" data-edit="' + o.id + '">跟进</button></span></div></div>';
     }).join("") + (list.length > 8 ? '<p class="hint" style="margin:2px 0 0">还有 ' + (list.length - 8) + ' 单，可在「统计」页查看全部</p>' : "");
   }
@@ -2461,6 +2462,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
         (o.status ? '<span class="pill p-a">' + esc(o.status) + '</span>' : '') + '</div>' +
         '<div class="rec-f"><span style="flex:1;font-size:12.5px;color:var(--faint)">' + esc(o.contact || "未填联系方式") + '</span>' +
         '<span class="acts">' + (o.contact ? '<button class="btn sm ghost" data-call="' + esc(o.contact) + '">催款</button>' : '') +
+        '<button class="btn sm ghost" data-refund="' + o.id + '" style="color:var(--red)">退款</button>' +
         '<button class="btn sm ghost" data-quickpay="' + o.id + '">收款</button></span></div></div>';
     }).join("") + (list.length > 6 ? '<p class="hint" style="margin:2px 0 0">还有 ' + (list.length - 6) + ' 单没收上来</p>' : "");
   }
