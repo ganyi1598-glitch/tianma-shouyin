@@ -1,17 +1,17 @@
 <!DOCTYPE html>
-<html lang="zh-CN" data-page-node-id="CkadvKTTPIQnYx8wHYIKSE">
-<head data-page-node-id="mXplXMjCYx3sQ7Dn3MrkBq">
-<meta charset="UTF-8" data-page-node-id="R6Qn4hLDRBy2vAHrAzn54t">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover" data-page-node-id="tIHyBq15UopGBwvpESEkjM">
-<meta name="theme-color" content="#2f6fed" media="(prefers-color-scheme:light)" data-page-node-id="2lA1Ei0EMV65axYlDe2hmv">
-<meta name="theme-color" content="#0f141b" media="(prefers-color-scheme:dark)" data-page-node-id="mOfKEGwPW3HTJdjNCDcdxT">
-<meta name="apple-mobile-web-app-capable" content="yes" data-page-node-id="A1LspOrypwRPQFuKnPVpKN">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" data-page-node-id="RJxE0tTPNb4HD7kpboIuMt">
-<meta name="apple-mobile-web-app-title" content="天马收银系统" data-page-node-id="XnYoV1pKtDLuQ4gkOlKMmr">
-<meta name="robots" content="noindex, nofollow" data-page-node-id="fVsc5rHWciGZmIqXCJ7aSB">
-<link rel="manifest" href="manifest.webmanifest" data-page-node-id="PFWEprnKFeREbo9wPAcyzn">
-<link rel="apple-touch-icon" href="icon-180.png" data-page-node-id="2AxKOAUthtYK0H17izJBIA">
-<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png" data-page-node-id="EnN8dJ38Le5EmxJS7zMjPD">
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#2f6fed" media="(prefers-color-scheme:light)">
+<meta name="theme-color" content="#0f141b" media="(prefers-color-scheme:dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="天马收银系统">
+<meta name="robots" content="noindex, nofollow">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <title>天马收银系统</title>
 <style>
 *,*::before,*::after{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -195,6 +195,16 @@ nav.tabbar{
 /* 原位编辑弹层：层级必须低于 picker(60/61)，这样点「收款情况」等选择按钮时，选项面板能盖在编辑面板上面 */
 .emask{position:fixed;inset:0;background:rgba(15,23,38,.42);z-index:55;opacity:0;pointer-events:none;transition:opacity .24s}
 .emask.on{opacity:1;pointer-events:auto}
+/* 收款弹层：在编辑层(56)之上、选择器(60/61)之下 */
+.pmask{position:fixed;inset:0;background:rgba(15,23,38,.42);z-index:57;opacity:0;pointer-events:none;transition:opacity .24s}
+.pmask.on{opacity:1;pointer-events:auto}
+.psheet{
+  position:fixed;left:0;right:0;bottom:0;z-index:58;background:#fff;
+  border-radius:20px 20px 0 0;box-shadow:0 -8px 40px -10px rgba(16,24,40,.3);
+  transform:translateY(102%);transition:transform .3s cubic-bezier(.22,.9,.3,1);
+  max-height:88vh;display:flex;flex-direction:column;padding-bottom:var(--safe-b)
+}
+.psheet.on{transform:translateY(0)}
 .esheet{
   position:fixed;left:0;right:0;bottom:0;z-index:56;background:#fff;
   border-radius:20px 20px 0 0;box-shadow:0 -8px 40px -10px rgba(16,24,40,.3);
@@ -322,353 +332,382 @@ nav.tabbar{
 }
 </style>
 </head>
-<body data-page-node-id="ycVMAIz59ZLbCLDgYzoPHz">
+<body>
 
-<header class="hd" data-page-node-id="BVwi0e7ttc0lStEMiUweP1">
-  <div class="hd-in" data-page-node-id="puGQwmYB2FGmaMdAb1FbAM">
-        <div class="hd-logo" id="hdLogo" data-page-node-id="xRctJc1ciAJhGnjMyJKHnY">
-      <svg viewBox="0 0 613.51 626.88" fill="#fff" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="天马" data-page-node-id="SKT5XBKk3xC0rw3Q4GxFbh">
-        <path d="M473.36,81.74l-5.1,8.04c-1.84,4.71-3.77,9.52-4.65,14.54-8.65,49.39,40.37,77.26,35.35,125.97l49.79-37.27c7.5-3.91,15.35-4.25,22.93-.27,6.07,3.18,33.94,36.1,38.03,43,7.73,13.05,2.04,30.6-2.7,43.95-7.04,19.82-18.42,40.04-31.28,56.49-4.97-11.84-11.63-27.78-10.66-40.86,1.13-15.22,22.12-22.2,18.86-38.08-1.12-5.45-16.15-20.89-21.04-23.73-4.31-2.5-9.56-2.56-13.95-.52-5.17,2.41-16.45,17.72-21.19,22.88-25.26,27.5-51.98,53.94-83.59,74.2-35.21,22.58-74.5,37.02-115.79,44.14-9.41,23.38-20.35,46.48-35.97,66.38-28.06,35.71-59.07,47.8-95.19,71.84-31.99,21.3-36.25,34.07-56.9,63.93-16.29,23.55-38.28,44.15-67.1,50.52,4.17-12.1,5.71-28.09,12.5-39.03,4.41-7.1,12.11-8.44,18.41-13.58,19.98-16.29,22.16-43.04,31.1-64.85,6.14-14.96,22.67-24.23,33.22-36.44,33.64-38.92,16.31-74.47,34.24-116.45,21.59-50.56,75.57-74.51,125.55-88.02,2.48-11.71-3.33-25.75-10.86-34.69-25.45-30.22-88.79-39.98-126-50.98-54.35-16.06-111.07-38.18-145.03-85.97-15.92-22.4-26.23-49.49-28.56-76.99,36.9,26.43,78.9,43.58,122.25,56.5,65.64,19.57,149.04,27.46,193.3,85.32,16.32,21.34,22.95,47.69,40.9,67.84l-7.82-23.45c-13.66-45.74-1.62-95.71,30.21-130.77l-30.21,12.78c-.48.15-.49-.59-.34-1.05,1.88-5.73,19.29-23.47,24.49-28.11,22.86-20.37,51.73-31.96,82.31-34.26,8.54-8.82,16.68-18.11,27.18-24.71l-.72,39.09c5.55,3.68,11.62,6.64,16.72,11,7.97,6.83,11.84,15.74,19.52,23.13,11.96,11.5,25.84,21.67,37.64,33.43,1.46,2.47,2.65,4.44,2.59,7.42-.07,3.53-2.68,20.28-4.37,22.69-1.92,2.73-17.13,2.95-20.6,2.22-4.63-.97-8.04-6.62-11.81-9.51-13.38-10.27-23.37-7.17-37.91-10.42-17.46-3.91-27.99-19.78-27.72-37.32Z" data-page-node-id="ZmF6LXMNVOeTy0nqRexg3o"/>
-        <path d="M314.86,257.29c-14.15-6.46-29.71-7.76-45.12-7.1-26.06,1.12-47.56,5.67-74.15.22-47.52-9.74-89.62-46.05-111.72-88.35,10.39,4.97,20.31,10.95,30.79,15.76,46.02,21.07,84.61,22.92,131.98,34.34,26.35,6.35,56.63,18.86,68.22,45.14Z" data-page-node-id="cUYecRIA8PQWrfEEbxagnT"/>
-        <path d="M198.3,342.58c-35.92,16.19-48.79,56.05-81.8,76.36-35.56,21.88-80.23,17.55-116.5-.3-.06-1.05,2.54-1.25,3.28-1.33,50.7-5.76,60.6-19.95,97.31-49.82,25.22-20.52,52.44-32.87,85.88-28.35,3.6.49,9.16,1.12,11.83,3.44Z" data-page-node-id="O2D7FJHGeCPoGaSTTek92o"/>
+<header class="hd">
+  <div class="hd-in">
+        <div class="hd-logo" id="hdLogo">
+      <svg viewBox="0 0 613.51 626.88" fill="#fff" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="天马">
+        <path d="M473.36,81.74l-5.1,8.04c-1.84,4.71-3.77,9.52-4.65,14.54-8.65,49.39,40.37,77.26,35.35,125.97l49.79-37.27c7.5-3.91,15.35-4.25,22.93-.27,6.07,3.18,33.94,36.1,38.03,43,7.73,13.05,2.04,30.6-2.7,43.95-7.04,19.82-18.42,40.04-31.28,56.49-4.97-11.84-11.63-27.78-10.66-40.86,1.13-15.22,22.12-22.2,18.86-38.08-1.12-5.45-16.15-20.89-21.04-23.73-4.31-2.5-9.56-2.56-13.95-.52-5.17,2.41-16.45,17.72-21.19,22.88-25.26,27.5-51.98,53.94-83.59,74.2-35.21,22.58-74.5,37.02-115.79,44.14-9.41,23.38-20.35,46.48-35.97,66.38-28.06,35.71-59.07,47.8-95.19,71.84-31.99,21.3-36.25,34.07-56.9,63.93-16.29,23.55-38.28,44.15-67.1,50.52,4.17-12.1,5.71-28.09,12.5-39.03,4.41-7.1,12.11-8.44,18.41-13.58,19.98-16.29,22.16-43.04,31.1-64.85,6.14-14.96,22.67-24.23,33.22-36.44,33.64-38.92,16.31-74.47,34.24-116.45,21.59-50.56,75.57-74.51,125.55-88.02,2.48-11.71-3.33-25.75-10.86-34.69-25.45-30.22-88.79-39.98-126-50.98-54.35-16.06-111.07-38.18-145.03-85.97-15.92-22.4-26.23-49.49-28.56-76.99,36.9,26.43,78.9,43.58,122.25,56.5,65.64,19.57,149.04,27.46,193.3,85.32,16.32,21.34,22.95,47.69,40.9,67.84l-7.82-23.45c-13.66-45.74-1.62-95.71,30.21-130.77l-30.21,12.78c-.48.15-.49-.59-.34-1.05,1.88-5.73,19.29-23.47,24.49-28.11,22.86-20.37,51.73-31.96,82.31-34.26,8.54-8.82,16.68-18.11,27.18-24.71l-.72,39.09c5.55,3.68,11.62,6.64,16.72,11,7.97,6.83,11.84,15.74,19.52,23.13,11.96,11.5,25.84,21.67,37.64,33.43,1.46,2.47,2.65,4.44,2.59,7.42-.07,3.53-2.68,20.28-4.37,22.69-1.92,2.73-17.13,2.95-20.6,2.22-4.63-.97-8.04-6.62-11.81-9.51-13.38-10.27-23.37-7.17-37.91-10.42-17.46-3.91-27.99-19.78-27.72-37.32Z"/>
+        <path d="M314.86,257.29c-14.15-6.46-29.71-7.76-45.12-7.1-26.06,1.12-47.56,5.67-74.15.22-47.52-9.74-89.62-46.05-111.72-88.35,10.39,4.97,20.31,10.95,30.79,15.76,46.02,21.07,84.61,22.92,131.98,34.34,26.35,6.35,56.63,18.86,68.22,45.14Z"/>
+        <path d="M198.3,342.58c-35.92,16.19-48.79,56.05-81.8,76.36-35.56,21.88-80.23,17.55-116.5-.3-.06-1.05,2.54-1.25,3.28-1.33,50.7-5.76,60.6-19.95,97.31-49.82,25.22-20.52,52.44-32.87,85.88-28.35,3.6.49,9.16,1.12,11.83,3.44Z"/>
       </svg>
     </div>
-    <div class="hd-t" data-page-node-id="ndvy88vzVJ7Dbb8fUdtqcg">
-      <h1 id="hdTitle" data-page-node-id="NdCXFvkrE5bJhhKfJJjpjf">天马收银系统</h1>
-      <span class="sub" id="hdSub" data-page-node-id="gT0vwyIQG9Fvz0UIrNS3mO">数据只存本机</span>
+    <div class="hd-t">
+      <h1 id="hdTitle">天马收银系统</h1>
+      <span class="sub" id="hdSub">数据只存本机</span>
     </div>
-    <button class="hd-bell" id="btnBackupBell" title="该备份数据了（点这里）" style="display:none" data-page-node-id="eTxBIAQk0kQuvuNJ1HUFS0">
-      <svg viewBox="0 0 24 24" fill="none" data-page-node-id="XHB2IUKy9cvGrncwb89moE"><path d="M12 3.2a6 6 0 0 0-6 6v3L4.7 15.4A1 1 0 0 0 5.6 17h12.8a1 1 0 0 0 .9-1.6L18 12.2v-3a6 6 0 0 0-6-6Z" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round" data-page-node-id="Eegxq07V3T8AChMuy87RQr"/><path d="M9.6 20a2.6 2.6 0 0 0 4.8 0" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" data-page-node-id="oENDLODVrtTLTHbPDYjlzo"/></svg>
-      <i data-page-node-id="ivCLAnGTZBZfN1otMGtKxx"></i>
+    <button class="hd-bell" id="btnBackupBell" title="该备份数据了（点这里）" style="display:none">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M12 3.2a6 6 0 0 0-6 6v3L4.7 15.4A1 1 0 0 0 5.6 17h12.8a1 1 0 0 0 .9-1.6L18 12.2v-3a6 6 0 0 0-6-6Z" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/><path d="M9.6 20a2.6 2.6 0 0 0 4.8 0" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>
+      <i></i>
     </button>
   </div>
 </header>
 
-<main data-page-node-id="rILIwG8xa7wFQJaKQfJfrA">
+<main>
 
-<section class="pane on" id="pane-add" data-page-node-id="MCCgIUMRj3EQa88heee8zK">
-  <div class="card" id="guideCard" style="display:none" data-page-node-id="DNEwFNmnfRuqj1gUuftdhQ">
-    <h2 data-page-node-id="F3Hbg4K52NOgq5jCmsV61m">三步上手</h2>
-    <p class="hint" style="margin:0" data-page-node-id="ktBhQNVpJ6pNodKrqPQERM">① 填「客户称呼」和「账单价」，其它都可以不填<br data-page-node-id="mje6odIZmKwR1ayUZFPJab">② 点最下面绿色「保存这一笔」<br data-page-node-id="EtmBlILM22FdoUPKmeJiFy">③ 切到「统计」看本月汇总，记得每隔一两周做一次备份</p>
+<section class="pane on" id="pane-add">
+  <div class="card" id="guideCard" style="display:none">
+    <h2>三步上手</h2>
+    <p class="hint" style="margin:0">① 填「客户称呼」和「账单价」，其它都可以不填<br>② 点最下面绿色「保存这一笔」<br>③ 切到「统计」看本月汇总，记得每隔一两周做一次备份</p>
   </div>
 
-  <div class="card" id="unpaidCard" style="display:none;border-color:var(--red)" data-page-node-id="ZSWLUbh2Km7khXROeQnOrL">
-    <h2 data-page-node-id="gafYe9LVrA7atTPZlrGBCn">未收尾款 <span class="tag" id="unpaidTag" data-page-node-id="fCCQgmNZpAWjirnBCW6XoF"></span></h2>
-    <div id="unpaidBox" data-page-node-id="qVCOFGNHTtIW5pXY7qVkLE"></div>
+  <div class="card" id="unpaidCard" style="display:none;border-color:var(--red)">
+    <h2>未收尾款 <span class="tag" id="unpaidTag"></span></h2>
+    <div id="unpaidBox"></div>
   </div>
 
-  <div class="card" id="followCard" style="display:none;border-color:var(--amber)" data-page-node-id="kPpQ1cZ2CAsaz8FJvYN4LP">
-    <h2 data-page-node-id="Ae4jaP5qDjmOMh74FXXBvj">待跟进 <span class="tag" id="followTag" data-page-node-id="f19gEo4HGAQpaRwFWEvlSV"></span></h2>
-    <div id="followBox" data-page-node-id="BFd0mlgdjIj3dfR20LIRSO"></div>
+  <div class="card" id="followCard" style="display:none;border-color:var(--amber)">
+    <h2>待跟进 <span class="tag" id="followTag"></span></h2>
+    <div id="followBox"></div>
   </div>
 
-  <div class="card" data-page-node-id="hbWQyzFvb1HSr11uFRxWBj">
-    <h2 data-page-node-id="BE7kS8f6kPbNTv4HgVFvt7">客户信息</h2>
-    <div class="f2" data-page-node-id="WlDFp37nXUWHGhIIdiuuRD">
-      <div class="fld" data-page-node-id="7HvUxjeWQnA0fflxHBLk4B"><label data-page-node-id="UAAVMCe7wz5vXDBHU4OSa1">客户称呼</label><input id="f_customer" list="custList" placeholder="张先生 / 王姐（可点历史客户）" autocomplete="off" data-page-node-id="AsdTbwpkGrqPIo4RKkLB60"></div>
-      <div class="fld" data-page-node-id="2nPoab7Y5Wy3BEswxKsGOG"><label data-page-node-id="z4Awmq2QNOZbhTTkthaYlW">联系方式</label><input id="f_contact" placeholder="电话 / 微信" autocomplete="off" inputmode="tel" data-page-node-id="OwyiOC3wnNEVdEvGLZKB5H"></div>
+  <div class="card">
+    <h2>客户信息</h2>
+    <div class="f2">
+      <div class="fld"><label>客户称呼</label><input id="f_customer" list="custList" placeholder="张先生 / 王姐（可点历史客户）" autocomplete="off"></div>
+      <div class="fld"><label>联系方式</label><input id="f_contact" placeholder="电话 / 微信" autocomplete="off" inputmode="tel"></div>
     </div>
-    <details class="datefold" data-page-node-id="i2gJZU4EYaWpAlaFYhWa5R">
-      <summary data-page-node-id="vZ6MfvXNNE5oisR9VLBnBj">接单日期 <span class="tag" id="dateTag" data-page-node-id="gy79t7SjFKwAKWZ8PgV3X7"></span></summary>
-      <div class="chips" id="dateChips" style="margin:10px 0" data-page-node-id="5iTiqXhZRQ7s6r9J55upim"></div>
-      <input type="date" id="f_date" data-page-node-id="Klfgf1EsKPDc1rLUizt2r6">
+    <details class="datefold">
+      <summary>接单日期 <span class="tag" id="dateTag"></span></summary>
+      <div class="chips" id="dateChips" style="margin:10px 0"></div>
+      <input type="date" id="f_date">
     </details>
   </div>
 
-  <div class="card" data-page-node-id="bt4AaVlYKR76VRFfCBHxED">
-    <h2 data-page-node-id="cZUUkMls6wnQ3IQROu9Ygr">金额 <span class="tag" data-page-node-id="zTsulsrVB5WYZxXTUDpYzm">都可以不填</span></h2>
-    <div class="f2" data-page-node-id="aEtSmoqwvd1JWcadxDfJZv">
-      <div class="fld" data-page-node-id="0cGmegpqyu8H7OU9WijPqX"><label data-page-node-id="yUTQWaSuJBPOE6usvzMrIC">账单价（元）</label><input type="text" id="f_amount" inputmode="decimal" placeholder="0.00" autocomplete="off" data-page-node-id="336hfljNNQle7treUACjZE"></div>
-      <div class="fld" data-page-node-id="Gh0gXo2jTaGZye70cGktVl"><label data-page-node-id="PeGOtyihMs82W5vkGEyP1N">定金（元）</label><input type="text" id="f_deposit" inputmode="decimal" placeholder="选填" autocomplete="off" data-page-node-id="dBCFWuuhirOLU3N2Fuz1nw"></div>
+  <div class="card">
+    <h2>金额 <span class="tag">都可以不填</span></h2>
+    <div class="f2">
+      <div class="fld"><label>账单价（元）</label><input type="text" id="f_amount" inputmode="decimal" placeholder="0.00" autocomplete="off"></div>
+      <div class="fld"><label>定金（元）</label><input type="text" id="f_deposit" inputmode="decimal" placeholder="选填" autocomplete="off"></div>
     </div>
-    <div id="moneyMore" style="display:none" data-page-node-id="52rTyCz63vBZUDaDLpNsBC">
-      <div class="f2" data-page-node-id="DFU5tR0Aqtr0So6kWnXXz7">
-        <div class="fld" data-page-node-id="iB0xNDGwp9PtroU0eCYMHi"><label data-page-node-id="PXT5UidrDziPdMFLzJlw3L">尾款（元）</label><input type="text" id="f_final" inputmode="decimal" placeholder="自动算" autocomplete="off" data-page-node-id="j5VRENnm70BExFcz68asFF"></div>
-        <div class="fld" data-page-node-id="2NA4ztBr72bngSTX8GWXVL"><label data-page-node-id="Iw0Cgq9ZhdXsuvml15fthq">成本（元）</label><input type="text" id="f_cost" inputmode="decimal" placeholder="选填" autocomplete="off" data-page-node-id="DqNTMIGpukkPyqzzcFxS0h"></div>
+    <div id="moneyMore" style="display:none">
+      <div class="f2">
+        <div class="fld"><label>尾款（元）</label><input type="text" id="f_final" inputmode="decimal" placeholder="自动算" autocomplete="off"></div>
+        <div class="fld"><label>成本（元）</label><input type="text" id="f_cost" inputmode="decimal" placeholder="选填" autocomplete="off"></div>
       </div>
-      <div class="fld last" data-page-node-id="gqMgAMyVPNJWTi3A1ib6Ax"><label data-page-node-id="nIhCy4rGws90nTBtUAQ4ci">其中：配件成本（选填）</label><input type="text" id="f_costmat" inputmode="decimal" placeholder="填了就能看出配件花了多少，人工 = 成本 − 配件" autocomplete="off" data-page-node-id="oTSxGm2mNpC1KZna0qNbxo"></div>
+      <div class="fld last"><label>其中：配件成本（选填）</label><input type="text" id="f_costmat" inputmode="decimal" placeholder="填了就能看出配件花了多少，人工 = 成本 − 配件" autocomplete="off"></div>
     </div>
-    <button class="btn ghost sm" id="btnMoneyMore" style="margin-top:2px" data-page-node-id="dbCoHO4f6H237gohQA0LGz">展开：尾款 / 成本 ▾</button>
-    <p class="hint" id="moneyHint" style="margin-top:11px;display:none" data-page-node-id="E9h9EfKiMMSxk9Nm31OXBi"></p>
+    <button class="btn ghost sm" id="btnMoneyMore" style="margin-top:2px">展开：尾款 / 成本 ▾</button>
+    <p class="hint" id="moneyHint" style="margin-top:11px;display:none"></p>
   </div>
 
-  <div class="card" data-page-node-id="S28wQ8jg7CpvWjMjfZ7WmB">
-    <h2 data-page-node-id="81z3jGuqRCGCCqCUVO2SRP">业务与进度 <span class="tag" data-page-node-id="0ckWHSbq9CF14zdj6BBCCS">点格子就能改</span></h2>
-    <div class="mini-grid" data-page-node-id="GHsDFEeqHPx3rkEp8BaSFn">
-      <button class="mini" id="p_source" data-page-node-id="dmBe7s3bXSmGxP81gEsBPv"><span class="k" data-page-node-id="6wjc5TW8lMfzLGbYbfmzTr">客户来源</span><span class="v ph" data-page-node-id="IBZpeVcTMAwy452hhXk97O">请选择</span></button>
-      <button class="mini" id="p_device" data-page-node-id="17rNTSmuH9gx30mhqKaKG1"><span class="k" data-page-node-id="pGGI217FB6Lbr0E54a760E">送修设备</span><span class="v ph" data-page-node-id="suVMlgGi3UKl5EWBIwEey2">请选择</span></button>
-      <button class="mini" id="p_fault" data-page-node-id="DaJnjtE7oY0M3pFJZuGYdm"><span class="k" data-page-node-id="jIXNQnhrvQp46yZvLIGPFQ">故障类型</span><span class="v ph" data-page-node-id="RGPvCPDz30UJ5EDHKejAXz">请选择</span></button>
-      <button class="mini" id="p_status" data-page-node-id="dffivlFS84VbDeRV1leNV1"><span class="k" data-page-node-id="UnA0bdLUHZS0CdoSOEFlEq">订单状态</span><span class="v" data-page-node-id="yMaBwa0sOS1rgLTyGH33Cl">跟进中</span></button>
-      <button class="mini" id="p_result" data-page-node-id="i7EbBxtjPOA0IvUZXGxz5S"><span class="k" data-page-node-id="F8jDdIXlQFC8STFYYF14bD">恢复结果</span><span class="v" data-page-node-id="iJ2X3IxjMi9kM3lYFsbZok">正在恢复</span></button>
-      <button class="mini" id="p_pay" data-page-node-id="rOkEenHMoVwVYhCwwCQCqX"><span class="k" data-page-node-id="eBkPq0cIR3mTj3nXB6AwHp">收款情况</span><span class="v" data-page-node-id="fk7BhNpBSxyEJIvoDv66Et">未付款</span></button>
+  <div class="card">
+    <h2>业务与进度 <span class="tag">点格子就能改</span></h2>
+    <div class="mini-grid">
+      <button class="mini" id="p_source"><span class="k">客户来源</span><span class="v ph">请选择</span></button>
+      <button class="mini" id="p_device"><span class="k">送修设备</span><span class="v ph">请选择</span></button>
+      <button class="mini" id="p_fault"><span class="k">故障类型</span><span class="v ph">请选择</span></button>
+      <button class="mini" id="p_status"><span class="k">订单状态</span><span class="v">跟进中</span></button>
+      <button class="mini" id="p_result"><span class="k">恢复结果</span><span class="v">正在恢复</span></button>
+      <button class="mini" id="p_pay"><span class="k">收款情况</span><span class="v">未付款</span></button>
     </div>
   </div>
 
-  <div class="card" data-page-node-id="BQHewAHU8ww4cBfMPBDAIE">
-    <h2 data-page-node-id="c0eY22nl6tTLEg0CikZjhH">备注</h2>
+  <div class="card">
+    <h2>备注</h2>
     <textarea id="f_note" rows="3" placeholder="想记什么就记什么，比如：开盘换头、客户急、明天交付"></textarea>
-    <div class="note-chipbar" data-page-node-id="Hi5zZoJ9BzKeCifzLgCS6a">
-      <div class="chips" id="noteChips" data-page-node-id="iatuuyosguJRntJpHCUazR"></div>
-      <button class="chip note-add" data-notemgr="1" data-page-node-id="YPWGNxHGoG0AV5BtSMnAhK">＋ 自定义</button>
+    <div class="note-chipbar">
+      <div class="chips" id="noteChips"></div>
+      <button class="chip note-add" data-notemgr="1">＋ 自定义</button>
     </div>
   </div>
 
-  <div class="card" data-page-node-id="r767ynYDfqjEvHIlsZHUY4">
-    <div class="btn-row" data-page-node-id="alGHRQNEH7Y8GdLgkUcAv7">
-      <button class="btn" id="btnReset" data-page-node-id="DTM4AJqVMGcbWglEWS4CC7">清空</button>
-      <button class="btn pri" id="btnSave" style="flex:1.6" data-page-node-id="iRRDMf0SYDE3Ihjcgvcey1">保存这一笔</button>
+  <div class="card">
+    <div class="btn-row">
+      <button class="btn" id="btnReset">清空</button>
+      <button class="btn pri" id="btnSave" style="flex:1.6">保存这一笔</button>
     </div>
-    <p class="hint" id="formMsg" style="margin-top:10px;text-align:center;min-height:18px" data-page-node-id="3Cp0DfuEGyjX8725M87w3W"></p>
-    <div id="lastSaved" style="display:none;margin-top:9px" data-page-node-id="6FnA7z4wYAW6yq4efCQgBp"></div>
-    <p class="quickline" id="quickLine" data-page-node-id="GP4XryCKn5UO9uhlQpyCBD"></p>
+    <p class="hint" id="formMsg" style="margin-top:10px;text-align:center;min-height:18px"></p>
+    <div id="lastSaved" style="display:none;margin-top:9px"></div>
+    <p class="quickline" id="quickLine"></p>
   </div>
 </section>
 
-<section class="pane" id="pane-stat" data-page-node-id="0oKNRQmcTSo10CuDg3tQyH">
-  <div class="segbar" data-page-node-id="JvD5NwdVpki6xH27p07xsP">
-    <button class="seg-search" id="statSearchBtn" title="搜索" data-page-node-id="oEGpVV4ve0VRWGALgmePyM">
-      <svg viewBox="0 0 24 24" fill="none" data-page-node-id="wEqHu2lTmbwHwZsDrjqswa"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2.2" data-page-node-id="z6Zgk5QB9gsXs6gm69a0rd"/><path d="M16.5 16.5L21 21" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" data-page-node-id="Fb8grdYJJi9CshLZpXGCy7"/></svg>
+<section class="pane" id="pane-stat">
+  <div class="segbar">
+    <button class="seg-search" id="statSearchBtn" title="搜索">
+      <svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2.2"/><path d="M16.5 16.5L21 21" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
     </button>
-    <div class="seg" id="segs" data-page-node-id="rUH6o94JZCu0SahO9qOBVz">
-      <button data-s="month" class="on" data-page-node-id="eFA8QTOctiRhXgytsy7x9G">按月</button>
-      <button data-s="day" data-page-node-id="Qq4pbFg2MiuRGd6VEm707M">按天</button>
-      <button data-s="year" data-page-node-id="gr5XDEXk8LTlQQ1vpYvCLt">按年</button>
-      <span class="seg-div" data-page-node-id="cuP5hf5wUPVyULHvrqN5Lg"></span>
-      <button data-s="source" data-page-node-id="dBxA6zur6XhyoNBOhj2DfH">按来源</button>
-      <button data-s="device" data-page-node-id="LsRe0nbxTzMoX5sD4be6DS">按设备</button>
-      <button data-s="fault" data-page-node-id="b8SKpiA05MVu9dbjHhUjsd">按故障</button>
-      <button data-s="result" data-page-node-id="RCY9OEb9lRDshgJBFr19vF">按结果</button>
+    <div class="seg" id="segs">
+      <button data-s="month" class="on">按月</button>
+      <button data-s="day">按天</button>
+      <button data-s="year">按年</button>
+      <span class="seg-div"></span>
+      <button data-s="source">按来源</button>
+      <button data-s="device">按设备</button>
+      <button data-s="fault">按故障</button>
+      <button data-s="result">按结果</button>
     </div>
-    <button class="seg-jump" id="btnJumpList" title="跳到明细" data-page-node-id="oqOrudgenAPzROPTlk6s4j">明细 ↓</button>
+    <button class="seg-jump" id="btnJumpList" title="跳到明细">明细 ↓</button>
   </div>
-  <div class="segsearch" id="statSearchWrap" data-page-node-id="DHFUowcPTzo2ncHa6dq7IP">
-    <input id="s_kw" placeholder="搜索：客户 / 电话 / 故障 / 备注" autocomplete="off" data-page-node-id="jjpXghWEPYQn6VG450D9B7">
-    <button class="btn sm ghost" id="statSearchClose" data-page-node-id="AmUmSIlmumaOh2R7TlMvpd">收起</button>
-  </div>
-
-  <div class="card" data-page-node-id="cPrRoLC8lHoS1ErlmExRiA">
-    <h2 data-page-node-id="Rb85xthy9i5WNIgKn0dNdO">接单情况 <span class="tag" id="statTag" data-page-node-id="eG2lnKaFnnRH3kIkcdKMxx"></span><span class="sp" id="statCtrl" data-page-node-id="QMz1ThteQfd9CMsRRnpQ9F"></span></h2>
-    <div class="stats" id="statCards" data-page-node-id="Bc1W2bAP9EEx3rzaYHE0s6"></div>
+  <div class="segsearch" id="statSearchWrap">
+    <input id="s_kw" placeholder="搜索：客户 / 电话 / 故障 / 备注" autocomplete="off">
+    <button class="btn sm ghost" id="statSearchClose">收起</button>
   </div>
 
-  <div class="card" id="statChartCard" data-page-node-id="dI86rs0OMrAMfPMpryK8nG">
-    <h2 id="statChartTitle" data-page-node-id="QM3fUpiMn5UsCilF3094vY">走势</h2>
-    <div id="statChart" data-page-node-id="mPWIzTO0vEXJE1mXPtRIY2"></div>
+  <div class="card">
+    <h2>接单情况 <span class="tag" id="statTag"></span><span class="sp" id="statCtrl"></span></h2>
+    <div class="stats" id="statCards"></div>
   </div>
 
-  <div class="card" data-page-node-id="0wK84GvvRCrD2m6sHTawYK">
-    <h2 id="statTableTitle" data-page-node-id="PjtxBboH2ig64HmTsvxFKZ">汇总</h2>
-    <div id="statTable" data-page-node-id="b6d1BPTbjQe8kaCnTI1Jxj"></div>
+  <div class="card" id="statChartCard">
+    <h2 id="statChartTitle">走势</h2>
+    <div id="statChart"></div>
   </div>
 
-  <div class="sec-t" id="secList" style="margin-top:24px;scroll-margin-top:78px" data-page-node-id="HmCRKAlwAiospxVIE9KBXk">全部记录</div>
-  <div class="card" data-page-node-id="5KaGs3tnCWpd4ukEEWeoPk">
-    <h2 data-page-node-id="inQGDMhzJ0XORymrx2VLex">筛选 <span class="sp" data-page-node-id="iFIlpdSoaMXgx8pl5ngyiH"><button class="btn sm ghost" id="btnClearFilter" data-page-node-id="1oqxmD3TIdfIa3FzNoEPJs">重置</button></span></h2>
-    <div class="fld" data-page-node-id="vNsf6H401aRy0kSMHB0SrM"><label data-page-node-id="uuxSMiRCeLrelNBt7mvD6F">月份</label><input type="month" id="q_month" data-page-node-id="NFwTm5ZYtxAqRLdnVeuqUR"></div>
-    <div class="f2" data-page-node-id="aiwKAOEsKS6iE1Ps6olIvw">
-      <div class="fld" data-page-node-id="I09YvpUmQnobMvyFdQk38B"><label data-page-node-id="oDRsS4xCwdhfUHvCACqr4H">客户来源</label><button class="pickbtn" id="q_p_source" data-page-node-id="yDuRyH4bBWMcJnEIbGwRZd"><span class="v ph" data-page-node-id="w4bs0xDHaxtnxQPxjaWm3Z">全部</span><svg viewBox="0 0 24 24" fill="none" data-page-node-id="hZ6VrDFsYXkyitTxd4N6G2"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" data-page-node-id="xzB3idKa6cxvV5PZLliOka"/></svg></button></div>
-      <div class="fld" data-page-node-id="XcspxTq5lMnr0Gg6gZBzUc"><label data-page-node-id="UxGJRQtZPw9tqLRma2MZ1g">订单状态</label><button class="pickbtn" id="q_p_status" data-page-node-id="2D37qRHFlPKdLbmiXPXEaT"><span class="v ph" data-page-node-id="ZtJ7LYeasvXyOPVw0yZmz0">全部</span><svg viewBox="0 0 24 24" fill="none" data-page-node-id="BdCsFtPIEVHynJkzzrfjV1"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" data-page-node-id="KkdGCN1RcWVlgCtlSg2ofZ"/></svg></button></div>
+  <div class="card">
+    <h2 id="statTableTitle">汇总</h2>
+    <div id="statTable"></div>
+  </div>
+
+  <div class="sec-t" id="secList" style="margin-top:24px;scroll-margin-top:78px">全部记录</div>
+  <div class="card">
+    <h2>筛选 <span class="sp"><button class="btn sm ghost" id="btnClearFilter">重置</button></span></h2>
+    <div class="fld"><label>月份</label><input type="month" id="q_month"></div>
+    <div class="f2">
+      <div class="fld"><label>客户来源</label><button class="pickbtn" id="q_p_source"><span class="v ph">全部</span><svg viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+      <div class="fld"><label>订单状态</label><button class="pickbtn" id="q_p_status"><span class="v ph">全部</span><svg viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
     </div>
-    <div class="fld last" data-page-node-id="oCK541JY6DC5j3u6R6xfqP"><label data-page-node-id="BmjAAwtGCjMBEjRxzUG7fn">搜索</label><input id="q_kw" placeholder="客户 / 电话 / 故障 / 备注" autocomplete="off" data-page-node-id="e7748i5bjs6tJSFCTM4pMl"></div>
+    <div class="fld last"><label>搜索</label><input id="q_kw" placeholder="客户 / 电话 / 故障 / 备注" autocomplete="off"></div>
   </div>
 
-  <div class="card" data-page-node-id="kJn7PNARdzraQ21yN39ctx">
-    <h2 data-page-node-id="SyBseWcFizGqzXudIeNzVF">共 <span class="tag" id="listCount" data-page-node-id="SXYDCzuUD6lAEqZF3OzXzu">0 条</span> <span class="sp" data-page-node-id="Aa0o4mjXCfrxWLCMdi07jS"><button class="btn sm" id="btnExportFiltered" data-page-node-id="lVlAMzk0lfXajeBddnFvKF">导出</button></span></h2>
-    <div id="listBox" data-page-node-id="JCPG36blEu6UyWwtZOTdSC"></div>
+  <div class="card">
+    <h2>共 <span class="tag" id="listCount">0 条</span> <span class="sp"><button class="btn sm" id="btnExportFiltered">导出</button></span></h2>
+    <div id="listBox"></div>
   </div>
 </section>
 
-<section class="pane" id="pane-more" data-page-node-id="UgMKAgNDCQCKdqFEK33xnh">
-  <div class="card" style="text-align:center;padding:20px 16px" data-page-node-id="kdQwzLAvsHWmhM2DfATGsE">
-    <img src="icon-180.png" alt="天马" style="width:72px;height:72px;border-radius:18px;box-shadow:0 6px 18px -8px rgba(16,24,40,.3)" onerror="this.style.display='none'" data-page-node-id="zFB7kleHslCETRjnkxW38d">
-    <div style="font-size:16px;font-weight:700;margin-top:11px" id="brandName" data-page-node-id="Ggw0g5W0NiNNCIpmsuqX2H">天马收银系统</div>
-    <div style="font-size:12.5px;color:var(--muted);margin-top:3px" data-page-node-id="A2fFHMgR0vMbIWzUfVupnC">天马专业数据恢复中心</div>
+<section class="pane" id="pane-more">
+  <div class="card" style="text-align:center;padding:20px 16px">
+    <img src="icon-180.png" alt="天马" style="width:72px;height:72px;border-radius:18px;box-shadow:0 6px 18px -8px rgba(16,24,40,.3)" onerror="this.style.display='none'">
+    <div style="font-size:16px;font-weight:700;margin-top:11px" id="brandName">天马收银系统</div>
+    <div style="font-size:12.5px;color:var(--muted);margin-top:3px">天马专业数据恢复中心</div>
   </div>
 
-  <div class="card" data-page-node-id="TGBuvNHUiHDDqG5rGkOfEg">
-    <h2 data-page-node-id="7B1EPfmTrBtvvtfN9Xuy5W">换手机 / 备份数据 <span class="tag" data-page-node-id="LsJv45YHpkdAAewk5CowUC">重要</span></h2>
-    <div class="warn" data-page-node-id="i6gyroKIHw1FEp3HG2N1GV">
-      记录只存在<b data-page-node-id="yaHE6fcIxEPmE0VMk7jCe1">这台手机的这个浏览器</b>里。<b data-page-node-id="OnDTZ14ZqszfHCmijbR6i4">把桌面图标删掉、清理浏览器数据、换手机，记录都可能一起消失。</b><br data-page-node-id="9nyvxLqZKmUEGuqgaLjqWG">
-      想长期留住数据：<b data-page-node-id="3zPDasc6GZwsFBiQvxq6Xe">每隔一两周点一次「备份」，把文件存进微信收藏</b>（微信收藏在云端，换手机也在）。<br data-page-node-id="c3l6MpNwrPUmyhsGb4MaiC">
-      <b data-page-node-id="of9mUaLNu8sXEFh9vLrnS1">要删图标 / 换图标 / 换手机之前，务必先点一次「备份」</b>；新设备上再「导入备份文件」就全回来了。
+  <div class="card">
+    <h2>换手机 / 备份数据 <span class="tag">重要</span></h2>
+    <div class="warn">
+      记录只存在<b>这台手机的这个浏览器</b>里。<b>把桌面图标删掉、清理浏览器数据、换手机，记录都可能一起消失。</b><br>
+      想长期留住数据：<b>每隔一两周点一次「备份」，把文件存进微信收藏</b>（微信收藏在云端，换手机也在）。<br>
+      <b>要删图标 / 换图标 / 换手机之前，务必先点一次「备份」</b>；新设备上再「导入备份文件」就全回来了。
     </div>
-    <div class="hr" data-page-node-id="C4mKRxApZ8wfm8VwjZFCFp"></div>
-    <div class="btn-row" data-page-node-id="ORrjlcbIA2W3GeHvSc31aI">
-      <button class="btn pri" id="btnBackup" data-page-node-id="kj7xXvpKAGTyAZFTBgFwpu">备份（存微信收藏 / 文件）</button>
-      <button class="btn" id="btnImport" data-page-node-id="pkHwmM5AZJkXmVPUyTCBWg">导入备份文件</button>
+    <div class="hr"></div>
+    <div class="btn-row">
+      <button class="btn pri" id="btnBackup">备份（存微信收藏 / 文件）</button>
+      <button class="btn" id="btnImport">导入备份文件</button>
     </div>
-    <input type="file" id="fileImport" accept=".json,application/json" style="display:none" data-page-node-id="HLjWj6fKBpLlFcCw4xnXbn">
-    <div class="sec-t" data-page-node-id="ImFCxz5x0xJaejPfgopu8d">手机之间传数据 · 扫一扫最快</div>
-    <div class="btn-row" data-page-node-id="5MSk522le0Tf7G6xlpW8sy">
-      <button class="btn sm pri" id="btnScan" data-page-node-id="vZIQn7ieFblZC9yS6iDlf6">扫一扫导入</button>
-      <button class="btn sm" id="btnGenCode" data-page-node-id="NjmYXvH1r3TC5J1GzGhK8p">生成同步码 / 二维码</button>
+    <input type="file" id="fileImport" accept=".json,application/json" style="display:none">
+    <div class="sec-t">手机之间传数据 · 扫一扫最快</div>
+    <div class="btn-row">
+      <button class="btn sm pri" id="btnScan">扫一扫导入</button>
+      <button class="btn sm" id="btnGenCode">生成同步码 / 二维码</button>
     </div>
-    <div class="btn-row" style="margin-top:9px" data-page-node-id="PXVAjYN9go2E6E6GeI8Uib">
-      <button class="btn sm" id="btnPasteCode" data-page-node-id="XBhBeXfNt1x2iZwGOyzxtL">粘贴同步码导入</button>
+    <div class="btn-row" style="margin-top:9px">
+      <button class="btn sm" id="btnPasteCode">粘贴同步码导入</button>
     </div>
-    <div id="codeWrap" style="display:none;margin-top:11px" data-page-node-id="RQ5I2OfBsXOtZESE3m1ZPF">
-      <div id="qrBox" style="text-align:center;margin-bottom:10px" data-page-node-id="TaSQwakqrNeNOQ2pDl8Dxg"></div>
-      <div class="hint" id="qrTip" style="text-align:center;margin:0 0 10px" data-page-node-id="HVBRXnAdU7wWAHNARIHkZD">让另一台手机用「扫一扫导入」扫这个二维码，数据直接过去</div>
-      <div class="codebox" id="codeOut" data-page-node-id="NBfrqoBVTCOVCrsjhX1kjw"></div>
-      <div class="btn-row" style="margin-top:10px;flex-wrap:wrap;gap:8px" data-page-node-id="nBPWrWDeR5IBoCgtEKjRdL">
-        <button class="btn sm" id="btnCopyCode" data-page-node-id="x5ltQdluSD90dFSowxg2Pf">复制同步码</button>
-        <button class="btn sm" id="btnShareCode" data-page-node-id="Z7A9S2UEaOD1ABMYcxSEW3">分享 / 发给微信</button>
-        <button class="btn sm" id="btnCloseCode" data-page-node-id="VFFkyLZeBN80Xw7CGWFQm3">收起</button>
+    <div id="codeWrap" style="display:none;margin-top:11px">
+      <div id="qrBox" style="text-align:center;margin-bottom:10px"></div>
+      <div class="hint" id="qrTip" style="text-align:center;margin:0 0 10px">让另一台手机用「扫一扫导入」扫这个二维码，数据直接过去</div>
+      <div class="codebox" id="codeOut"></div>
+      <div class="btn-row" style="margin-top:10px;flex-wrap:wrap;gap:8px">
+        <button class="btn sm" id="btnCopyCode">复制同步码</button>
+        <button class="btn sm" id="btnShareCode">分享 / 发给微信</button>
+        <button class="btn sm" id="btnCloseCode">收起</button>
       </div>
     </div>
-    <div id="pasteWrap" style="display:none;margin-top:11px" data-page-node-id="qeyb1PDKvH6aIGqQ8z7qXc">
+    <div id="pasteWrap" style="display:none;margin-top:11px">
       <textarea id="codeIn" class="codein" placeholder="把另一台设备生成的同步码粘贴到这里"></textarea>
-      <div class="btn-row" style="margin-top:10px" data-page-node-id="YIZfhPwkrNHGAhaI5g1RSV">
-        <button class="btn sm pri" id="btnDoImport" data-page-node-id="6bT1NvITehohuTDO8hVY0X">导入到这台设备</button>
-        <button class="btn sm" id="btnClosePaste" data-page-node-id="rfKeIFIvmnhHjZFR5tCGlC">取消</button>
+      <div class="btn-row" style="margin-top:10px">
+        <button class="btn sm pri" id="btnDoImport">导入到这台设备</button>
+        <button class="btn sm" id="btnClosePaste">取消</button>
       </div>
     </div>
-    <div class="hr" data-page-node-id="dR4ImBTqmCn2yTr065ZPjF"></div>
-    <div class="btn-row" data-page-node-id="FJAHwl7nQvqDqJxhaeK7aO"><button class="btn" id="btnCsvAll" data-page-node-id="OztCH9rzVAXlZ52L3IksWF">导出全部（Excel 可打开）</button></div>
-    <div class="btn-row" style="margin-top:10px" data-page-node-id="A9FX4GumFARrRjngVfRPSV"><button class="btn" id="btnReport" data-report="1" data-page-node-id="XsGncz0CHIMHWwwNsJzIfD">生成当月经营简报图</button></div>
-    <p class="hint" id="backupInfo" style="margin-top:13px" data-page-node-id="sFKF6YHRKUaogiLQqiOt5T"></p>
-    <div class="btn-row" style="margin-top:10px" data-page-node-id="gRAhjlZnktECJmiwBFxkNa"><button class="btn sm" id="btnCheckUpdate" data-page-node-id="F1ijYY31rTJJJ0uTPKj75A">检查更新（拉取最新版）</button></div>
+    <div class="hr"></div>
+    <div class="btn-row"><button class="btn" id="btnCsvAll">导出全部（Excel 可打开）</button></div>
+    <div class="btn-row" style="margin-top:10px"><button class="btn" id="btnReport" data-report="1">生成当月经营简报图</button></div>
+    <p class="hint" id="backupInfo" style="margin-top:13px"></p>
+    <div class="btn-row" style="margin-top:10px"><button class="btn sm" id="btnCheckUpdate">检查更新（拉取最新版）</button></div>
   </div>
 
-  <div class="card" id="cloudCard" style="display:none" data-page-node-id="Tk1VLRZuEKAOh8Y1bVuhhV">
-    <h2 data-page-node-id="IaQ745h7T9IZmlqCGIS0fw">云备份 <span class="tag" data-page-node-id="fmXeFfVvKumFGwvRCDh2j0">换手机也不怕</span></h2>
-    <div id="cloudSetup" data-page-node-id="h6RYapM4VOEnOFyeD98pvT">
-      <p class="hint" style="margin:0 0 11px" data-page-node-id="q5vmCbGVpCYfhG38djMkqW">设一个只有你知道的「<b data-page-node-id="YUwQDD3yNUMd74LjX0YHLH">备份口令</b>」（建议 8 位以上，别用生日）。以后换手机、删掉应用、清了浏览器，输入同一个口令就能把记录找回来。</p>
-      <div class="fld" data-page-node-id="Qx69odKIZzo5KfZJ2M95yN"><label data-page-node-id="LwT8BySoVsgvoPRnLF3HWG">设置备份口令</label><input type="text" id="cloudPass" placeholder="例如 tianma2026（记牢它）" autocomplete="off" data-page-node-id="uG5FxFYAp0GTWUIScglVQS"></div>
-      <div class="btn-row" data-page-node-id="lT6oJutDcMkpwAZxgdhtSR"><button class="btn pri" id="btnCloudSave" data-page-node-id="dP13S2GfjuHg1nHtrDdPJm">保存口令并启用云备份</button></div>
+  <div class="card" id="cloudCard" style="display:none">
+    <h2>云备份 <span class="tag">换手机也不怕</span></h2>
+    <div id="cloudSetup">
+      <p class="hint" style="margin:0 0 11px">设一个只有你知道的「<b>备份口令</b>」（建议 8 位以上，别用生日）。以后换手机、删掉应用、清了浏览器，输入同一个口令就能把记录找回来。</p>
+      <div class="fld"><label>设置备份口令</label><input type="text" id="cloudPass" placeholder="例如 tianma2026（记牢它）" autocomplete="off"></div>
+      <div class="btn-row"><button class="btn pri" id="btnCloudSave">保存口令并启用云备份</button></div>
     </div>
-    <div id="cloudPanel" style="display:none" data-page-node-id="b4OymDI1Csdfk7wU7hSoEz">
-      <p class="hint" id="cloudInfo" style="margin:0 0 11px" data-page-node-id="jEqQIz4KRhfGOAZSSHmPQd"></p>
-      <div class="btn-row" data-page-node-id="eiPsMl9P958DWdfNHBywSK">
-        <button class="btn pri" id="btnCloudUp" data-page-node-id="dg4f1PX8hRDnNTSfmoUqUe">备份到云</button>
-        <button class="btn" id="btnCloudDown" data-page-node-id="KFB8q3Vfl3TC9DLo1s4EqP">从云恢复</button>
+    <div id="cloudPanel" style="display:none">
+      <p class="hint" id="cloudInfo" style="margin:0 0 11px"></p>
+      <div class="btn-row">
+        <button class="btn pri" id="btnCloudUp">备份到云</button>
+        <button class="btn" id="btnCloudDown">从云恢复</button>
       </div>
-      <div class="btn-row" style="margin-top:9px" data-page-node-id="LHruW4UChhkCSZ9N7B9vtr">
-        <button class="btn sm" id="btnCloudDel" data-page-node-id="urSn9Mbf63oZMNYPMv7gPE">删除云端备份</button>
-        <button class="btn sm ghost" id="btnCloudReset" data-page-node-id="yofycMyZsxDkHSIDlOa1GE">换个口令</button>
+      <div class="btn-row" style="margin-top:9px">
+        <button class="btn sm" id="btnCloudDel">删除云端备份</button>
+        <button class="btn sm ghost" id="btnCloudReset">换个口令</button>
       </div>
-      <p class="hint" id="cloudMsg" style="margin-top:11px" data-page-node-id="uMm2QF6TDPObAAzUcQdylM"></p>
+      <p class="hint" id="cloudMsg" style="margin-top:11px"></p>
     </div>
   </div>
 
-  <div class="card" data-page-node-id="HfxNJK9mB9TCiCIBNEQ44A">
-    <h2 data-page-node-id="ulCuuqGhzL5EY5oHdqVWDq">提醒 <span class="tag" data-page-node-id="p9DWrlGytBqcP2HednLFra">加到手机日历</span></h2>
-    <p class="hint" style="margin:0 0 12px" data-page-node-id="Hlv780tysHya1d5Afy6JqN">网页关掉后没法自己弹消息（浏览器限制）。但可以把提醒写进你手机的「日历」——每天 20:00 提醒记账，每周日 10:00 提醒核对尾款，到点系统会响。</p>
-    <div class="btn-row" data-page-node-id="HTJ5xRJWpduSoWoXijR15Q"><button class="btn pri" id="btnIcs" data-page-node-id="TtBZaovIQFFRosKfpDa5jT">一键加入手机日历</button></div>
-    <div class="btn-row" style="margin-top:9px" data-page-node-id="LTAIOpNm1gtnpoqolAXqIl"><button class="btn sm" id="btnIcsDl" data-page-node-id="OvkfCiO36FAWH6qa2mOXmr">下载日历文件（备选）</button></div>
-    <p class="hint" style="margin-top:10px" data-page-node-id="iaXBQor4aDVhEWNF2BFb8T">点第一下会直接唤起手机的「日历」并问你是否订阅，同意就行。若没反应（个别安卓机型），就用下面那个下载文件的方式。</p>
+  <div class="card">
+    <h2>提醒 <span class="tag">加到手机日历</span></h2>
+    <p class="hint" style="margin:0 0 12px">网页关掉后没法自己弹消息（浏览器限制）。但可以把提醒写进你手机的「日历」——每天 20:00 提醒记账，每周日 10:00 提醒核对尾款，到点系统会响。</p>
+    <div class="btn-row"><button class="btn pri" id="btnIcs">一键加入手机日历</button></div>
+    <div class="btn-row" style="margin-top:9px"><button class="btn sm" id="btnIcsDl">下载日历文件（备选）</button></div>
+    <p class="hint" style="margin-top:10px">点第一下会直接唤起手机的「日历」并问你是否订阅，同意就行。若没反应（个别安卓机型），就用下面那个下载文件的方式。</p>
   </div>
 
-  <div class="card" data-page-node-id="fHT3BGRxkVs1SviTHaomnb">
-    <details class="datefold" style="margin-top:0;border-top:none;padding-top:0" data-page-node-id="lSS6LqNYCwNOGvBwBDGIir">
-      <summary data-page-node-id="IISnTHQVENkXEXF8Mda68a">选项怎么改　<span class="tag" data-page-node-id="IyI5drelGmLGQ7qpnfYQTG">点开看</span></summary>
-      <p class="hint" style="margin-top:10px" data-page-node-id="Sbd8zQOijSKU7FvmZHGdH1">不用来这里改。记账时点开「客户来源 / 送修设备 / 故障类型」，<b data-page-node-id="ezMv4KKtpiZIgq5pP95Hac">直接输入新选项</b>就会自动存下来；每个选项右边的 <b data-page-node-id="sjUmP2p5bsHCvDPaXg4tLx">删</b> 按钮可以去掉不要的。历史记录不受影响。</p>
+  <div class="card">
+    <details class="datefold" style="margin-top:0;border-top:none;padding-top:0">
+      <summary>选项怎么改　<span class="tag">点开看</span></summary>
+      <p class="hint" style="margin-top:10px">不用来这里改。记账时点开「客户来源 / 送修设备 / 故障类型」，<b>直接输入新选项</b>就会自动存下来；每个选项右边的 <b>删</b> 按钮可以去掉不要的。历史记录不受影响。</p>
     </details>
   </div>
 
-  <div class="card" data-page-node-id="aBl6DNiLBAu6ZiF7UmKnH9">
-    <h2 data-page-node-id="h6jogsvnSsU67r5fIBZsqM">最近删除 <span class="tag" id="trashTag" data-page-node-id="HrI3kZr8mZ9REw9OuN9GpO">0 条</span> <span class="sp" data-page-node-id="GeDa5Utop6GJGCr4wB0kLH"><button class="btn sm ghost" id="btnClearTrash" data-page-node-id="a3VgHWuBClDR7jr2jft2qj">清空</button></span></h2>
-    <div id="trashBox" data-page-node-id="lyixODXyw5n2pO0qoHieht"></div>
+  <div class="card">
+    <h2>最近删除 <span class="tag" id="trashTag">0 条</span> <span class="sp"><button class="btn sm ghost" id="btnClearTrash">清空</button></span></h2>
+    <div id="trashBox"></div>
   </div>
 
-  <div class="card" data-page-node-id="PSe1QumpxWf0pXf8hRruMQ">
-    <h2 data-page-node-id="SDtFA8YWG8t9NCofo9tRuL">清除数据</h2>
-    <div class="btn-row" data-page-node-id="1GOG2bRqWBHiBOY6Hf5K4C"><button class="btn danger" id="btnWipe" data-page-node-id="XwmUPNwbGD2XK50EY2JYw8">清空全部记录</button></div>
-    <p class="hint" style="margin-top:11px" data-page-node-id="OOqzjRwHh3DFN29mAs1H0J">会先自动导出一份备份文件，再清空。</p>
+  <div class="card">
+    <h2>清除数据</h2>
+    <div class="btn-row"><button class="btn danger" id="btnWipe">清空全部记录</button></div>
+    <p class="hint" style="margin-top:11px">会先自动导出一份备份文件，再清空。</p>
   </div>
 
-  <p class="hint" style="text-align:center;padding:6px 0 20px;color:var(--faint)" data-page-node-id="mMKANxShjNAiq10kngbKc1">天马收银系统 · 完全离线 · 无需联网</p>
+  <p class="hint" style="text-align:center;padding:6px 0 20px;color:var(--faint)">天马收银系统 · 完全离线 · 无需联网</p>
 </section>
 
 </main>
 
-<nav class="tabbar" data-page-node-id="RQx8rFibctJq7M2tjlp98o">
-  <div class="tb-in" data-page-node-id="6p5xAH5uSgWUvgR93ySn34">
-    <button data-tab="add" class="on" data-page-node-id="6CPOh5t9n0YmQVmuEhRivb">
-      <svg viewBox="0 0 24 24" data-page-node-id="AD5P8iuMHKOuFY5hAuy7O2"><path d="M12 5v14M5 12h14" data-page-node-id="J4gMvE2yxFEuE5mxcWe22f"/></svg>
-      <span data-page-node-id="DBCggZZYOjUsdDuVrmq620">记一笔</span>
+<nav class="tabbar">
+  <div class="tb-in">
+    <button data-tab="add" class="on">
+      <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+      <span>记一笔</span>
     </button>
-    <button data-tab="stat" data-page-node-id="O1ivNT1w3eg7kaFzhJwNTE">
-      <svg viewBox="0 0 24 24" data-page-node-id="8dMJAQk7XvP9u67pmIiC35"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2" data-page-node-id="C5PI9AHmUWhuTiu0kWXFxa"/></svg>
-      <span data-page-node-id="1BF6GdPmS2783G1YHIyXCp">统计</span>
+    <button data-tab="stat">
+      <svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>
+      <span>统计</span>
     </button>
-    <button data-tab="more" data-page-node-id="LAY5PXK5ngXVwq85cwc39A">
-      <svg viewBox="0 0 24 24" data-page-node-id="c3WaBpKnrlo2pYVIZXDLmu"><circle cx="12" cy="12" r="1.4" data-page-node-id="nBi96yUPpIQuVIawX6XlS6"/><circle cx="5" cy="12" r="1.4" data-page-node-id="NZ81r7RR8HvPyAZSgmFbey"/><circle cx="19" cy="12" r="1.4" data-page-node-id="z4LwJhRi9BXvCuHbWVhQrM"/></svg>
-      <span data-page-node-id="I4E4OWoqakwRbx2mCObZzE">更多</span>
+    <button data-tab="more">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="1.4"/><circle cx="5" cy="12" r="1.4"/><circle cx="19" cy="12" r="1.4"/></svg>
+      <span>更多</span>
     </button>
   </div>
 </nav>
 
-<div class="mask" id="mask" data-page-node-id="M8mTwHSEbpLQacVzBUtUPp"></div>
-<div class="sheet" id="sheet" data-page-node-id="9KAX3dI1OpxQvl5X2XDDnd">
-  <div class="sh-hd" data-page-node-id="rHuS9MUcI5Sl5BF8tbnkbG">
-    <h3 id="shTitle" data-page-node-id="IInp9deTgvkqmDejV2A3bY">请选择</h3>
-    <button class="btn sm ghost" id="shClose" data-page-node-id="i7WoBjXEGNDDIBa8phUcRT">关闭</button>
+<div class="mask" id="mask"></div>
+<div class="sheet" id="sheet">
+  <div class="sh-hd">
+    <h3 id="shTitle">请选择</h3>
+    <button class="btn sm ghost" id="shClose">关闭</button>
   </div>
-  <div class="sh-inp" id="shInp" style="display:none" data-page-node-id="wd05QEhEMYeZjbq4LubZGB">
-    <input id="shInput" placeholder="直接输入" autocomplete="off" data-page-node-id="BUoLvrKltVM2kmde8xox9s">
+  <div class="sh-inp" id="shInp" style="display:none">
+    <input id="shInput" placeholder="直接输入" autocomplete="off">
   </div>
-  <div class="sh-bd" id="shBody" data-page-node-id="lcf6BKvddgZBb3FBuDpEXR"></div>
-  <div class="sh-ft" data-page-node-id="oWEiqIUkiIpAUKuIBhCk8s">
-    <button class="btn sm" id="shClear" style="flex:1" data-page-node-id="hlIiojm6jnhoqEyibAqrAG">清空这一项</button>
-    <button class="btn pri sm" id="shOk" style="flex:1.4" data-page-node-id="aBwEg8GICjTonbIF89A7wU">确定</button>
-  </div>
-</div>
-
-<div class="scanmask" id="scanMask" data-page-node-id="VOU0DG16DcNMADiW9gpDAW">
-  <div class="scan-hd" data-page-node-id="VOf0csieu3Kqaqzxp9C0yP">
-    <span data-page-node-id="URlOIQMUDj2hWDNJ1PvX8e">对准另一台手机上的二维码</span>
-    <button class="btn sm ghost" id="btnScanClose" style="color:#fff;margin-left:auto" data-page-node-id="arvfN9gAyQ55zKWDqmQvXu">关闭</button>
-  </div>
-  <video id="scanVideo" playsinline muted autoplay data-page-node-id="hvS31sw1AWt19vNAOuGl4j"></video>
-  <div class="scan-tip" id="scanTip" data-page-node-id="jPaUwso7bsJVjCktTEz2y1">正在打开摄像头…</div>
-</div>
-
-<div class="emask" id="emask" data-page-node-id="7d5cAkWGavD5wJdD9f0YOL"></div>
-<div class="esheet" id="esheet" data-page-node-id="qSDJxylh4qnRct07pqgBHM">
-  <div class="sh-hd" data-page-node-id="l6xfxQDE61iNXpSWKgTUL7">
-    <h3 data-page-node-id="spaBoIsVWimrp9PYjJDXDm">修改记录</h3>
-    <button class="btn sm ghost" id="eClose" data-page-node-id="S7aQ4zfRc28qzkXour8YBP">关闭</button>
-  </div>
-  <div class="es-bd" data-page-node-id="uvZMF2ESc75aDnW7SNu01s">
-    <div class="f2" data-page-node-id="eK1Mlp094sJANkrx8eveRl">
-      <div class="fld" data-page-node-id="4FbXCVGmHwgpx1COKxKTjm"><label data-page-node-id="Hw3YCDdwZ1BDOaM1wX5hs8">客户称呼</label><input id="e_customer" placeholder="张先生 / 王姐" autocomplete="off" data-page-node-id="J2sBxCiVCnsz9VQtmjKnjG"></div>
-      <div class="fld" data-page-node-id="WzyPs1WHaZfYfDuebIhDLm"><label data-page-node-id="HVevfglJ80GJXJWdKZsjIN">联系方式</label><input id="e_contact" placeholder="电话 / 微信" autocomplete="off" inputmode="tel" data-page-node-id="d3BEqxFfbhiRtHJwh8gErh"></div>
-    </div>
-    <div class="f2" data-page-node-id="MSjhveSH0OOdHf8SQHkygZ">
-      <div class="fld" data-page-node-id="OI379U5qBR3Sbe4v6qAZo7"><label data-page-node-id="IApyUSpAcXDqrRnYBNOpF4">账单价（元）</label><input type="text" id="e_amount" inputmode="decimal" placeholder="0.00" autocomplete="off" data-page-node-id="FPDxUImRiBnmJAUPk2nLTT"></div>
-      <div class="fld" data-page-node-id="2vg08z6vSYxZz8v8MVyBGe"><label data-page-node-id="On5IffNbNTRnLHnBaD5rci">收款情况</label><button class="pickbtn" id="e_pay" data-page-node-id="DzkGXQupuK9IAmNVQNXLJR"><span class="v ph" data-page-node-id="OLc2AVic2zJBXSgFbyAfhB">请选择</span><svg viewBox="0 0 24 24" fill="none" data-page-node-id="BPIXbdhLcI05ewI7XCcKNx"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" data-page-node-id="HOIHMs5St1kleW3i5X3WM9"/></svg></button></div>
-    </div>
-    <div class="fld last" data-page-node-id="mosfcnS372ga7PUJM6omCD"><label data-page-node-id="G4WGO4xtlwr4pr29hGpG3G">备注</label><textarea id="e_note" rows="2" placeholder="想记什么就记什么"></textarea></div>
-
-    <button class="btn sm ghost wide" id="eMoreBtn" style="margin-top:12px" data-page-node-id="p23k14eGCAStXAXUaxHdqU">展开更多字段 ▾</button>
-
-    <div class="es-more" id="eMore" data-page-node-id="9SF8lC0u1TJSdlzypBAYtn">
-      <div class="hr" data-page-node-id="ZWHKcdanGgaHGiozMpClxb"></div>
-      <div class="fld" data-page-node-id="1XEBMGT06Psjt8GP0GMwjv"><label data-page-node-id="vECxYnfHFsMYBkemE02mD0">接单日期</label><input type="date" id="e_date" data-page-node-id="K4ao5DYVfhbSe9TVnU891a"></div>
-      <div class="f2" data-page-node-id="axx9ieDy5gHpSxEZAkrHfi">
-        <div class="fld" data-page-node-id="Qn2yERBspJE8rHT5eYfV9V"><label data-page-node-id="IiONynxBzJU0wt7eXERM0j">客户来源</label><button class="pickbtn" id="e_source" data-page-node-id="dqwrr6Phef2wnQbFMOI3hm"><span class="v ph" data-page-node-id="3BQPFIYcb45C1Txj7V3FIV">请选择</span><svg viewBox="0 0 24 24" fill="none" data-page-node-id="8XU41HSWXBmlIprkrgg6VP"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" data-page-node-id="KtYIMt2Cv0OLC5PCjcwTUi"/></svg></button></div>
-        <div class="fld" data-page-node-id="Mq18BVVgMESbhkk6h3UL2R"><label data-page-node-id="REsJuKMkBdV6nsx8vn2xbM">送修设备</label><button class="pickbtn" id="e_device" data-page-node-id="BmQxOeBDhr4RVqDCSqrbqj"><span class="v ph" data-page-node-id="aMX3gyQ5X4EtrQjsove9sf">请选择</span><svg viewBox="0 0 24 24" fill="none" data-page-node-id="DuQPmKJbLjEvTPMpXpSYZt"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" data-page-node-id="woPPnQpDP6FKm4Cm35LlWi"/></svg></button></div>
-      </div>
-      <div class="fld" data-page-node-id="xFqQOr5Xlg7rAFDNShFEKy"><label data-page-node-id="NzozdE3ojUDd9rELBc4JW2">故障类型</label><button class="pickbtn" id="e_fault" data-page-node-id="p8IWp6LlmzyhmcQ2F5Shou"><span class="v ph" data-page-node-id="0D12Hfi4u96f0T2mMZ8Acp">请选择</span><svg viewBox="0 0 24 24" fill="none" data-page-node-id="JTAtp29sZsik3U7f5C5uoH"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" data-page-node-id="95r4owCDkwWzrrrTU7brpx"/></svg></button></div>
-      <div class="f2" data-page-node-id="2fZEtoFe2XVRePKv4LO3De">
-        <div class="fld" data-page-node-id="OrA4jtZrbQ3U5jOWBKA9l4"><label data-page-node-id="PrNJDKRob34QDdV1fIAaS2">订单状态</label><button class="pickbtn" id="e_status" data-page-node-id="FuMQCLbNodvuat8PnF69rj"><span class="v ph" data-page-node-id="dYVuSD14RbKbj21JToEzDF">请选择</span><svg viewBox="0 0 24 24" fill="none" data-page-node-id="oi2KQ6RfOGQzqEQlt0rcdq"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" data-page-node-id="HgVhpITDwhfuOO5JPDsthr"/></svg></button></div>
-        <div class="fld" data-page-node-id="ssyqo7vYAywzDDnaGzCKWC"><label data-page-node-id="ndU3myV7zPS0hVIigxCwt6">恢复结果</label><button class="pickbtn" id="e_result" data-page-node-id="WDecvzEGcLjQlyJz6sGxgh"><span class="v ph" data-page-node-id="CgsScPISc21FA4G9Coegut">请选择</span><svg viewBox="0 0 24 24" fill="none" data-page-node-id="xksMjv9QW96yKDJjHMRZvG"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" data-page-node-id="Y6h9tbnodCU1vmZI1CfYfa"/></svg></button></div>
-      </div>
-      <div class="f2" data-page-node-id="GHqzoJtxuIuMeHzS1IDWt1">
-        <div class="fld" data-page-node-id="OvomjFqpQ6Ao0i28uXrFpv"><label data-page-node-id="Iy33JDpEeBYF5EdVg5fDGE">定金（元）</label><input type="text" id="e_deposit" inputmode="decimal" placeholder="选填" autocomplete="off" data-page-node-id="bfntsMeU4vN27RY7PVLRhw"></div>
-        <div class="fld" data-page-node-id="YeEKn5rJDMK8DJYswli1np"><label data-page-node-id="JqH1F1BEmpsjbXDl7AGHag">成本（元）</label><input type="text" id="e_cost" inputmode="decimal" placeholder="选填" autocomplete="off" data-page-node-id="6TZshqKibGBZEsijqqCfkC"></div>
-      </div>
-    </div>
-  </div>
-  <div class="sh-ft" data-page-node-id="DndLABXQ0eDgpXLXfadzsC">
-    <button class="btn sm" id="eCancel" style="flex:1" data-page-node-id="4682vHE8daQUUzLSLoHe0O">取消</button>
-    <button class="btn pri sm" id="eSave" style="flex:1.4" data-page-node-id="DQIvO6RubnG9iavl6nkA9f">保存修改</button>
+  <div class="sh-bd" id="shBody"></div>
+  <div class="sh-ft">
+    <button class="btn sm" id="shClear" style="flex:1">清空这一项</button>
+    <button class="btn pri sm" id="shOk" style="flex:1.4">确定</button>
   </div>
 </div>
 
-<div class="toast" id="toast" data-page-node-id="NgUBiPCG7h5ySSnx1HfYUx"></div>
-<datalist id="custList" data-page-node-id="VDpg1sabYdGIxxjGWgTHEq"></datalist>
+<div class="scanmask" id="scanMask">
+  <div class="scan-hd">
+    <span>对准另一台手机上的二维码</span>
+    <button class="btn sm ghost" id="btnScanClose" style="color:#fff;margin-left:auto">关闭</button>
+  </div>
+  <video id="scanVideo" playsinline muted autoplay></video>
+  <div class="scan-tip" id="scanTip">正在打开摄像头…</div>
+</div>
+
+<div class="emask" id="emask"></div>
+<div class="esheet" id="esheet">
+  <div class="sh-hd">
+    <h3>修改记录</h3>
+    <button class="btn sm ghost" id="eClose">关闭</button>
+  </div>
+  <div class="es-bd">
+    <div class="f2">
+      <div class="fld"><label>客户称呼</label><input id="e_customer" placeholder="张先生 / 王姐" autocomplete="off"></div>
+      <div class="fld"><label>联系方式</label><input id="e_contact" placeholder="电话 / 微信" autocomplete="off" inputmode="tel"></div>
+    </div>
+    <div class="f2">
+      <div class="fld"><label>账单价（元）</label><input type="text" id="e_amount" inputmode="decimal" placeholder="0.00" autocomplete="off"></div>
+      <div class="fld"><label>收款情况</label><button class="pickbtn" id="e_pay"><span class="v ph">请选择</span><svg viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+    </div>
+    <div class="fld last"><label>备注</label><textarea id="e_note" rows="2" placeholder="想记什么就记什么"></textarea></div>
+
+    <button class="btn sm ghost wide" id="eMoreBtn" style="margin-top:12px">展开更多字段 ▾</button>
+
+    <div class="es-more" id="eMore">
+      <div class="hr"></div>
+      <div class="fld"><label>接单日期</label><input type="date" id="e_date"></div>
+      <div class="f2">
+        <div class="fld"><label>客户来源</label><button class="pickbtn" id="e_source"><span class="v ph">请选择</span><svg viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+        <div class="fld"><label>送修设备</label><button class="pickbtn" id="e_device"><span class="v ph">请选择</span><svg viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+      </div>
+      <div class="fld"><label>故障类型</label><button class="pickbtn" id="e_fault"><span class="v ph">请选择</span><svg viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+      <div class="f2">
+        <div class="fld"><label>订单状态</label><button class="pickbtn" id="e_status"><span class="v ph">请选择</span><svg viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+        <div class="fld"><label>恢复结果</label><button class="pickbtn" id="e_result"><span class="v ph">请选择</span><svg viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+      </div>
+      <div class="f2">
+        <div class="fld"><label>定金（元）</label><input type="text" id="e_deposit" inputmode="decimal" placeholder="选填" autocomplete="off"></div>
+        <div class="fld"><label>成本（元）</label><input type="text" id="e_cost" inputmode="decimal" placeholder="选填" autocomplete="off"></div>
+      </div>
+      <div class="hr"></div>
+      <div class="fld">
+        <label>收款流水 <span class="tag" id="ePaidTag"></span></label>
+        <div id="ePays"></div>
+        <button class="btn sm ghost" id="eAddPay" style="margin-top:6px">＋记一笔收款</button>
+        <p class="hint" style="margin-top:8px;color:var(--faint);font-size:12.5px">每一笔收款都有日期。改「收款情况」会自动重写这里的流水。</p>
+      </div>
+    </div>
+  </div>
+  <div class="sh-ft">
+    <button class="btn sm" id="eCancel" style="flex:1">取消</button>
+    <button class="btn pri sm" id="eSave" style="flex:1.4">保存修改</button>
+  </div>
+</div>
+
+<div class="pmask" id="pmask"></div>
+<div class="psheet" id="psheet">
+  <div class="sh-hd">
+    <h3 id="pTitle">收款</h3>
+    <button class="btn sm ghost" id="pClose">关闭</button>
+  </div>
+  <div class="es-bd">
+    <p class="hint" id="pSub" style="margin:0 0 12px"></p>
+    <div class="fld"><label>收款金额（元）</label><input type="text" id="p_amount" inputmode="decimal" placeholder="0.00" autocomplete="off"></div>
+    <div class="fld"><label>收款日期</label><input type="date" id="p_date"></div>
+    <div class="btn-row" style="margin-top:8px;gap:8px">
+      <button class="btn sm" id="pFull" style="flex:1">收清尾款</button>
+      <button class="btn sm" id="pHalf" style="flex:1">收一半</button>
+    </div>
+    <p class="hint" style="margin-top:11px;color:var(--faint);font-size:12.5px">收款日期默认今天。哪一天点的收款，钱就算在哪一天的实收里。</p>
+  </div>
+  <div class="sh-ft">
+    <button class="btn sm" id="pCancel" style="flex:1">取消</button>
+    <button class="btn pri sm" id="pOk" style="flex:1.4">记下这笔收款</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<datalist id="custList"></datalist>
 
 <script>
 var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",n="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-$",e={};function t(r,o){if(!e[r]){e[r]={};for(var n=0;n<r.length;n++)e[r][r.charAt(n)]=n}return e[r][o]}var i={compressToBase64:function(r){if(null==r)return"";var n=i._compress(r,6,function(r){return o.charAt(r)});switch(n.length%4){default:case 0:return n;case 1:return n+"===";case 2:return n+"==";case 3:return n+"="}},decompressFromBase64:function(r){return null==r?"":""==r?null:i._decompress(r.length,32,function(n){return t(o,r.charAt(n))})},compressToUTF16:function(o){return null==o?"":i._compress(o,15,function(o){return r(o+32)})+" "},decompressFromUTF16:function(r){return null==r?"":""==r?null:i._decompress(r.length,16384,function(o){return r.charCodeAt(o)-32})},compressToUint8Array:function(r){for(var o=i.compress(r),n=new Uint8Array(2*o.length),e=0,t=o.length;e<t;e++){var s=o.charCodeAt(e);n[2*e]=s>>>8,n[2*e+1]=s%256}return n},decompressFromUint8Array:function(o){if(null==o)return i.decompress(o);for(var n=new Array(o.length/2),e=0,t=n.length;e<t;e++)n[e]=256*o[2*e]+o[2*e+1];var s=[];return n.forEach(function(o){s.push(r(o))}),i.decompress(s.join(""))},compressToEncodedURIComponent:function(r){return null==r?"":i._compress(r,6,function(r){return n.charAt(r)})},decompressFromEncodedURIComponent:function(r){return null==r?"":""==r?null:(r=r.replace(/ /g,"+"),i._decompress(r.length,32,function(o){return t(n,r.charAt(o))}))},compress:function(o){return i._compress(o,16,function(o){return r(o)})},_compress:function(r,o,n){if(null==r)return"";var e,t,i,s={},u={},a="",p="",c="",l=2,f=3,h=2,d=[],m=0,v=0;for(i=0;i<r.length;i+=1)if(a=r.charAt(i),Object.prototype.hasOwnProperty.call(s,a)||(s[a]=f++,u[a]=!0),p=c+a,Object.prototype.hasOwnProperty.call(s,p))c=p;else{if(Object.prototype.hasOwnProperty.call(u,c)){if(c.charCodeAt(0)<256){for(e=0;e<h;e++)m<<=1,v==o-1?(v=0,d.push(n(m)),m=0):v++;for(t=c.charCodeAt(0),e=0;e<8;e++)m=m<<1|1&t,v==o-1?(v=0,d.push(n(m)),m=0):v++,t>>=1}else{for(t=1,e=0;e<h;e++)m=m<<1|t,v==o-1?(v=0,d.push(n(m)),m=0):v++,t=0;for(t=c.charCodeAt(0),e=0;e<16;e++)m=m<<1|1&t,v==o-1?(v=0,d.push(n(m)),m=0):v++,t>>=1}0==--l&&(l=Math.pow(2,h),h++),delete u[c]}else for(t=s[c],e=0;e<h;e++)m=m<<1|1&t,v==o-1?(v=0,d.push(n(m)),m=0):v++,t>>=1;0==--l&&(l=Math.pow(2,h),h++),s[p]=f++,c=String(a)}if(""!==c){if(Object.prototype.hasOwnProperty.call(u,c)){if(c.charCodeAt(0)<256){for(e=0;e<h;e++)m<<=1,v==o-1?(v=0,d.push(n(m)),m=0):v++;for(t=c.charCodeAt(0),e=0;e<8;e++)m=m<<1|1&t,v==o-1?(v=0,d.push(n(m)),m=0):v++,t>>=1}else{for(t=1,e=0;e<h;e++)m=m<<1|t,v==o-1?(v=0,d.push(n(m)),m=0):v++,t=0;for(t=c.charCodeAt(0),e=0;e<16;e++)m=m<<1|1&t,v==o-1?(v=0,d.push(n(m)),m=0):v++,t>>=1}0==--l&&(l=Math.pow(2,h),h++),delete u[c]}else for(t=s[c],e=0;e<h;e++)m=m<<1|1&t,v==o-1?(v=0,d.push(n(m)),m=0):v++,t>>=1;0==--l&&(l=Math.pow(2,h),h++)}for(t=2,e=0;e<h;e++)m=m<<1|1&t,v==o-1?(v=0,d.push(n(m)),m=0):v++,t>>=1;for(;;){if(m<<=1,v==o-1){d.push(n(m));break}v++}return d.join("")},decompress:function(r){return null==r?"":""==r?null:i._decompress(r.length,32768,function(o){return r.charCodeAt(o)})},_decompress:function(o,n,e){var t,i,s,u,a,p,c,l=[],f=4,h=4,d=3,m="",v=[],g={val:e(0),position:n,index:1};for(t=0;t<3;t+=1)l[t]=t;for(s=0,a=Math.pow(2,2),p=1;p!=a;)u=g.val&g.position,g.position>>=1,0==g.position&&(g.position=n,g.val=e(g.index++)),s|=(u>0?1:0)*p,p<<=1;switch(s){case 0:for(s=0,a=Math.pow(2,8),p=1;p!=a;)u=g.val&g.position,g.position>>=1,0==g.position&&(g.position=n,g.val=e(g.index++)),s|=(u>0?1:0)*p,p<<=1;c=r(s);break;case 1:for(s=0,a=Math.pow(2,16),p=1;p!=a;)u=g.val&g.position,g.position>>=1,0==g.position&&(g.position=n,g.val=e(g.index++)),s|=(u>0?1:0)*p,p<<=1;c=r(s);break;case 2:return""}for(l[3]=c,i=c,v.push(c);;){if(g.index>o)return"";for(s=0,a=Math.pow(2,d),p=1;p!=a;)u=g.val&g.position,g.position>>=1,0==g.position&&(g.position=n,g.val=e(g.index++)),s|=(u>0?1:0)*p,p<<=1;switch(c=s){case 0:for(s=0,a=Math.pow(2,8),p=1;p!=a;)u=g.val&g.position,g.position>>=1,0==g.position&&(g.position=n,g.val=e(g.index++)),s|=(u>0?1:0)*p,p<<=1;l[h++]=r(s),c=h-1,f--;break;case 1:for(s=0,a=Math.pow(2,16),p=1;p!=a;)u=g.val&g.position,g.position>>=1,0==g.position&&(g.position=n,g.val=e(g.index++)),s|=(u>0?1:0)*p,p<<=1;l[h++]=r(s),c=h-1,f--;break;case 2:return v.join("")}if(0==f&&(f=Math.pow(2,d),d++),l[c])m=l[c];else{if(c!==h)return null;m=i+i.charAt(0)}v.push(m),l[h++]=i+m.charAt(0),i=m,0==--f&&(f=Math.pow(2,d),d++)}}};return i}();"function"==typeof define&&define.amd?define(function(){return LZString}):"undefined"!=typeof module&&null!=module?module.exports=LZString:"undefined"!=typeof angular&&null!=angular&&angular.module("LZString",[]).factory("LZString",function(){return LZString});
@@ -683,7 +722,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
   "use strict";
 
   var KEY = "jizhang_v1";
-  var DATA_VER = 2;
+  var DATA_VER = 3;
 
   var DEF_SOURCE = ["到店直客","电话咨询","微信","淘宝","闲鱼","小红书","抖音","老客户介绍","同行转介","企业客户","其他"];
   var DEF_DEVICE = ["机械硬盘","固态硬盘","移动硬盘","U盘/闪存卡","服务器/RAID","NAS","监控存储","手机","笔记本","其他"];
@@ -742,7 +781,10 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
       var raw = localStorage.getItem(KEY);
       if(raw){
         var o = JSON.parse(raw);
-        if(o && Array.isArray(o.orders)) db = migrate(o);
+        if(o && Array.isArray(o.orders)){
+          db = migrate(o);
+          if(db._migrated){ delete db._migrated; save(); }
+        }
       }
     }catch(e){ console.warn("读取失败", e); }
     if(!db.orders) db.orders = [];
@@ -756,8 +798,52 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
     if(!o.opts) o.opts = {};
     if(!o.meta) o.meta = { shop:"", lastBackup:null };
     if(!Array.isArray(o.trash)) o.trash = [];
+    // 收款流水：老记录没有 pays，按旧状态补一份（定金算在接单日）
+    var dirty = false;
+    o.orders.forEach(function(x){
+      if(!Array.isArray(x.pays)) dirty = true;
+      ensurePays(x);
+    });
+    if(dirty) o._migrated = 1;
     o.v = DATA_VER;
     return o;
+  }
+  /* 收款流水 pays = [{date:"2026-09-11", amount:400}, ...]
+     老记录迁移：已付清→全额一笔；已付定金→定金一笔；其余→无 */
+  function ensurePays(o){
+    if(Array.isArray(o.pays)) return;
+    var a = parseMoney(o.amount), d = parseMoney(o.deposit);
+    o.pays = [];
+    if(o.pay === "已付清" && a > 0) o.pays.push({ date:o.date || todayStr(), amount:a });
+    else if(o.pay === "已付定金" && d > 0) o.pays.push({ date:o.date || todayStr(), amount:d });
+  }
+  /* 已收总额 = 流水之和 */
+  function totalPaidOf(o){
+    if(!Array.isArray(o.pays) || !o.pays.length) return 0;
+    var s = 0;
+    o.pays.forEach(function(p){ s += parseMoney(p.amount); });
+    return s;
+  }
+  /* 按流水日期统计实收：prefix 为 "YYYY-MM-DD" / "YYYY-MM" / "YYYY" / ""(全部) */
+  function paysOn(list, prefix){
+    var s = 0;
+    list.forEach(function(o){
+      if(!Array.isArray(o.pays)) return;
+      o.pays.forEach(function(p){
+        if(!p || !p.date) return;
+        if(prefix && p.date.slice(0, prefix.length) !== prefix) return;
+        s += parseMoney(p.amount);
+      });
+    });
+    return s;
+  }
+  /* 按流水总额自动推导「收款情况」 */
+  function derivePay(o){
+    var a = parseMoney(o.amount), t = totalPaidOf(o);
+    if(o.pay === "货到付款" && t <= 0) return "货到付款";
+    if(a > 0 && t >= a) return "已付清";
+    if(t > 0) return "已付定金";
+    return "未付款";
   }
   function save(){
     try{ localStorage.setItem(KEY, JSON.stringify(db)); return true; }
@@ -792,29 +878,20 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
   }
   function inputMoney(el){ return el ? parseMoney(el.value) : 0; }
 
-  /* 未收金额 = 账单价 − 定金（只对已成交的单算；已付清 = 收齐了）
-     注：门店规则「付了定金就算成交」，所以未收 = 已答应做、但尾款还没齐的钱 */
+  /* 未收金额 = 账单价 − 已收流水（只对已成交的单算）
+     注：门店规则「付了定金就算成交」，所以未收 = 已答应做、但还没收齐的钱 */
   function unpaidOf(o){
     if(o.status !== "已成交") return 0;
-    var a = parseMoney(o.amount), d = parseMoney(o.deposit);
+    var a = parseMoney(o.amount);
     if(!a) return 0;
-    if(o.pay === "已付清") return 0;
-    return Math.max(0, a - d);
+    return Math.max(0, a - totalPaidOf(o));
   }
   function profitOf(o){
     if(o.status !== "已成交") return 0;
     return parseMoney(o.amount) - parseMoney(o.cost);
   }
-  /* 实收 = 已经真金白银到账的钱（只对已成交的单算）
-     已付清 → 全额；已付定金 → 只算定金那部分；货到付款 / 未付款 → 0 */
-  function receivedOf(o){
-    if(o.status !== "已成交") return 0;
-    var a = parseMoney(o.amount), d = parseMoney(o.deposit);
-    if(!a) return 0;
-    if(o.pay === "已付清") return a;
-    if(o.pay === "已付定金") return Math.min(d, a);
-    return 0;
-  }
+  /* 实收已改为按「收款流水」逐笔按天统计（见 paysOn），
+     不再用状态反推 —— 11号收的定金就算11号、今天收的尾款就算今天。 */
   function sumBy(list, fn){
     var s = 0;
     list.forEach(function(o){ s += fn(o); });
@@ -1114,6 +1191,13 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
     if(o.status === "已成交" && o.pay === "未付款"){
       if(!confirm("这笔还是「未付款」。\n\n付了定金才算成交，确定要算作「已成交」吗？")) return;
     }
+    // 收款流水：按录入时的收款情况生成第一笔（定金/全额记在接单日）
+    o.pays = [];
+    if(o.pay === "已付清" && parseMoney(o.amount) > 0){
+      o.pays.push({ date:o.date, amount:parseMoney(o.amount) });
+    }else if(o.pay === "已付定金" && parseMoney(o.deposit) > 0){
+      o.pays.push({ date:o.date, amount:parseMoney(o.deposit) });
+    }
     o.id = uid();
     o.createdAt = new Date().toISOString();
     db.orders.push(o);
@@ -1157,12 +1241,33 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
     paintPick("e_status", eForm.status);
     paintPick("e_result", eForm.result);
     paintPick("e_pay",    eForm.pay);
+    renderEPays();
     $("eMore").classList.remove("on");
     $("eMoreBtn").textContent = "展开更多字段 ▾";
     $("emask").classList.add("on");
     $("esheet").classList.add("on");
     var bd = document.querySelector(".es-bd");
     if(bd) bd.scrollTop = 0;
+  }
+  /* 编辑弹层里的收款流水列表 */
+  function renderEPays(){
+    var tag = $("ePaidTag"), box = $("ePays");
+    if(!box) return;
+    var pays = (eOrder && Array.isArray(eOrder.pays)) ? eOrder.pays : [];
+    var a = parseMoney(eOrder ? eOrder.amount : 0);
+    var t = 0;
+    pays.forEach(function(p){ t += parseMoney(p.amount); });
+    if(tag) tag.textContent = "已收 " + money(t) + (a > 0 ? " / " + money(a) : "");
+    if(!pays.length){
+      box.innerHTML = '<p class="hint" style="color:var(--faint);font-size:12.5px">还没有收款记录</p>';
+      return;
+    }
+    box.innerHTML = pays.map(function(p, idx){
+      return '<div style="display:flex;align-items:center;gap:9px;padding:8px 11px;background:var(--line2);border-radius:10px;margin-bottom:6px">' +
+        '<span style="font-size:12.5px;color:var(--muted);flex:none">' + esc(p.date || "无日期") + '</span>' +
+        '<b style="flex:1;font-variant-numeric:tabular-nums">' + money(p.amount) + '</b>' +
+        '<button class="btn sm ghost" data-delpay="' + idx + '" style="color:var(--red);padding:4px 9px">✕</button></div>';
+    }).join("");
   }
   function closeEditSheet(){
     $("emask").classList.remove("on");
@@ -1187,7 +1292,19 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
     o.fault    = eForm.fault;
     o.status   = eForm.status;
     o.result   = eForm.result;
-    o.pay      = eForm.pay;
+    // 收款情况若被手改，按新状态重写流水（定金/全额记在接单日）；
+    // 没改则把编辑面板里调整过的流水（增删）原样写回
+    if(eForm.pay !== eOrder.pay){
+      var a = parseMoney(o.amount), d = parseMoney(o.deposit);
+      o.pays = [];
+      if(eForm.pay === "已付清" && a > 0) o.pays.push({ date:o.date || todayStr(), amount:a });
+      else if(eForm.pay === "已付定金" && d > 0) o.pays.push({ date:o.date || todayStr(), amount:d });
+      o.pay = eForm.pay;
+      toast("收款记录已按「" + eForm.pay + "」重写");
+    }else{
+      o.pays = (eOrder.pays || []).slice();
+      o.pay = derivePay(o);
+    }
     // 手输的新选项入库
     rememberOption("source", o.source);
     rememberOption("device", o.device);
@@ -1207,6 +1324,24 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
     var on = $("eMore").classList.toggle("on");
     this.textContent = on ? "收起更多字段 ▴" : "展开更多字段 ▾";
   };
+  $("eAddPay").onclick = function(){
+    if(!eOrder) return;
+    var o = null;
+    for(var i = 0; i < db.orders.length; i++) if(db.orders[i].id === eOrder.id) o = db.orders[i];
+    if(!o) return;
+    // 把编辑中的流水先同步到真实记录，再开收款面板
+    eOrder.pays = (o.pays || []).slice();
+    openPaySheet(eOrder.id);
+  };
+  document.addEventListener("click", function(e){
+    var t = e.target.closest ? e.target.closest("[data-delpay]") : null;
+    if(!t) return;
+    var idx = parseInt(t.dataset.delpay, 10);
+    if(!eOrder || !Array.isArray(eOrder.pays)) return;
+    if(!confirm("删除这笔收款记录（" + money(eOrder.pays[idx] ? eOrder.pays[idx].amount : 0) + "）？")) return;
+    eOrder.pays.splice(idx, 1);
+    renderEPays();
+  });
   bindFormPick("e_source", "source", "请选择", true);
   bindFormPick("e_device", "device", "请选择", true);
   bindFormPick("e_fault",  "fault",  "请选择", true);
@@ -1251,10 +1386,9 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
   /* ---------------- 渲染：快速预览（一行摘要，替代原来的「今天」卡片） ---------------- */
   function renderQuick(){
     var t = todayStr(), m = thisMonth();
-    var today = db.orders.filter(function(o){ return o.date === t; });
+    var tIn = paysOn(db.orders, t);
+    var mIn = paysOn(db.orders, m);
     var month = db.orders.filter(function(o){ return (o.date||"").slice(0,7) === m; });
-    var tIn = sumBy(today, function(o){ return o.status === "已成交" ? receivedOf(o) : 0; });
-    var mIn = sumBy(month, function(o){ return o.status === "已成交" ? receivedOf(o) : 0; });
     var mUnpaid = sumBy(month, unpaidOf);
     var parts = [
       "今日实收 <b>" + money(tIn) + "</b>",
@@ -1336,8 +1470,9 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
     var moneyRow = "";
     if(amt){
       var unpaid = unpaidOf(o);
+      var paid = totalPaidOf(o);
       var parts = ['<span class="amt">' + money(amt) + "</span>"];
-      if(parseMoney(o.deposit)) parts.push('<span class="pill p-g">定金 ' + money(o.deposit) + "</span>");
+      if(paid > 0) parts.push('<span class="pill p-g">已收 ' + money(paid) + "</span>");
       if(unpaid > 0) parts.push('<span class="pill p-r">未收 ' + money(unpaid) + "</span>");
       else parts.push(payPill(o.pay || "已付清"));
       if(parseMoney(o.cost)) parts.push('<span class="pill p-n">成本 ' + money(o.cost) + "</span>");
@@ -1487,7 +1622,12 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
     var cost = sumBy(doneList, function(o){ return parseMoney(o.cost); });
     var costMat = sumBy(doneList, function(o){ return parseMoney(o.costMat); });
     var profit = income - cost;
-    var received = sumBy(doneList, receivedOf);
+    // 实收按「收款流水」的日期算：今天收的尾款就记在今天，不随接单日期走
+    var received;
+    if(curStat === "day") received = paysOn(db.orders, pick.day || todayStr());
+    else if(curStat === "month") received = paysOn(db.orders, pick.month || thisMonth());
+    else if(curStat === "year") received = paysOn(db.orders, String(pick.year || thisYear()));
+    else received = sumBy(doneList, totalPaidOf);
     var unpaid = sumBy(all, unpaidOf);
 
     var ctrl = "", tag = "", title = "";
@@ -1920,6 +2060,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
     try{ o = JSON.parse(text); }catch(e){ alert("导入失败：内容不是有效的备份数据。"); return; }
     if(!o || !Array.isArray(o.orders)){ alert("导入失败：内容里没有找到账单记录。"); return; }
     var incoming = o.orders;
+    incoming.forEach(ensurePays);
     var msg = "识别到 " + incoming.length + " 条记录。\n\n" +
               "确定 = 与现有记录合并（自动跳过重复，推荐）\n" +
               "取消 = 覆盖，只保留导入的这份";
@@ -2033,6 +2174,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
     var html = '<div style="padding:8px 6px 2px">' +
       '<div style="font-size:13.5px;color:var(--muted);margin-bottom:12px;line-height:1.7">' +
         esc(o.date || "") + '　' + (esc(o.customer) || "未填客户") + '　<b style="color:var(--text)">' + money(o.amount) + '</b></div>' +
+      (unpaidOf(o) > 0 ? '<button class="btn wide" data-quickpay="' + o.id + '" style="margin-bottom:9px">记收款（还差 ' + money(unpaidOf(o)) + '）</button>' : '') +
       '<button class="btn wide" data-edit="' + o.id + '" style="margin-bottom:9px">修改这条</button>' +
       '<button class="btn wide" data-ticket="' + o.id + '" style="margin-bottom:9px">生成接单凭证图</button>' +
       (o.contact ? '<button class="btn wide" data-copy="' + esc(o.contact) + '" style="margin-bottom:9px">复制联系方式</button>' : '') +
@@ -2041,20 +2183,70 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
     openInfo("记录操作", html);
   }
 
-  /* ---------------- 快捷收款（不进编辑模式） ---------------- */
-  function quickPay(id){
+  /* ---------------- 收款（流水记账：哪一天点收款，钱就算在哪一天） ---------------- */
+  var payTargetId = null;
+  function openPaySheet(id){
     var o = null;
     for(var i = 0; i < db.orders.length; i++) if(db.orders[i].id === id) o = db.orders[i];
     if(!o) return;
-    openSheet("pay", o.pay, function(v){
-      if(!v) return;
-      o.pay = v;
-      if(v === "已付清" || v === "已付定金"){ o.status = "已成交"; }
-      else if(v === "未付款" && o.status === "已成交"){ o.status = "跟进中"; }
-      save(); renderAll();
-      toast(v === "已付清" ? "已收清，这笔算成交了" : "收款情况已改为「" + v + "」");
-    }, { title: "收款：" + (o.customer || "这一单") + (parseMoney(o.amount) ? "（" + money(o.amount) + "）" : "") });
+    payTargetId = id;
+    var a = parseMoney(o.amount), t = totalPaidOf(o), u = Math.max(0, a - t);
+    $("pTitle").textContent = "收款：" + (o.customer || "这一单");
+    $("pSub").innerHTML = "账单价 <b>" + money(a) + "</b> · 已收 <b>" + money(t) + "</b> · 还差 <b>" + money(u) + "</b>";
+    $("p_amount").value = u > 0 ? u : (a > 0 ? a : "");
+    $("p_date").value = todayStr();
+    $("pmask").classList.add("on");
+    $("psheet").classList.add("on");
+    setTimeout(function(){ var el = $("p_amount"); if(el) el.focus(); }, 320);
   }
+  function closePaySheet(){
+    $("pmask").classList.remove("on");
+    $("psheet").classList.remove("on");
+    payTargetId = null;
+  }
+  function confirmPay(){
+    var o = null;
+    for(var i = 0; i < db.orders.length; i++) if(db.orders[i].id === payTargetId) o = db.orders[i];
+    if(!o) return;
+    var v = parseMoney($("p_amount").value);
+    if(v <= 0){ toast("先填收款金额"); return; }
+    var d = $("p_date").value || todayStr();
+    if(!Array.isArray(o.pays)) o.pays = [];
+    o.pays.push({ date:d, amount:v });
+    o.pays.sort(function(x, y){ return (x.date||"").localeCompare(y.date||""); });
+    o.pay = derivePay(o);
+    if(totalPaidOf(o) > 0) o.status = "已成交";
+    // 若原位编辑面板还开着，同步它的流水快照
+    if(eOrder && eOrder.id === o.id){
+      eOrder.pays = o.pays.slice();
+      eOrder.pay = o.pay;
+      renderEPays();
+    }
+    save(); closePaySheet();
+    toast("已记收款 " + money(v) + (d === todayStr() ? "" : "（" + d + "）"));
+    renderAll();
+  }
+  function quickPay(id){ openPaySheet(id); }
+  $("pClose").onclick = closePaySheet;
+  $("pCancel").onclick = closePaySheet;
+  $("pmask").onclick = closePaySheet;
+  $("pOk").onclick = confirmPay;
+  $("pFull").onclick = function(){
+    var o = null;
+    for(var i = 0; i < db.orders.length; i++) if(db.orders[i].id === payTargetId) o = db.orders[i];
+    if(!o) return;
+    var u = Math.max(0, parseMoney(o.amount) - totalPaidOf(o));
+    $("p_amount").value = u > 0 ? u : "";
+    $("p_date").value = todayStr();
+  };
+  $("pHalf").onclick = function(){
+    var o = null;
+    for(var i = 0; i < db.orders.length; i++) if(db.orders[i].id === payTargetId) o = db.orders[i];
+    if(!o) return;
+    var u = Math.max(0, parseMoney(o.amount) - totalPaidOf(o));
+    $("p_amount").value = u > 0 ? Math.round(u / 2) : "";
+    $("p_date").value = todayStr();
+  };
 
   /* ---------------- 首用引导 / 待跟进 ---------------- */
   function renderGuide(){
@@ -2305,7 +2497,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
       }
       if(t.dataset.note){ insertNote(t.dataset.note); return; }
       if(t.dataset.notemgr){ openNoteMgr(); return; }
-      if(t.dataset.quickpay){ quickPay(t.dataset.quickpay); return; }
+      if(t.dataset.quickpay){ closeSheet(); quickPay(t.dataset.quickpay); return; }
       if(t.dataset.actions){ openActions(t.dataset.actions); return; }
       if(t.dataset.report){ closeSheet(); var rp = buildMonthlyReport(); canvasToImage(rp.canvas, rp.name); return; }
       if(t.dataset.ticket){
