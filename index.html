@@ -1304,13 +1304,23 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
     if(eForm.status !== eOrder.status && eForm.status !== "已成交" && totalPaidOf(o) > 0){
       if(!confirm("这单已经收过 " + money(totalPaidOf(o)) + "。\n\n确定要把状态改成「" + eForm.status + "」吗？")) return;
     }
-    // 收款情况若被手改，按新状态重写流水（定金/全额记在接单日）；
+    // 收款情况若被手改：保留已有流水，新收的差额记「今天」（今天改的状态=今天收的钱）；
     // 没改则把编辑面板里调整过的流水（增删）原样写回
     if(eForm.pay !== eOrder.pay){
       var a = parseMoney(o.amount), d = parseMoney(o.deposit);
-      o.pays = [];
-      if(eForm.pay === "已付清" && a > 0) o.pays.push({ date:o.date || todayStr(), amount:a });
-      else if(eForm.pay === "已付定金" && d > 0) o.pays.push({ date:o.date || todayStr(), amount:d });
+      if(eForm.pay === "已付清" && a > 0){
+        o.pays = (o.pays || []).slice();
+        var gap = a - totalPaidOf(o);
+        if(gap > 0) o.pays.push({ date:todayStr(), amount:gap });
+        o.pays.sort(function(x, y){ return (x.date||"").localeCompare(y.date||""); });
+      }else if(eForm.pay === "已付定金" && d > 0){
+        o.pays = (o.pays || []).slice();
+        var gap2 = d - totalPaidOf(o);
+        if(gap2 > 0) o.pays.push({ date:todayStr(), amount:gap2 });
+        o.pays.sort(function(x, y){ return (x.date||"").localeCompare(y.date||""); });
+      }else{
+        o.pays = [];
+      }
       o.pay = eForm.pay;
       // A3：收款情况 ↔ 状态联动（用户没手改状态时才自动联动）
       if(eForm.status === eOrder.status){
@@ -1321,7 +1331,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
           toast("还没收到钱，状态已回到「跟进中」");
         }
       }
-      toast("收款记录已按「" + eForm.pay + "」重写");
+      toast("收款记录已更新，新收的钱记在今天");
     }else{
       o.pays = (eOrder.pays || []).slice();
       o.pay = derivePay(o);
