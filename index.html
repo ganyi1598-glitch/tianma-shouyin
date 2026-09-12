@@ -205,6 +205,8 @@ nav.tabbar{
   max-height:88vh;display:flex;flex-direction:column;padding-bottom:var(--safe-b)
 }
 .psheet.on{transform:translateY(0)}
+.r-reason{transition:.15s}
+.r-reason.on{background:var(--red-soft);border-color:var(--red);color:var(--red)}
 .esheet{
   position:fixed;left:0;right:0;bottom:0;z-index:56;background:#fff;
   border-radius:20px 20px 0 0;box-shadow:0 -8px 40px -10px rgba(16,24,40,.3);
@@ -675,7 +677,10 @@ nav.tabbar{
       <div class="fld">
         <label>收款流水 <span class="tag" id="ePaidTag"></span></label>
         <div id="ePays"></div>
-        <button class="btn sm ghost" id="eAddPay" style="margin-top:6px">＋记一笔收款</button>
+        <div class="btn-row" style="margin-top:6px;gap:8px">
+          <button class="btn sm ghost" id="eAddPay" style="flex:1">＋记一笔收款</button>
+          <button class="btn sm ghost" id="eRefundBtn" style="flex:1;color:var(--red)">退一笔款</button>
+        </div>
         <p class="hint" style="margin-top:8px;color:var(--faint);font-size:12.5px">每一笔收款都有日期。改「收款情况」会自动重写这里的流水。</p>
       </div>
     </div>
@@ -705,6 +710,29 @@ nav.tabbar{
   <div class="sh-ft">
     <button class="btn sm" id="pCancel" style="flex:1">取消</button>
     <button class="btn pri sm" id="pOk" style="flex:1.4">记下这笔收款</button>
+  </div>
+</div>
+
+<div class="pmask" id="rmask"></div>
+<div class="psheet" id="rsheet">
+  <div class="sh-hd">
+    <h3 id="rTitle">退款</h3>
+    <button class="btn sm ghost" id="rClose">关闭</button>
+  </div>
+  <div class="es-bd">
+    <p class="hint" id="rSub" style="margin:0 0 12px"></p>
+    <div class="fld"><label>退款金额（元）</label><input type="text" id="r_amount" inputmode="decimal" placeholder="0.00" autocomplete="off"></div>
+    <div class="fld"><label>退款日期</label><input type="date" id="r_date"></div>
+    <div class="fld"><label>取消原因</label></div>
+    <div class="btn-row" style="gap:8px;margin-bottom:4px">
+      <button class="btn sm r-reason on" data-reason="客户反悔不做了" style="flex:1">客户反悔不做了</button>
+      <button class="btn sm r-reason" data-reason="技术原因搞不定" style="flex:1">技术原因搞不定</button>
+    </div>
+    <p class="hint" style="margin-top:11px;color:var(--faint);font-size:12.5px">退款后：这单自动改为「已流失」，恢复结果按原因自动填（反悔→客户放弃；技术原因→失败），收款情况回到「未付款」。</p>
+  </div>
+  <div class="sh-ft">
+    <button class="btn sm" id="rCancel" style="flex:1">取消</button>
+    <button class="btn danger sm" id="rOk" style="flex:1.6">确认退款并取消订单</button>
   </div>
 </div>
 
@@ -1271,9 +1299,11 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
       return;
     }
     box.innerHTML = pays.map(function(p, idx){
+      var neg = parseMoney(p.amount) < 0;
       return '<div style="display:flex;align-items:center;gap:9px;padding:8px 11px;background:var(--line2);border-radius:10px;margin-bottom:6px">' +
         '<span style="font-size:12.5px;color:var(--muted);flex:none">' + esc(p.date || "无日期") + '</span>' +
-        '<b style="flex:1;font-variant-numeric:tabular-nums">' + money(p.amount) + '</b>' +
+        '<b style="flex:1;font-variant-numeric:tabular-nums;' + (neg ? 'color:var(--red)' : '') + '">' +
+          (neg ? "退 " : "") + money(Math.abs(parseMoney(p.amount))) + '</b>' +
         '<button class="btn sm ghost" data-delpay="' + idx + '" style="color:var(--red);padding:4px 9px">✕</button></div>';
     }).join("");
   }
@@ -1368,6 +1398,14 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
     // 把编辑中的流水先同步到真实记录，再开收款面板
     eOrder.pays = (o.pays || []).slice();
     openPaySheet(eOrder.id);
+  };
+  $("eRefundBtn").onclick = function(){
+    if(!eOrder) return;
+    var o = null;
+    for(var i = 0; i < db.orders.length; i++) if(db.orders[i].id === eOrder.id) o = db.orders[i];
+    if(!o) return;
+    eOrder.pays = (o.pays || []).slice();
+    openRefundSheet(eOrder.id);
   };
   document.addEventListener("click", function(e){
     var t = e.target.closest ? e.target.closest("[data-delpay]") : null;
@@ -1676,7 +1714,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
 
     // 卡片：实收(主) + 未收 恒显示；其余指标固定排布，避免有/无数据时高度跳动
     var cards = statCard("实收", money(received), "应结 " + money(income), "pri");
-    cards += statCard("未收", money(unpaid), unpaid > 0 ? "记得催一下" : "都收齐了");
+    cards += statCard("未收", money(unpaid), unpaid > 0 ? "记得催一下" : "没有欠款");
     cards += statCard("客单价", done ? money(income / done) : "—", "平均每单成交");
     cards += statCard("成交率", rate + "%", "跟进 " + follow + " · 流失 " + lost);
     cards += statCard("恢复成功", ok + " <small>单</small>", all.length ? "成功率 " + Math.round(ok / all.length * 100) + "%" : "");
@@ -2210,6 +2248,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
       '<div style="font-size:13.5px;color:var(--muted);margin-bottom:12px;line-height:1.7">' +
         esc(o.date || "") + '　' + (esc(o.customer) || "未填客户") + '　<b style="color:var(--text)">' + money(o.amount) + '</b></div>' +
       (unpaidOf(o) > 0 ? '<button class="btn wide" data-quickpay="' + o.id + '" style="margin-bottom:9px">记收款（还差 ' + money(unpaidOf(o)) + '）</button>' : '') +
+      (totalPaidOf(o) > 0 ? '<button class="btn wide" data-refund="' + o.id + '" style="margin-bottom:9px">退款 / 取消订单</button>' : '') +
       '<button class="btn wide" data-edit="' + o.id + '" style="margin-bottom:9px">修改这条</button>' +
       '<button class="btn wide" data-ticket="' + o.id + '" style="margin-bottom:9px">生成接单凭证图</button>' +
       (o.contact ? '<button class="btn wide" data-copy="' + esc(o.contact) + '" style="margin-bottom:9px">复制联系方式</button>' : '') +
@@ -2274,6 +2313,74 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
     renderAll();
   }
   function quickPay(id){ openPaySheet(id); }
+
+  /* ---------------- 退款 / 取消订单（负流水，实收自动扣减） ---------------- */
+  var refundTargetId = null, refundReason = "客户反悔不做了";
+  function openRefundSheet(id){
+    var o = null;
+    for(var i = 0; i < db.orders.length; i++) if(db.orders[i].id === id) o = db.orders[i];
+    if(!o) return;
+    refundTargetId = id;
+    var t = totalPaidOf(o);
+    $("rTitle").textContent = "退款：" + (o.customer || "这一单");
+    $("rSub").innerHTML = "已收 <b>" + money(t) + "</b> · 账单价 <b>" + money(o.amount) + "</b>";
+    $("r_amount").value = t > 0 ? t : "";
+    $("r_date").value = todayStr();
+    refundReason = "客户反悔不做了";
+    document.querySelectorAll(".r-reason").forEach(function(b){
+      b.classList.toggle("on", b.dataset.reason === refundReason);
+    });
+    $("rmask").classList.add("on");
+    $("rsheet").classList.add("on");
+    setTimeout(function(){ var el = $("r_amount"); if(el) el.focus(); }, 320);
+  }
+  function closeRefundSheet(){
+    $("rmask").classList.remove("on");
+    $("rsheet").classList.remove("on");
+    refundTargetId = null;
+  }
+  function confirmRefund(){
+    var o = null;
+    for(var i = 0; i < db.orders.length; i++) if(db.orders[i].id === refundTargetId) o = db.orders[i];
+    if(!o) return;
+    var v = parseMoney($("r_amount").value);
+    if(v <= 0){ toast("先填退款金额"); return; }
+    var t = totalPaidOf(o);
+    if(v > t){
+      if(!confirm("退款金额 " + money(v) + " 比已收的 " + money(t) + " 多了 " + money(v - t) + "。\n\n确定要退这么多吗？")) return;
+    }
+    var d = $("r_date").value || todayStr();
+    if(!Array.isArray(o.pays)) o.pays = [];
+    o.pays.push({ date:d, amount:-v });
+    o.pays.sort(function(x, y){ return (x.date||"").localeCompare(y.date||""); });
+    // 四连联动：收款回未付款 / 状态已流失 / 结果按原因 / 未收自动归零
+    o.pay = "未付款";
+    o.status = "已流失";
+    o.result = refundReason === "技术原因搞不定" ? "失败" : "客户放弃";
+    // 若原位编辑面板还开着，同步它的快照
+    if(eOrder && eOrder.id === o.id){
+      eOrder.pays = o.pays.slice();
+      eOrder.pay = o.pay;
+      eOrder.status = o.status;
+      eOrder.result = o.result;
+      renderEPays();
+    }
+    save(); closeRefundSheet();
+    toast("已退款 " + money(v) + "，订单已取消");
+    renderAll();
+  }
+  $("rClose").onclick = closeRefundSheet;
+  $("rCancel").onclick = closeRefundSheet;
+  $("rmask").onclick = closeRefundSheet;
+  $("rOk").onclick = confirmRefund;
+  document.addEventListener("click", function(e){
+    var b = e.target.closest ? e.target.closest(".r-reason") : null;
+    if(!b) return;
+    refundReason = b.dataset.reason;
+    document.querySelectorAll(".r-reason").forEach(function(x){
+      x.classList.toggle("on", x.dataset.reason === refundReason);
+    });
+  });
   $("pClose").onclick = closePaySheet;
   $("pCancel").onclick = closePaySheet;
   $("pmask").onclick = closePaySheet;
@@ -2541,6 +2648,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
       if(t.dataset.note){ insertNote(t.dataset.note); return; }
       if(t.dataset.notemgr){ openNoteMgr(); return; }
       if(t.dataset.quickpay){ closeSheet(); quickPay(t.dataset.quickpay); return; }
+      if(t.dataset.refund){ closeSheet(); openRefundSheet(t.dataset.refund); return; }
       if(t.dataset.actions){ openActions(t.dataset.actions); return; }
       if(t.dataset.report){ closeSheet(); var rp = buildMonthlyReport(); canvasToImage(rp.canvas, rp.name); return; }
       if(t.dataset.ticket){
