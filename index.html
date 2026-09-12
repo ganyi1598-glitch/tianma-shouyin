@@ -312,6 +312,7 @@ nav.tabbar{
   header.hd{background:rgba(20,26,34,.92)}
   nav.tabbar{background:rgba(20,26,34,.95)}
   .sheet{background:var(--surface)}
+  .esheet,.psheet{background:var(--surface)}
   input,textarea,.pickbtn,.btn,.chip,.seg button{background:#1e2732;color:var(--text)}
   input::placeholder,textarea::placeholder{color:#5f7186}
   .pickbtn:active,.btn:active,.opt:active{background:#26313e}
@@ -392,13 +393,10 @@ nav.tabbar{
       <div class="fld"><label>定金（元）</label><input type="text" id="f_deposit" inputmode="decimal" placeholder="选填" autocomplete="off"></div>
     </div>
     <div id="moneyMore" style="display:none">
-      <div class="f2">
-        <div class="fld"><label>尾款（元）</label><input type="text" id="f_final" inputmode="decimal" placeholder="自动算" autocomplete="off"></div>
-        <div class="fld"><label>成本（元）</label><input type="text" id="f_cost" inputmode="decimal" placeholder="选填" autocomplete="off"></div>
-      </div>
+      <div class="fld"><label>成本（元）</label><input type="text" id="f_cost" inputmode="decimal" placeholder="选填" autocomplete="off"></div>
       <div class="fld last"><label>其中：配件成本（选填）</label><input type="text" id="f_costmat" inputmode="decimal" placeholder="填了就能看出配件花了多少，人工 = 成本 − 配件" autocomplete="off"></div>
     </div>
-    <button class="btn ghost sm" id="btnMoneyMore" style="margin-top:2px">展开：尾款 / 成本 ▾</button>
+    <button class="btn ghost sm" id="btnMoneyMore" style="margin-top:2px">展开：成本 ▾</button>
     <p class="hint" id="moneyHint" style="margin-top:11px;display:none"></p>
   </div>
 
@@ -409,7 +407,7 @@ nav.tabbar{
       <button class="mini" id="p_device"><span class="k">送修设备</span><span class="v ph">请选择</span></button>
       <button class="mini" id="p_fault"><span class="k">故障类型</span><span class="v ph">请选择</span></button>
       <button class="mini" id="p_status"><span class="k">订单状态</span><span class="v">跟进中</span></button>
-      <button class="mini" id="p_result"><span class="k">恢复结果</span><span class="v">正在恢复</span></button>
+      <button class="mini" id="p_result"><span class="k">恢复结果</span><span class="v">进行中</span></button>
       <button class="mini" id="p_pay"><span class="k">收款情况</span><span class="v">未付款</span></button>
     </div>
   </div>
@@ -508,36 +506,48 @@ nav.tabbar{
       <button class="btn" id="btnImport">导入备份文件</button>
     </div>
     <input type="file" id="fileImport" accept=".json,application/json" style="display:none">
-    <div class="sec-t">手机之间传数据 · 扫一扫最快</div>
-    <div class="btn-row">
-      <button class="btn sm pri" id="btnScan">扫一扫导入</button>
-      <button class="btn sm" id="btnGenCode">生成同步码 / 二维码</button>
-    </div>
-    <div class="btn-row" style="margin-top:9px">
-      <button class="btn sm" id="btnPasteCode">粘贴同步码导入</button>
-    </div>
-    <div id="codeWrap" style="display:none;margin-top:11px">
-      <div id="qrBox" style="text-align:center;margin-bottom:10px"></div>
-      <div class="hint" id="qrTip" style="text-align:center;margin:0 0 10px">让另一台手机用「扫一扫导入」扫这个二维码，数据直接过去</div>
-      <div class="codebox" id="codeOut"></div>
-      <div class="btn-row" style="margin-top:10px;flex-wrap:wrap;gap:8px">
-        <button class="btn sm" id="btnCopyCode">复制同步码</button>
-        <button class="btn sm" id="btnShareCode">分享 / 发给微信</button>
-        <button class="btn sm" id="btnCloseCode">收起</button>
-      </div>
-    </div>
-    <div id="pasteWrap" style="display:none;margin-top:11px">
-      <textarea id="codeIn" class="codein" placeholder="把另一台设备生成的同步码粘贴到这里"></textarea>
-      <div class="btn-row" style="margin-top:10px">
-        <button class="btn sm pri" id="btnDoImport">导入到这台设备</button>
-        <button class="btn sm" id="btnClosePaste">取消</button>
-      </div>
-    </div>
     <div class="hr"></div>
     <div class="btn-row"><button class="btn" id="btnCsvAll">导出全部（Excel 可打开）</button></div>
     <div class="btn-row" style="margin-top:10px"><button class="btn" id="btnReport" data-report="1">生成当月经营简报图</button></div>
     <p class="hint" id="backupInfo" style="margin-top:13px"></p>
-    <div class="btn-row" style="margin-top:10px"><button class="btn sm" id="btnCheckUpdate">检查更新（拉取最新版）</button></div>
+  </div>
+
+  <div class="card">
+    <details class="datefold" style="margin-top:0;border-top:none;padding-top:0">
+      <summary>高级功能　<span class="tag">点开看</span></summary>
+      <div class="sec-t" style="margin-top:12px">手机之间传数据 · 扫一扫最快</div>
+      <div class="btn-row">
+        <button class="btn sm pri" id="btnScan">扫一扫导入</button>
+        <button class="btn sm" id="btnGenCode">生成同步码 / 二维码</button>
+      </div>
+      <div class="btn-row" style="margin-top:9px">
+        <button class="btn sm" id="btnPasteCode">粘贴同步码导入</button>
+      </div>
+      <div id="codeWrap" style="display:none;margin-top:11px">
+        <div id="qrBox" style="text-align:center;margin-bottom:10px"></div>
+        <div class="hint" id="qrTip" style="text-align:center;margin:0 0 10px">让另一台手机用「扫一扫导入」扫这个二维码，数据直接过去</div>
+        <div class="codebox" id="codeOut"></div>
+        <div class="btn-row" style="margin-top:10px;flex-wrap:wrap;gap:8px">
+          <button class="btn sm" id="btnCopyCode">复制同步码</button>
+          <button class="btn sm" id="btnShareCode">分享 / 发给微信</button>
+          <button class="btn sm" id="btnCloseCode">收起</button>
+        </div>
+      </div>
+      <div id="pasteWrap" style="display:none;margin-top:11px">
+        <textarea id="codeIn" class="codein" placeholder="把另一台设备生成的同步码粘贴到这里"></textarea>
+        <div class="btn-row" style="margin-top:10px">
+          <button class="btn sm pri" id="btnDoImport">导入到这台设备</button>
+          <button class="btn sm" id="btnClosePaste">取消</button>
+        </div>
+      </div>
+      <div class="hr"></div>
+      <div class="btn-row" style="margin-top:6px"><button class="btn sm" id="btnCheckUpdate">检查更新（拉取最新版）</button></div>
+      <div class="hr"></div>
+      <div class="sec-t">加到手机日历</div>
+      <p class="hint" style="margin:0 0 10px">网页关掉后没法自己弹消息（浏览器限制）。可以把提醒写进手机「日历」：每天 20:00 提醒记账，每周日 10:00 提醒核对尾款，到点系统会响。</p>
+      <div class="btn-row"><button class="btn pri" id="btnIcs">一键加入手机日历</button></div>
+      <div class="btn-row" style="margin-top:9px"><button class="btn sm" id="btnIcsDl">下载日历文件（备选）</button></div>
+    </details>
   </div>
 
   <div class="card" id="cloudCard" style="display:none">
@@ -559,14 +569,6 @@ nav.tabbar{
       </div>
       <p class="hint" id="cloudMsg" style="margin-top:11px"></p>
     </div>
-  </div>
-
-  <div class="card">
-    <h2>提醒 <span class="tag">加到手机日历</span></h2>
-    <p class="hint" style="margin:0 0 12px">网页关掉后没法自己弹消息（浏览器限制）。但可以把提醒写进你手机的「日历」——每天 20:00 提醒记账，每周日 10:00 提醒核对尾款，到点系统会响。</p>
-    <div class="btn-row"><button class="btn pri" id="btnIcs">一键加入手机日历</button></div>
-    <div class="btn-row" style="margin-top:9px"><button class="btn sm" id="btnIcsDl">下载日历文件（备选）</button></div>
-    <p class="hint" style="margin-top:10px">点第一下会直接唤起手机的「日历」并问你是否订阅，同意就行。若没反应（个别安卓机型），就用下面那个下载文件的方式。</p>
   </div>
 
   <div class="card">
@@ -728,7 +730,9 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
   var DEF_DEVICE = ["机械硬盘","固态硬盘","移动硬盘","U盘/闪存卡","服务器/RAID","NAS","监控存储","手机","笔记本","其他"];
   var DEF_FAULT  = ["磁头损坏","盘片划伤","固件损坏","坏道/弱道","电路板故障","进水腐蚀","摔碰跌落","电机故障","RAID掉盘","SSD掉固件","误删除","误格式化","分区丢失","加密/病毒","其他"];
   var STATUS = ["已成交","跟进中","已流失"];
-  var RESULT = ["正在恢复","等待配件","客户考虑中","成功","部分成功","失败","客户放弃","未开始"];
+  var RESULT = ["进行中","成功","部分成功","失败","客户放弃"];
+  /* 老版本结果 → 新版映射（正在恢复/等待配件/客户考虑中/未开始 → 进行中） */
+  var RESULT_MAP = { "正在恢复":"进行中", "等待配件":"进行中", "客户考虑中":"进行中", "未开始":"进行中" };
   var PAY    = ["未付款","已付定金","已付清","货到付款"];
   var DEF_NOTEPH = ["客户急","开盘换头","等待配件","已恢复数据","需要报价","已通知取件","客户考虑中"];
 
@@ -737,11 +741,10 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
   var filter = { month:"", source:"", device:"", status:"", kw:"" };
   var pick = { month:"", year:0, day:"" };
   function defForm(){
-    return { source:"", device:"", fault:"", status:"跟进中", result:"正在恢复", pay:"未付款" };
+    return { source:"", device:"", fault:"", status:"跟进中", result:"进行中", pay:"未付款" };
   }
   var form = defForm();
   var sheetFor = null, sheetVal = "";
-  var finalManual = false;
   var advancedOpen = false;
 
   /* ---------------- 工具 ---------------- */
@@ -798,19 +801,25 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
     if(!o.opts) o.opts = {};
     if(!o.meta) o.meta = { shop:"", lastBackup:null };
     if(!Array.isArray(o.trash)) o.trash = [];
-    // 收款流水：老记录没有 pays，按旧状态补一份（定金算在接单日）
+    // 收款流水/结果选项：老记录自动迁移（定金算在接单日）
     var dirty = false;
     o.orders.forEach(function(x){
+      var oldR = x.result;
       if(!Array.isArray(x.pays)) dirty = true;
       ensurePays(x);
+      if(x.result !== oldR) dirty = true;
     });
     if(dirty) o._migrated = 1;
     o.v = DATA_VER;
     return o;
   }
   /* 收款流水 pays = [{date:"2026-09-11", amount:400}, ...]
-     老记录迁移：已付清→全额一笔；已付定金→定金一笔；其余→无 */
+     老记录迁移：已付清→全额一笔；已付定金→定金一笔；其余→无
+     顺带把老版「恢复结果」映射到新版（正在恢复等 → 进行中） */
   function ensurePays(o){
+    if(o.result && RESULT_MAP[o.result]) o.result = RESULT_MAP[o.result];
+    // 与「收款确认」时的联动一致：已付清且结果还是进行中 → 自动成功
+    if(o.pay === "已付清" && o.result === "进行中") o.result = "成功";
     if(Array.isArray(o.pays)) return;
     var a = parseMoney(o.amount), d = parseMoney(o.deposit);
     o.pays = [];
@@ -1114,20 +1123,19 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
   }
 
   function resetForm(keepDate){
-    finalManual = false;
     $("f_customer").value = "";
     $("f_contact").value = "";
     $("f_note").value = "";
-    ["f_amount","f_deposit","f_final","f_cost","f_costmat"].forEach(function(id){ $(id).value = ""; });
+    ["f_amount","f_deposit","f_cost","f_costmat"].forEach(function(id){ $(id).value = ""; });
     $("moneyMore").style.display = "none";
-    $("btnMoneyMore").textContent = "展开：尾款 / 成本 ▾";
+    $("btnMoneyMore").textContent = "展开：成本 ▾";
     if($("lastSaved")) $("lastSaved").style.display = "none";
     form = defForm();
     paintPick("p_source", "", "请选择");
     paintPick("p_device", "", "请选择");
     paintPick("p_fault",  "", "请选择");
     paintPick("p_status", "跟进中");
-    paintPick("p_result", "正在恢复");
+    paintPick("p_result", "进行中");
     paintPick("p_pay",    "未付款");
     updateMoneyHint();
     if(!keepDate) $("f_date").value = todayStr();
@@ -1145,12 +1153,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
     var parts = [];
     if(a){
       var rest = Math.max(0, a - d);
-      if(finalManual){
-        parts.push("尾款 " + money(parseMoney($("f_final").value)));
-      }else{
-        $("f_final").value = rest ? rest : (a ? "0" : "");
-        parts.push("尾款 " + money(rest));
-      }
+      parts.push("尾款 " + money(rest));
       if(c) parts.push("毛利 " + money(a - c) + (a ? "（" + Math.round((a - c) / a * 100) + "%）" : ""));
       if(d) parts.push("已收定金 " + money(d));
     }
@@ -1161,7 +1164,6 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
   function collect(){
     var a = inputMoney($("f_amount"));
     var d = inputMoney($("f_deposit"));
-    var finVal = $("f_final").value;
     return {
       date: $("f_date").value || todayStr(),
       customer: $("f_customer").value.trim(),
@@ -1170,11 +1172,11 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
       device: form.device,
       fault: form.fault,
       status: form.status || "跟进中",
-      result: form.result || "正在恢复",
+      result: form.result || "进行中",
       pay: form.pay || "未付款",
       amount: a,
       deposit: d,
-      rest: finVal === "" ? Math.max(0, a - d) : parseMoney(finVal),
+      rest: Math.max(0, a - d),
       cost: inputMoney($("f_cost")),
       costMat: inputMoney($("f_costmat")),
       costLab: Math.max(0, inputMoney($("f_cost")) - inputMoney($("f_costmat"))),
@@ -1198,6 +1200,10 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
     }else if(o.pay === "已付定金" && parseMoney(o.deposit) > 0){
       o.pays.push({ date:o.date, amount:parseMoney(o.deposit) });
     }
+    // A4：记了收款但状态不是已成交 → 确认
+    if(o.pays.length && o.status !== "已成交"){
+      if(!confirm("这笔记了收款 " + money(totalPaidOf(o)) + "，但订单状态是「" + o.status + "」。\n\n确定要这样保存吗？")) return;
+    }
     o.id = uid();
     o.createdAt = new Date().toISOString();
     db.orders.push(o);
@@ -1220,13 +1226,15 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
 
   /* ---------------- 原位编辑弹层（不跳页） ---------------- */
   var eOrder = null;
-  var eForm = { source:"", device:"", fault:"", status:"已成交", result:"正在恢复", pay:"未付款" };
+  var eHadPays = false;
+  var eForm = { source:"", device:"", fault:"", status:"已成交", result:"进行中", pay:"未付款" };
 
   function openEditSheet(o){
     eOrder = JSON.parse(JSON.stringify(o));
+    eHadPays = (o.pays || []).length > 0;
     eForm = {
       source:o.source || "", device:o.device || "", fault:o.fault || "",
-      status:o.status || "已成交", result:o.result || "正在恢复", pay:o.pay || "未付款"
+      status:o.status || "已成交", result:o.result || "进行中", pay:o.pay || "未付款"
     };
     $("e_customer").value = o.customer || "";
     $("e_contact").value  = o.contact || "";
@@ -1292,6 +1300,10 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
     o.fault    = eForm.fault;
     o.status   = eForm.status;
     o.result   = eForm.result;
+    // A4：状态被改回「跟进中/已流失」，但这单已收过钱 → 先确认
+    if(eForm.status !== eOrder.status && eForm.status !== "已成交" && totalPaidOf(o) > 0){
+      if(!confirm("这单已经收过 " + money(totalPaidOf(o)) + "。\n\n确定要把状态改成「" + eForm.status + "」吗？")) return;
+    }
     // 收款情况若被手改，按新状态重写流水（定金/全额记在接单日）；
     // 没改则把编辑面板里调整过的流水（增删）原样写回
     if(eForm.pay !== eOrder.pay){
@@ -1300,10 +1312,24 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
       if(eForm.pay === "已付清" && a > 0) o.pays.push({ date:o.date || todayStr(), amount:a });
       else if(eForm.pay === "已付定金" && d > 0) o.pays.push({ date:o.date || todayStr(), amount:d });
       o.pay = eForm.pay;
+      // A3：收款情况 ↔ 状态联动（用户没手改状态时才自动联动）
+      if(eForm.status === eOrder.status){
+        if(eForm.pay === "已付清" || eForm.pay === "已付定金"){
+          o.status = "已成交";
+        }else if(eOrder.status === "已成交"){
+          o.status = "跟进中";
+          toast("还没收到钱，状态已回到「跟进中」");
+        }
+      }
       toast("收款记录已按「" + eForm.pay + "」重写");
     }else{
       o.pays = (eOrder.pays || []).slice();
       o.pay = derivePay(o);
+      // A5：原来有流水、现在删光了 → 状态降级回「跟进中」（付了定金才算成交）
+      if(eHadPays && totalPaidOf(o) <= 0 && o.status === "已成交" && o.pay !== "货到付款"){
+        o.status = "跟进中";
+        toast("已删光收款记录，状态回到「跟进中」");
+      }
     }
     // 手输的新选项入库
     rememberOption("source", o.source);
@@ -1444,7 +1470,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
     if(r === "成功") cls = "p-g";
     else if(r === "部分成功") cls = "p-b";
     else if(r === "失败" || r === "客户放弃") cls = "p-r";
-    else if(r === "正在恢复") cls = "p-a";
+    else if(r === "进行中") cls = "p-a";
     else cls = "p-n";
     return '<span class="pill ' + cls + '">' + esc(r) + "</span>";
   }
@@ -1474,7 +1500,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
       var parts = ['<span class="amt">' + money(amt) + "</span>"];
       if(paid > 0) parts.push('<span class="pill p-g">已收 ' + money(paid) + "</span>");
       if(unpaid > 0) parts.push('<span class="pill p-r">未收 ' + money(unpaid) + "</span>");
-      else parts.push(payPill(o.pay || "已付清"));
+      else if(!paid) parts.push(payPill(o.pay || "已付清"));
       if(parseMoney(o.cost)) parts.push('<span class="pill p-n">成本 ' + money(o.cost) + "</span>");
       moneyRow = '<div class="rec-m">' + parts.join("") + "</div>";
     }else{
@@ -1564,7 +1590,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
       var k = o[field] || "未填写";
       if(!m[k]) m[k] = { name:k, n:0, done:0, amount:0 };
       m[k].n++;
-      if(o.status === "已成交"){ m[k].done++; m[k].amount += parseMoney(o.amount); }
+      if(o.status === "已成交"){ m[k].done++; m[k].amount += totalPaidOf(o); }
     });
     return Object.keys(m).map(function(k){ return m[k]; })
       .sort(function(a, b){ return b.amount - a.amount || b.n - a.n || a.name.localeCompare(b.name); });
@@ -1655,20 +1681,19 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
     if(notes.length) cards += '<div class="profit-note">' + notes.join('<span class="pn-sep"></span>') + "</div>";
     $("statCards").innerHTML = cards;
 
-    // 图：按天/按月看收入，按年看月度收入
+    // 图：按天/按月看实收，按年看月度实收（口径与卡片一致）
     var title2 = "", items = [];
     if(curStat === "day" || curStat === "month"){
       $("statChartCard").style.display = "";
       var m = pick.month || thisMonth();
       var y = parseInt(m.slice(0,4), 10), mo = parseInt(m.slice(5,7), 10);
       var days = new Date(y, mo, 0).getDate();
-      title2 = "每日收入";
+      title2 = "每日实收";
       var dailyMax = 0;
       var raw = [];
       for(var d = 1; d <= days; d++){
         var ds = m + "-" + pad(d);
-        var v = 0;
-        db.orders.forEach(function(o){ if(o.date === ds && o.status === "已成交") v += parseMoney(o.amount); });
+        var v = paysOn(db.orders, ds);
         dailyMax = Math.max(dailyMax, v);
         raw.push({ label:d + "", value:v, key:(m.replace(/-/g, "") + pad(d)) });
       }
@@ -1681,11 +1706,11 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
     }else if(curStat === "year"){
       $("statChartCard").style.display = "";
       var yy = pick.year || thisYear();
-      title2 = "每月收入";
+      title2 = "每月实收";
       var moMax = 0, rawY = [];
       for(var i2 = 1; i2 <= 12; i2++){
-        var mm = yy + "-" + pad(i2), v2 = 0;
-        db.orders.forEach(function(o){ if((o.date||"").slice(0,7) === mm && o.status === "已成交") v2 += parseMoney(o.amount); });
+        var mm = yy + "-" + pad(i2);
+        var v2 = paysOn(db.orders, mm);
         moMax = Math.max(moMax, v2);
         rawY.push({ label:i2 + "月", value:v2, key:(yy + pad(i2)) });
       }
@@ -1720,7 +1745,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
       if(!list.length) continue;
       any = true;
       var done = cnt(list, "已成交");
-      var inc = sumBy(list, function(o){ return o.status === "已成交" ? parseMoney(o.amount) : 0; });
+      var inc = paysOn(list, ds);
       out.push('<div class="bl-top" style="padding:11px 2px;border-bottom:1px solid var(--line2)">' +
         '<span class="nm">' + d + " 日</span>" +
         '<span class="vl">' + money(inc) + "</span>" +
@@ -1737,7 +1762,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
       if(!list.length) continue;
       any = true;
       var done = cnt(list, "已成交");
-      var inc = sumBy(list, function(o){ return o.status === "已成交" ? parseMoney(o.amount) : 0; });
+      var inc = paysOn(list, mm);
       out.push('<div class="bl-top" style="padding:11px 2px;border-bottom:1px solid var(--line2)">' +
         '<span class="nm">' + i + " 月</span>" +
         '<span class="vl">' + money(inc) + "</span>" +
@@ -1903,7 +1928,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
     var m = pick.month || thisMonth();
     var list = db.orders.filter(function(o){ return (o.date || "").slice(0,7) === m; });
     var doneList = list.filter(function(o){ return o.status === "已成交"; });
-    var income = sumBy(doneList, function(o){ return parseMoney(o.amount); });
+    var income = paysOn(doneList, m); // 实收口径（与统计卡片一致）
     var cost = sumBy(doneList, function(o){ return parseMoney(o.cost); });
     var profit = income - cost;
     var unpaid = sumBy(list, unpaidOf);
@@ -2210,16 +2235,28 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
     if(!o) return;
     var v = parseMoney($("p_amount").value);
     if(v <= 0){ toast("先填收款金额"); return; }
+    // A8：超收警告
+    var u = Math.max(0, parseMoney(o.amount) - totalPaidOf(o));
+    if(v > u && u > 0){
+      if(!confirm("收款金额 " + money(v) + " 比还差的 " + money(u) + " 多了 " + money(v - u) + "。\n\n确定要记这么多吗？")) return;
+    }
     var d = $("p_date").value || todayStr();
     if(!Array.isArray(o.pays)) o.pays = [];
     o.pays.push({ date:d, amount:v });
     o.pays.sort(function(x, y){ return (x.date||"").localeCompare(y.date||""); });
     o.pay = derivePay(o);
     if(totalPaidOf(o) > 0) o.status = "已成交";
+    // A1：收清尾款 → 结果若还在「进行中」类，自动改成「成功」（失败/放弃/部分成功不动）
+    if(o.pay === "已付清" && o.result === "进行中"){
+      o.result = "成功";
+      toast("尾款收清，恢复结果已更新为「成功」");
+    }
     // 若原位编辑面板还开着，同步它的流水快照
     if(eOrder && eOrder.id === o.id){
       eOrder.pays = o.pays.slice();
       eOrder.pay = o.pay;
+      eOrder.result = o.result;
+      eOrder.status = o.status;
       renderEPays();
     }
     save(); closePaySheet();
@@ -2259,13 +2296,14 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
     var names = uniq(db.orders.map(function(o){ return o.customer; }).filter(Boolean)).sort();
     dl.innerHTML = names.slice(0, 300).map(function(n){ return '<option value="' + esc(n) + '"></option>'; }).join("");
   }
-  var PENDING_ST = ["跟进中","等待配件","客户考虑中"];
+  /* 待跟进 = 订单状态「跟进中」，或恢复结果「进行中」（3 天没动静的都提醒） */
   function renderFollow(){
     var card = $("followCard"), box = $("followBox"), tag = $("followTag");
     if(!card || !box) return;
     var now = new Date();
     var list = db.orders.filter(function(o){
-      if(PENDING_ST.indexOf(o.status) < 0) return false;
+      if(o.status !== "跟进中" && o.result !== "进行中") return false;
+      if(o.status === "已流失") return false;
       if(!o.date) return false;
       var d = new Date(o.date + "T00:00:00");
       return Math.floor((now - d) / 86400000) >= 3;
@@ -2342,12 +2380,6 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
     });
     $(id).addEventListener("change", updateMoneyHint);
   });
-  /* 尾款手动输入：标记为用户手填，不再被自动计算覆盖 */
-  $("f_final").addEventListener("input", function(){
-    this.value = this.value.replace(/[^\d.]/g, "").replace(/(\..*)\./g, "$1");
-    finalManual = true;
-    updateMoneyHint();
-  });
   /* 订单状态改了要重算（未收只对已成交算） */
   (function(){
     var origStatus = null;
@@ -2403,12 +2435,12 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
     db.trash = []; save(); renderTrash(); toast("已清空最近删除");
   };
 
-  /* 金额卡：展开 / 收起「尾款 & 成本」 */
+  /* 金额卡：展开 / 收起「成本」 */
   $("btnMoneyMore").onclick = function(){
     var box = $("moneyMore");
     var open = box.style.display === "none";
     box.style.display = open ? "" : "none";
-    this.textContent = open ? "收起：尾款 / 成本 ▴" : "展开：尾款 / 成本 ▾";
+    this.textContent = open ? "收起：成本 ▴" : "展开：成本 ▾";
   };
 
   /* 备注常用短语（可自定义、可删除） */
@@ -2480,6 +2512,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
         var it = (db.trash || [])[ri];
         if(it && it.order){
           if(!it.order.id) it.order.id = uid();
+          ensurePays(it.order); // 老记录恢复时补流水/结果映射
           db.orders.push(it.order);
           db.trash.splice(ri, 1);
           save(); renderAll(); toast("已恢复这一条");
@@ -2617,7 +2650,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
         date: date, customer: row[1] || "", contact: row[2] || "",
         source: val("s", row[3]), device: val("d", row[4]), fault: val("f", row[5]),
         status: val("t", row[6]) || "跟进中",
-        result: val("r", row[7]) || "正在恢复",
+        result: val("r", row[7]) || "进行中",
         pay:    val("p", row[8]) || "未付款",
         amount: parseMoney(row[9]), deposit: parseMoney(row[10]),
         rest: parseMoney(row[11]), cost: parseMoney(row[12]),
