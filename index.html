@@ -787,6 +787,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
   var curTab = "add", curStat = "month", statKw = "";
   var filter = { month:"", source:"", device:"", status:"", kw:"" };
   var listLimit = 30; // 「全部记录」一次渲染多少条，防数据多了卡顿
+  var chartFocusKey = null; // 刚点过的柱子，重绘后要把它滚回可视区
   var pick = { month:"", year:0, day:"" };
   function defForm(){
     return { source:"", device:"", fault:"", status:"跟进中", result:"进行中", pay:"未付款" };
@@ -1846,6 +1847,16 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
     }
     $("statChartTitle").textContent = title2;
     $("statChart").innerHTML = items.length ? barChart(items) : "";
+    // 点柱子会整块重绘、横向滚动条会归零 → 把刚点的那根柱子滚回看得见的位置
+    if(chartFocusKey){
+      var wc = $("statChart").querySelector(".chart");
+      var tg = wc ? wc.querySelector('[data-key="' + chartFocusKey + '"]') : null;
+      if(wc && tg){
+        var tr = tg.getBoundingClientRect(), wr = wc.getBoundingClientRect();
+        wc.scrollLeft = Math.max(0, wc.scrollLeft + (tr.left - wr.left) - (wc.clientWidth - tr.width) / 2);
+      }
+      chartFocusKey = null;
+    }
 
     // 表格
     var field = curStat === "source" || curStat === "device" || curStat === "fault" || curStat === "result" ? curStat : null;
@@ -1908,12 +1919,13 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
     if(!b) return;
     setStat(b.getAttribute("data-s"));
   };
-  /* 点柱子下钻：日柱 → 按天，月柱 → 按月 */
+  /* 点柱子下钻：日柱 → 按天，月柱 → 按月；并记住点的是哪根，重绘后滚回它 */
   $("statChart").onclick = function(e){
     var c = e.target.closest ? e.target.closest(".col") : null;
     if(!c) return;
     var k = c.getAttribute("data-key");
     if(!k) return;
+    chartFocusKey = k;
     if(k.length === 8){ pick.day = k.slice(0,4) + "-" + k.slice(4,6) + "-" + k.slice(6,8); setStat("day"); }
     else if(k.length === 6){ pick.month = k.slice(0,4) + "-" + k.slice(4,6); setStat("month"); }
   };
