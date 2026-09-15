@@ -57,8 +57,11 @@ main{max-width:760px;margin:0 auto;padding:0 14px 118px}
 .pane.on{display:block;animation:fade .22s ease}
 @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh);padding:16px;margin:13px 0}
-/* 核心数据卡：轻微强调（主色描边 + 柔光），和普通说明卡区分开 */
-.card.card-hi{border-color:#cfe0fd;box-shadow:0 2px 14px -8px rgba(47,111,237,.4)}
+/* 核心数据卡：主色描边 + 标题竖条，一眼和普通说明卡区分开 */
+.card.card-hi{border-color:#b9d4fb;box-shadow:0 4px 18px -10px rgba(47,111,237,.6)}
+.card.card-hi h2{color:var(--primary-dark)}
+.card.card-hi h2::before{content:"";display:inline-block;width:3.5px;height:15px;border-radius:2px;
+  background:linear-gradient(180deg,#5b93f8,#2f6fed);margin-right:8px;vertical-align:-2px}
 .card>h2{margin:0 0 13px;font-size:14.5px;font-weight:700;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .card>h2 .tag{font-size:12px;font-weight:500;color:var(--muted);background:var(--line2);padding:2px 8px;border-radius:20px}
 .card>h2 .sp{margin-left:auto;display:flex;gap:8px;align-items:center}
@@ -339,6 +342,7 @@ nav.tabbar{
   .mini .v.ph{color:#5f7186}
   /* 深色：核心卡描边 + 图表分档柱（避免浅蓝在暗底上刺眼） */
   .card.card-hi{border-color:#2a4a7a;box-shadow:0 2px 14px -8px rgba(74,134,247,.5)}
+  .card.card-hi h2{color:#8fb4ff}
   .col .cb.h1{background:linear-gradient(180deg,#2f4a75,#243c60)}
   .col .cb.h2{background:linear-gradient(180deg,#3a6ed0,#2a55a8)}
   .col .cb.h3{background:linear-gradient(180deg,#4a86f7,#2c62cf)}
@@ -1507,9 +1511,33 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
   }
 
   /* ---------------- 渲染：明细 ---------------- */
+  /* 明细跟随上面的统计范围：按天看就只列那天的、按月就只列那个月的，年同理；
+     按来源/设备/故障/结果这类维度看时，明细列出全部（维度只影响上面的汇总） */
+  function listScoped(){
+    if(curStat === "day"){
+      var d = pick.day || todayStr();
+      return db.orders.filter(function(o){ return o.date === d; });
+    }
+    if(curStat === "month"){
+      var m = pick.month || thisMonth();
+      return db.orders.filter(function(o){ return (o.date||"").slice(0,7) === m; });
+    }
+    if(curStat === "year"){
+      var y = String(pick.year || thisYear());
+      return db.orders.filter(function(o){ return (o.date||"").slice(0,4) === y; });
+    }
+    return db.orders;
+  }
+  /* 「全部记录」的标题：跟着统计范围变，避免"哪儿来的这些记录"的疑惑 */
+  function listScopeName(){
+    if(curStat === "day") return "当天记录 · " + (pick.day || todayStr());
+    if(curStat === "month") return "本月记录 · " + (pick.month || thisMonth());
+    if(curStat === "year") return "本年记录 · " + (pick.year || thisYear()) + " 年";
+    return "全部记录";
+  }
   function filtered(){
     var kw = filter.kw.trim().toLowerCase();
-    return db.orders.filter(function(o){
+    return listScoped().filter(function(o){
       if(filter.month && (o.date||"").slice(0,7) !== filter.month) return false;
       if(filter.source && o.source !== filter.source) return false;
       if(filter.device && o.device !== filter.device) return false;
@@ -1587,6 +1615,9 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
     var list = filtered();
     var total = list.length;
     $("listCount").textContent = total + " 条";
+    // 标题跟着统计范围走（按天看=当天记录，按月看=本月记录…）
+    var st = $("secList");
+    if(st) st.textContent = listScopeName();
     // 筛选标记：有筛选条件时在折叠标题上提示，避免"忘了筛过"看不到记录
     var ft = $("filterTag");
     if(ft){
@@ -1595,7 +1626,10 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
       ft.style.color = on ? "var(--red)" : "";
     }
     if(!total){
-      $("listBox").innerHTML = emptyHtml("还没有记录", "到「记一笔」录入第一条吧", "去记一笔", "add");
+      $("listBox").innerHTML = emptyHtml(
+        curStat === "day" ? "这天没有记录" : curStat === "month" ? "这个月没有记录" : curStat === "year" ? "这一年没有记录" : "还没有记录",
+        curStat === "day" || curStat === "month" || curStat === "year" ? "换个日期看看" : "到「记一笔」录入第一条吧",
+        "去记一笔", "add");
       return;
     }
     // 只渲染前 listLimit 条，避免记录多了整页变卡（点「显示更早的记录」再往上加）
@@ -1822,6 +1856,8 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
       $("statTableTitle").textContent = (curStat === "year" ? "每月" : "每日") + "汇总";
       $("statTable").innerHTML = curStat === "year" ? yearRows() : dayRows();
     }
+    // 统计范围一变，下面的明细也刷新（明细跟随统计范围：按天看=只有那天的记录）
+    renderList();
   }
 
   function dayRows(){
@@ -3217,8 +3253,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
   /* ---------------- 初始化 ---------------- */
   function renderAll(){
     renderQuick();
-    renderList();
-    renderStat();
+    renderStat(); // 内部会连带刷新明细列表
     renderBackupInfo();
     renderTrash();
     renderGuide();
