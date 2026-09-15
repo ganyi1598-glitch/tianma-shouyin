@@ -57,6 +57,8 @@ main{max-width:760px;margin:0 auto;padding:0 14px 118px}
 .pane.on{display:block;animation:fade .22s ease}
 @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh);padding:16px;margin:13px 0}
+/* 核心数据卡：轻微强调（主色描边 + 柔光），和普通说明卡区分开 */
+.card.card-hi{border-color:#cfe0fd;box-shadow:0 2px 14px -8px rgba(47,111,237,.4)}
 .card>h2{margin:0 0 13px;font-size:14.5px;font-weight:700;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .card>h2 .tag{font-size:12px;font-weight:500;color:var(--muted);background:var(--line2);padding:2px 8px;border-radius:20px}
 .card>h2 .sp{margin-left:auto;display:flex;gap:8px;align-items:center}
@@ -136,17 +138,17 @@ nav.tabbar{
 .tb-in button.on{color:var(--primary)}
 .tb-in button.on::after{content:"";position:absolute;top:0;left:50%;transform:translateX(-50%);width:22px;height:2.5px;border-radius:0 0 3px 3px;background:var(--primary)}
 .tb-in button:active{opacity:.6}
-.rec{background:var(--surface);border:1px solid var(--line);border-radius:13px;padding:12px 13px;margin-bottom:9px;box-shadow:0 1px 2px rgba(16,24,40,.04)}
-.rec-h{display:flex;align-items:center;gap:8px;margin-bottom:6px}
-.rec-h .who{font-size:15px;font-weight:700;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rec{background:var(--surface);border:1px solid var(--line);border-radius:13px;padding:10px 12px;margin-bottom:7px;box-shadow:0 1px 2px rgba(16,24,40,.04)}
+.rec-h{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.rec-h .who{font-size:14.5px;font-weight:700;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .rec-h .dt{font-size:12px;color:var(--faint);flex:none;font-variant-numeric:tabular-nums}
-.rec-b{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:7px}
-.rec-m{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin-bottom:8px;padding-bottom:8px;border-bottom:1px dashed var(--line)}
-.rec-m .amt{font-size:19px;font-weight:700;letter-spacing:-.5px;font-variant-numeric:tabular-nums;color:var(--text);margin-right:3px}
+.rec-b{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px}
+.rec-m{display:flex;align-items:center;flex-wrap:wrap;gap:5px;margin-bottom:6px;padding-bottom:6px;border-bottom:1px dashed var(--line)}
+.rec-m .amt{font-size:17.5px;font-weight:700;letter-spacing:-.5px;font-variant-numeric:tabular-nums;color:var(--text);margin-right:3px}
 .rec-f{display:flex;align-items:center;gap:8px}
 .rec-f .tel{font-size:13.5px;color:var(--primary-dark);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:pointer}
 .rec-f .acts{display:flex;gap:4px;flex:none}
-.pill{display:inline-flex;align-items:center;padding:2.5px 9px;border-radius:20px;font-size:12px;font-weight:600;white-space:nowrap;line-height:1.5}
+.pill{display:inline-flex;align-items:center;padding:2px 8.5px;border-radius:20px;font-size:11.5px;font-weight:600;white-space:nowrap;line-height:1.45}
 .p-g{background:var(--green-soft);color:var(--green)}
 .p-r{background:var(--red-soft);color:var(--red)}
 .p-a{background:var(--amber-soft);color:var(--amber)}
@@ -177,6 +179,9 @@ nav.tabbar{
 .col .cv{font-size:10.5px;color:var(--muted);font-variant-numeric:tabular-nums;margin-bottom:3px;white-space:nowrap}
 .col .cb{width:100%;max-width:38px;border-radius:6px 6px 3px 3px;background:linear-gradient(180deg,#5b93f8,#2f6fed);min-height:2px;transition:height .45s cubic-bezier(.2,.8,.3,1)}
 .col .cb.g{background:linear-gradient(180deg,#3fc38c,#12a06a)}
+.col .cb.h3{background:linear-gradient(180deg,#3a76e8,#1c4fc4)}
+.col .cb.h2{background:linear-gradient(180deg,#5b93f8,#2f6fed)}
+.col .cb.h1{background:linear-gradient(180deg,#9cc2fb,#6ea2f5)}
 .col .cb.a{background:linear-gradient(180deg,#f5bd53,#e0930f)}
 .axis{display:flex;gap:5px;margin-top:6px}
 .axis span{flex:1;text-align:center;font-size:11px;color:var(--faint);white-space:nowrap;overflow:hidden}
@@ -332,6 +337,11 @@ nav.tabbar{
   .mini{background:#1e2732}
   .mini:active{background:#26313e}
   .mini .v.ph{color:#5f7186}
+  /* 深色：核心卡描边 + 图表分档柱（避免浅蓝在暗底上刺眼） */
+  .card.card-hi{border-color:#2a4a7a;box-shadow:0 2px 14px -8px rgba(74,134,247,.5)}
+  .col .cb.h1{background:linear-gradient(180deg,#2f4a75,#243c60)}
+  .col .cb.h2{background:linear-gradient(180deg,#3a6ed0,#2a55a8)}
+  .col .cb.h3{background:linear-gradient(180deg,#4a86f7,#2c62cf)}
 }
 </style>
 </head>
@@ -456,7 +466,7 @@ nav.tabbar{
     <button class="btn sm ghost" id="statSearchClose">收起</button>
   </div>
 
-  <div class="card">
+  <div class="card card-hi">
     <h2>接单情况 <span class="tag" id="statTag"></span><span class="sp" id="statCtrl"></span></h2>
     <div class="stats" id="statCards"></div>
   </div>
@@ -473,13 +483,18 @@ nav.tabbar{
 
   <div class="sec-t" id="secList" style="margin-top:24px;scroll-margin-top:78px">全部记录</div>
   <div class="card">
-    <h2>筛选 <span class="sp"><button class="btn sm ghost" id="btnClearFilter">重置</button></span></h2>
-    <div class="fld"><label>月份</label><input type="month" id="q_month"></div>
-    <div class="f2">
-      <div class="fld"><label>客户来源</label><button class="pickbtn" id="q_p_source"><span class="v ph">全部</span><svg viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
-      <div class="fld"><label>订单状态</label><button class="pickbtn" id="q_p_status"><span class="v ph">全部</span><svg viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
-    </div>
-    <div class="fld last"><label>搜索</label><input id="q_kw" placeholder="客户 / 电话 / 故障 / 备注" autocomplete="off"></div>
+    <details class="datefold" style="margin-top:0;border-top:none;padding-top:0">
+      <summary>筛选 / 搜索记录　<span class="tag" id="filterTag">点开看</span></summary>
+      <div style="margin-top:13px">
+        <div class="fld"><label>月份</label><input type="month" id="q_month"></div>
+        <div class="f2">
+          <div class="fld"><label>客户来源</label><button class="pickbtn" id="q_p_source"><span class="v ph">全部</span><svg viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+          <div class="fld"><label>订单状态</label><button class="pickbtn" id="q_p_status"><span class="v ph">全部</span><svg viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+        </div>
+        <div class="fld"><label>搜索</label><input id="q_kw" placeholder="客户 / 电话 / 故障 / 备注" autocomplete="off"></div>
+        <div class="btn-row"><button class="btn sm ghost" id="btnClearFilter">重置筛选</button></div>
+      </div>
+    </details>
   </div>
 
   <div class="card">
@@ -767,6 +782,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
   var db = { orders: [], opts: {}, meta: { shop:"", lastBackup:null }, trash: [] };
   var curTab = "add", curStat = "month", statKw = "";
   var filter = { month:"", source:"", device:"", status:"", kw:"" };
+  var listLimit = 30; // 「全部记录」一次渲染多少条，防数据多了卡顿
   var pick = { month:"", year:0, day:"" };
   function defForm(){
     return { source:"", device:"", fault:"", status:"跟进中", result:"进行中", pay:"未付款" };
@@ -1452,6 +1468,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
       openSheet(field, filter[field], function(v){
         filter[field] = v;
         paintPick(btnId, v, ph);
+        listLimit = 30; // 换了筛选条件，重新从头显示
         renderList();
       }, { allowAll:true, ph:"不在上面？直接输入" });
     };
@@ -1539,6 +1556,8 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
         (o.contact ? esc(o.contact) : '<span style="color:var(--faint)">未填联系方式</span>') + "</span>" +
         '<span class="acts">' +
           (o.contact ? '<button class="btn sm ghost" data-call="' + esc(o.contact) + '">拨打</button>' : "") +
+          (parseMoney(o.amount) > 0 && totalPaidOf(o) < parseMoney(o.amount) ? '<button class="btn sm ghost" data-quickpay="' + o.id + '">收款</button>' : "") +
+          (totalPaidOf(o) > 0 ? '<button class="btn sm ghost" data-refund="' + o.id + '" style="color:var(--red)">退款</button>' : "") +
           '<button class="btn sm ghost" data-actions="' + o.id + '">⋯</button>' +
         "</span></div>";
     var moneyRow = "";
@@ -1566,14 +1585,25 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
 
   function renderList(){
     var list = filtered();
-    $("listCount").textContent = list.length + " 条";
-    if(!list.length){
-      $("listBox").innerHTML = emptyHtml("还没有记录", "到「记一笔」录入第一条吧");
+    var total = list.length;
+    $("listCount").textContent = total + " 条";
+    // 筛选标记：有筛选条件时在折叠标题上提示，避免"忘了筛过"看不到记录
+    var ft = $("filterTag");
+    if(ft){
+      var on = !!(filter.month || filter.source || filter.device || filter.status || (filter.kw || "").trim());
+      ft.textContent = on ? "筛选中" : "点开看";
+      ft.style.color = on ? "var(--red)" : "";
+    }
+    if(!total){
+      $("listBox").innerHTML = emptyHtml("还没有记录", "到「记一笔」录入第一条吧", "去记一笔", "add");
       return;
     }
+    // 只渲染前 listLimit 条，避免记录多了整页变卡（点「显示更早的记录」再往上加）
+    var shown = Math.min(listLimit, total);
+    var part = list.slice(0, shown);
     // 按日期分组显示
     var groups = [], cur = null;
-    list.forEach(function(o){
+    part.forEach(function(o){
       if(!cur || cur.d !== o.date){ cur = { d:o.date, items:[] }; groups.push(cur); }
       cur.items.push(o);
     });
@@ -1582,11 +1612,20 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
         ' <span style="font-weight:400;color:var(--faint)">' + g.items.length + " 单</span></div>";
       return head + g.items.map(recHtml).join("");
     }).join("");
+    if(shown < total){
+      html += '<div style="text-align:center;margin:16px 0 4px">' +
+        '<button class="btn sm" data-morelist="1">显示更早的记录（还有 ' + (total - shown) + ' 条）↓</button></div>' +
+        '<p class="hint" style="text-align:center;color:var(--faint);margin:9px 0 2px">已显示最近 ' + shown + ' 条，共 ' + total + ' 条</p>';
+    }else if(total > listLimit){
+      html += '<p class="hint" style="text-align:center;color:var(--faint);margin:13px 0 2px">已经到底了 · 共 ' + total + ' 条</p>';
+    }
     $("listBox").innerHTML = html;
   }
-  function emptyHtml(t, s){
+  function emptyHtml(t, s, btn, goto){
     return '<div class="empty"><svg viewBox="0 0 24 24"><path d="M4 5.5h16v13H4z"/><path d="M7.5 9.5h6M7.5 13h9M7.5 16.2h4"/></svg><p>' +
-      esc(t) + (s ? "<br>" + esc(s) : "") + "</p></div>";
+      esc(t) + (s ? "<br>" + esc(s) : "") + "</p>" +
+      (btn ? '<button class="btn pri sm" data-goto="' + (goto || "add") + '" style="margin-top:4px">' + esc(btn) + "</button>" : "") +
+      "</div>";
   }
 
   /* ---------------- 渲染：统计 ---------------- */
@@ -1748,7 +1787,8 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
       items = [];
       for(var i = 0; i < raw.length; i++){
         var x = raw[i];
-        x.cls = x.value >= dailyMax && dailyMax > 0 ? "g" : "";
+        var ratio = dailyMax > 0 ? x.value / dailyMax : 0;
+        x.cls = x.value <= 0 ? "" : (ratio >= 0.999 ? "g" : ratio > 0.6 ? "h3" : ratio > 0.3 ? "h2" : "h1");
         items.push(x);
       }
     }else if(curStat === "year"){
@@ -1763,7 +1803,9 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
         rawY.push({ label:i2 + "月", value:v2, key:(yy + pad(i2)) });
       }
       items = rawY.map(function(x){
-        return { label:x.label, value:x.value, key:x.key, cls: x.value >= moMax && moMax > 0 ? "g" : "" };
+        var ratio = moMax > 0 ? x.value / moMax : 0;
+        var cls = x.value <= 0 ? "" : (ratio >= 0.999 ? "g" : ratio > 0.6 ? "h3" : ratio > 0.3 ? "h2" : "h1");
+        return { label:x.label, value:x.value, key:x.key, cls: cls };
       });
     }else{
       $("statChartCard").style.display = "none";
@@ -2516,10 +2558,11 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
   bindFilterPick("q_p_source", "source", "全部");
   bindFilterPick("q_p_status", "status", "全部");
 
-  $("q_month").onchange = function(){ filter.month = this.value; renderList(); };
-  $("q_kw").oninput = function(){ filter.kw = this.value; renderList(); };
+  $("q_month").onchange = function(){ filter.month = this.value; listLimit = 30; renderList(); };
+  $("q_kw").oninput = function(){ filter.kw = this.value; listLimit = 30; renderList(); };
   $("btnClearFilter").onclick = function(){
     filter = { month:"", source:"", device:"", status:"", kw:"" };
+    listLimit = 30;
     $("q_month").value = ""; $("q_kw").value = "";
     paintPick("q_p_source", "", "全部");
     paintPick("q_p_status", "", "全部");
@@ -2649,6 +2692,8 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
       }
       if(t.dataset.note){ insertNote(t.dataset.note); return; }
       if(t.dataset.notemgr){ openNoteMgr(); return; }
+      if(t.dataset.morelist){ listLimit += 30; renderList(); return; }
+      if(t.dataset.goto){ switchTab(t.dataset.goto); return; }
       if(t.dataset.quickpay){ closeSheet(); quickPay(t.dataset.quickpay); return; }
       if(t.dataset.refund){ closeSheet(); openRefundSheet(t.dataset.refund); return; }
       if(t.dataset.actions){ openActions(t.dataset.actions); return; }
