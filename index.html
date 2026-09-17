@@ -256,6 +256,15 @@ nav.tabbar{
 .quickline b{color:var(--text);font-weight:700;font-variant-numeric:tabular-nums}
 .quickline b.q-red{color:var(--red)}
 .q-dot{display:inline-block;width:3px;height:3px;border-radius:50%;background:var(--faint);margin:0 10px;vertical-align:middle}
+/* ① 客户快速输入：输入即浮出候选，点一下带出称呼 + 电话 */
+.cust-quick{margin-top:12px}
+.cq-hd{font-size:11.5px;color:var(--faint);margin:0 2px 7px}
+.cq-row{display:flex;gap:7px;overflow-x:auto;padding:1px 2px 7px;scrollbar-width:none}
+.cq-row::-webkit-scrollbar{display:none}
+.cq-item{flex:0 0 auto;display:flex;flex-direction:column;gap:3px;align-items:flex-start;padding:8px 12px;border-radius:12px;border:1px solid var(--line);background:var(--line2);cursor:pointer;font:inherit;text-align:left;transition:border-color .15s,background .15s}
+.cq-item b{font-size:13px;color:var(--text);font-weight:600;white-space:nowrap}
+.cq-item span{font-size:10.5px;color:var(--muted);white-space:nowrap}
+.cq-item:active{border-color:var(--primary);background:var(--primary-soft)}
 .datefold{margin-top:13px;border-top:1px solid var(--line2);padding-top:12px}
 .datefold>summary{list-style:none;cursor:pointer;font-size:13px;color:var(--muted);font-weight:500;display:flex;align-items:center;gap:7px;user-select:none}
 .datefold>summary::-webkit-details-marker{display:none}
@@ -392,9 +401,10 @@ nav.tabbar{
   <div class="card">
     <h2>客户信息</h2>
     <div class="f2">
-      <div class="fld"><label>客户称呼</label><input id="f_customer" list="custList" placeholder="张先生 / 王姐（可点历史客户）" autocomplete="off"></div>
+      <div class="fld"><label>客户称呼</label><input id="f_customer" placeholder="张先生 / 王姐（可点历史客户）" autocomplete="off"></div>
       <div class="fld"><label>联系方式</label><input id="f_contact" placeholder="电话 / 微信" autocomplete="off" inputmode="tel"></div>
     </div>
+    <div class="cust-quick" id="custQuick" style="display:none"></div>
     <details class="datefold">
       <summary>接单日期 <span class="tag" id="dateTag"></span></summary>
       <div class="chips" id="dateChips" style="margin:10px 0"></div>
@@ -454,8 +464,8 @@ nav.tabbar{
       <svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2.2"/><path d="M16.5 16.5L21 21" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
     </button>
     <div class="seg" id="segs">
-      <button data-s="month" class="on">按月</button>
-      <button data-s="day">按天</button>
+      <button data-s="day" class="on">按天</button>
+      <button data-s="month">按月</button>
       <button data-s="year">按年</button>
       <span class="seg-div"></span>
       <button data-s="source">按来源</button>
@@ -756,7 +766,6 @@ nav.tabbar{
 </div>
 
 <div class="toast" id="toast"></div>
-<datalist id="custList"></datalist>
 
 <script>
 var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",n="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-$",e={};function t(r,o){if(!e[r]){e[r]={};for(var n=0;n<r.length;n++)e[r][r.charAt(n)]=n}return e[r][o]}var i={compressToBase64:function(r){if(null==r)return"";var n=i._compress(r,6,function(r){return o.charAt(r)});switch(n.length%4){default:case 0:return n;case 1:return n+"===";case 2:return n+"==";case 3:return n+"="}},decompressFromBase64:function(r){return null==r?"":""==r?null:i._decompress(r.length,32,function(n){return t(o,r.charAt(n))})},compressToUTF16:function(o){return null==o?"":i._compress(o,15,function(o){return r(o+32)})+" "},decompressFromUTF16:function(r){return null==r?"":""==r?null:i._decompress(r.length,16384,function(o){return r.charCodeAt(o)-32})},compressToUint8Array:function(r){for(var o=i.compress(r),n=new Uint8Array(2*o.length),e=0,t=o.length;e<t;e++){var s=o.charCodeAt(e);n[2*e]=s>>>8,n[2*e+1]=s%256}return n},decompressFromUint8Array:function(o){if(null==o)return i.decompress(o);for(var n=new Array(o.length/2),e=0,t=n.length;e<t;e++)n[e]=256*o[2*e]+o[2*e+1];var s=[];return n.forEach(function(o){s.push(r(o))}),i.decompress(s.join(""))},compressToEncodedURIComponent:function(r){return null==r?"":i._compress(r,6,function(r){return n.charAt(r)})},decompressFromEncodedURIComponent:function(r){return null==r?"":""==r?null:(r=r.replace(/ /g,"+"),i._decompress(r.length,32,function(o){return t(n,r.charAt(o))}))},compress:function(o){return i._compress(o,16,function(o){return r(o)})},_compress:function(r,o,n){if(null==r)return"";var e,t,i,s={},u={},a="",p="",c="",l=2,f=3,h=2,d=[],m=0,v=0;for(i=0;i<r.length;i+=1)if(a=r.charAt(i),Object.prototype.hasOwnProperty.call(s,a)||(s[a]=f++,u[a]=!0),p=c+a,Object.prototype.hasOwnProperty.call(s,p))c=p;else{if(Object.prototype.hasOwnProperty.call(u,c)){if(c.charCodeAt(0)<256){for(e=0;e<h;e++)m<<=1,v==o-1?(v=0,d.push(n(m)),m=0):v++;for(t=c.charCodeAt(0),e=0;e<8;e++)m=m<<1|1&t,v==o-1?(v=0,d.push(n(m)),m=0):v++,t>>=1}else{for(t=1,e=0;e<h;e++)m=m<<1|t,v==o-1?(v=0,d.push(n(m)),m=0):v++,t=0;for(t=c.charCodeAt(0),e=0;e<16;e++)m=m<<1|1&t,v==o-1?(v=0,d.push(n(m)),m=0):v++,t>>=1}0==--l&&(l=Math.pow(2,h),h++),delete u[c]}else for(t=s[c],e=0;e<h;e++)m=m<<1|1&t,v==o-1?(v=0,d.push(n(m)),m=0):v++,t>>=1;0==--l&&(l=Math.pow(2,h),h++),s[p]=f++,c=String(a)}if(""!==c){if(Object.prototype.hasOwnProperty.call(u,c)){if(c.charCodeAt(0)<256){for(e=0;e<h;e++)m<<=1,v==o-1?(v=0,d.push(n(m)),m=0):v++;for(t=c.charCodeAt(0),e=0;e<8;e++)m=m<<1|1&t,v==o-1?(v=0,d.push(n(m)),m=0):v++,t>>=1}else{for(t=1,e=0;e<h;e++)m=m<<1|t,v==o-1?(v=0,d.push(n(m)),m=0):v++,t=0;for(t=c.charCodeAt(0),e=0;e<16;e++)m=m<<1|1&t,v==o-1?(v=0,d.push(n(m)),m=0):v++,t>>=1}0==--l&&(l=Math.pow(2,h),h++),delete u[c]}else for(t=s[c],e=0;e<h;e++)m=m<<1|1&t,v==o-1?(v=0,d.push(n(m)),m=0):v++,t>>=1;0==--l&&(l=Math.pow(2,h),h++)}for(t=2,e=0;e<h;e++)m=m<<1|1&t,v==o-1?(v=0,d.push(n(m)),m=0):v++,t>>=1;for(;;){if(m<<=1,v==o-1){d.push(n(m));break}v++}return d.join("")},decompress:function(r){return null==r?"":""==r?null:i._decompress(r.length,32768,function(o){return r.charCodeAt(o)})},_decompress:function(o,n,e){var t,i,s,u,a,p,c,l=[],f=4,h=4,d=3,m="",v=[],g={val:e(0),position:n,index:1};for(t=0;t<3;t+=1)l[t]=t;for(s=0,a=Math.pow(2,2),p=1;p!=a;)u=g.val&g.position,g.position>>=1,0==g.position&&(g.position=n,g.val=e(g.index++)),s|=(u>0?1:0)*p,p<<=1;switch(s){case 0:for(s=0,a=Math.pow(2,8),p=1;p!=a;)u=g.val&g.position,g.position>>=1,0==g.position&&(g.position=n,g.val=e(g.index++)),s|=(u>0?1:0)*p,p<<=1;c=r(s);break;case 1:for(s=0,a=Math.pow(2,16),p=1;p!=a;)u=g.val&g.position,g.position>>=1,0==g.position&&(g.position=n,g.val=e(g.index++)),s|=(u>0?1:0)*p,p<<=1;c=r(s);break;case 2:return""}for(l[3]=c,i=c,v.push(c);;){if(g.index>o)return"";for(s=0,a=Math.pow(2,d),p=1;p!=a;)u=g.val&g.position,g.position>>=1,0==g.position&&(g.position=n,g.val=e(g.index++)),s|=(u>0?1:0)*p,p<<=1;switch(c=s){case 0:for(s=0,a=Math.pow(2,8),p=1;p!=a;)u=g.val&g.position,g.position>>=1,0==g.position&&(g.position=n,g.val=e(g.index++)),s|=(u>0?1:0)*p,p<<=1;l[h++]=r(s),c=h-1,f--;break;case 1:for(s=0,a=Math.pow(2,16),p=1;p!=a;)u=g.val&g.position,g.position>>=1,0==g.position&&(g.position=n,g.val=e(g.index++)),s|=(u>0?1:0)*p,p<<=1;l[h++]=r(s),c=h-1,f--;break;case 2:return v.join("")}if(0==f&&(f=Math.pow(2,d),d++),l[c])m=l[c];else{if(c!==h)return null;m=i+i.charAt(0)}v.push(m),l[h++]=i+m.charAt(0),i=m,0==--f&&(f=Math.pow(2,d),d++)}}};return i}();"function"==typeof define&&define.amd?define(function(){return LZString}):"undefined"!=typeof module&&null!=module?module.exports=LZString:"undefined"!=typeof angular&&null!=angular&&angular.module("LZString",[]).factory("LZString",function(){return LZString});
@@ -784,10 +793,11 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
   var DEF_NOTEPH = ["客户急","开盘换头","等待配件","已恢复数据","需要报价","已通知取件","客户考虑中"];
 
   var db = { orders: [], opts: {}, meta: { shop:"", lastBackup:null }, trash: [] };
-  var curTab = "add", curStat = "month", statKw = "";
+  var curTab = "add", curStat = "day", statKw = "";
   var filter = { month:"", source:"", device:"", status:"", kw:"" };
   var listLimit = 30; // 「全部记录」一次渲染多少条，防数据多了卡顿
   var chartFocusKey = null; // 刚点过的柱子，重绘后要把它滚回可视区
+  var chartAutoAnchor = true; // 进统计页/切维度时，是否要把「今天」那根柱子自动滚到眼前
   var pick = { month:"", year:0, day:"" };
   function defForm(){
     return { source:"", device:"", fault:"", status:"跟进中", result:"进行中", pay:"未付款" };
@@ -930,9 +940,11 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
   }
   function moneyShort(n){
     n = parseMoney(n);
-    if(n >= 10000) return (Math.round(n / 100) / 100) + "万";
-    if(n >= 1000) return (Math.round(n / 100) / 10) + "千";
-    return String(Math.round(n));
+    var neg = n < 0, an = Math.abs(n), s;
+    if(an >= 10000) s = (Math.round(an / 1000) / 10) + "万";
+    else if(an >= 1000) s = (Math.round(an / 100) / 10) + "k"; // ② 1000 缩写成 1k
+    else s = String(Math.round(an));
+    return (neg ? "-" : "") + s;
   }
   function inputMoney(el){ return el ? parseMoney(el.value) : 0; }
 
@@ -1180,6 +1192,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
     $("btnMoneyMore").textContent = "展开：成本 ▾";
     if($("lastSaved")) $("lastSaved").style.display = "none";
     form = defForm();
+    if(typeof payAutoSet !== "undefined") payAutoSet = false;
     paintPick("p_source", "", "请选择");
     paintPick("p_device", "", "请选择");
     paintPick("p_fault",  "", "请选择");
@@ -1203,8 +1216,12 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
     if(a){
       var rest = Math.max(0, a - d);
       parts.push("尾款 " + money(rest));
-      if(c) parts.push("毛利 " + money(a - c) + (a ? "（" + Math.round((a - c) / a * 100) + "%）" : ""));
+      if(c) parts.push("毛利 " + money(a - c) + "（" + Math.round((a - c) / a * 100) + "%）");
       if(d) parts.push("已收定金 " + money(d));
+    }else if(d){
+      // ⑦ 只填了定金、还没填账单价：也给个反馈，别让提示栏空着
+      parts.push("已收定金 " + money(d));
+      parts.push("填上「账单价」才能算尾款");
     }
     hint.style.display = "";
     hint.innerHTML = parts.length ? "　".concat(parts.join("　|　")) : "";
@@ -1239,15 +1256,32 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
     if(!o.customer && !o.amount){
       if(!confirm("这一笔还没填「客户称呼」和「账单价」。\n\n确定就这样保存吗？")) return;
     }
-    if(o.status === "已成交" && o.pay === "未付款"){
-      if(!confirm("这笔还是「未付款」。\n\n付了定金才算成交，确定要算作「已成交」吗？")) return;
-    }
-    // 收款流水：按录入时的收款情况生成第一笔（定金/全额记在接单日）
+    // 收款流水：按「金额」生成，而不是按「收款情况」这个标签 —— 只要填了钱就一定入账
     o.pays = [];
-    if(o.pay === "已付清" && parseMoney(o.amount) > 0){
-      o.pays.push({ date:o.date, amount:parseMoney(o.amount) });
-    }else if(o.pay === "已付定金" && parseMoney(o.deposit) > 0){
-      o.pays.push({ date:o.date, amount:parseMoney(o.deposit) });
+    var _a = parseMoney(o.amount), _d = parseMoney(o.deposit);
+    if(o.pay === "已付清"){
+      if(_a > 0) o.pays.push({ date:o.date, amount:_a });
+      else if(_d > 0) o.pays.push({ date:o.date, amount:_d });
+    }else if(_d > 0){
+      o.pays.push({ date:o.date, amount:_d });
+    }
+    // ⑥ 超收：定金超过账单价 → 提醒（与编辑面板「收款」的口径一致）
+    if(_a > 0 && _d > _a){
+      if(!confirm("定金 " + money(_d) + " 超过了账单价 " + money(_a) + "。\n\n多出来的 " + money(_d - _a) + " 也会一并算作实收，确定吗？")) return;
+    }
+    // ⑤ 标了「已成交」却一分钱没收到 → 确认（看实收金额，不看标签）
+    if(o.status === "已成交" && o.pay !== "货到付款" && totalPaidOf(o) <= 0){
+      if(!confirm("这单标了「已成交」，但没有任何收款记录。\n\n确定要这样保存吗？")) return;
+    }
+    // ④ 收款情况按「实收金额」自动判定，避免标签与流水打架
+    var _payBefore = o.pay;
+    o.pay = derivePay(o);
+    // ④c 金额判定出「已付定金/已付清」时，状态也要跟到位（付了定金才算成交）
+    //     只提升「跟进中」，不动您手动设的「已流失」等其它状态
+    var _statusBumped = false;
+    if((o.pay === "已付定金" || o.pay === "已付清") && o.status === "跟进中"){
+      o.status = "已成交";
+      _statusBumped = true;
     }
     // A4：记了收款但状态不是已成交 → 确认
     if(o.pays.length && o.status !== "已成交"){
@@ -1256,7 +1290,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
     o.id = uid();
     o.createdAt = new Date().toISOString();
     db.orders.push(o);
-    toast("记好了一笔");
+    toast(_payBefore === o.pay ? "记好了一笔" : "记好了 · 收款情况自动记为「" + o.pay + "」" + (_statusBumped ? "、状态改为「已成交」" : ""));
     save();
     var savedId = o.id;
     $("f_date").value = o.date;
@@ -1745,18 +1779,19 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
     items.forEach(function(i){ max = Math.max(max, i.value); tot += i.value; });
     if(tot <= 0) return emptyHtml("这个区间还没有成交记录");
     if(max <= 0) max = 1;
-    var many = items.length > 15;
-    var minW = many ? Math.max(520, items.length * 26) : 0;
-    var step = many ? Math.ceil(items.length / 12) : 1;
+    var many = items.length > 10;
+    // ② 有收入的柱子全部标注 → 按柱子数量把图表拉宽，保证每根柱子的数字都放得下
+    var minW = many ? Math.max(520, items.length * 34) : 0;
     var cols = items.map(function(i, idx){
       var h = Math.max(i.value > 0 ? 3 : 0, Math.round(i.value / max * 100));
       var lab = i.value > 0 ? (moneyShort(i.value) === "0" ? "" : moneyShort(i.value)) : "";
-      return '<div class="col"' + (i.key ? ' data-key="' + i.key + '" style="cursor:pointer"' : "") + '><div class="cv">' + (idx % step === 0 ? lab : "") + "</div>" +
+      return '<div class="col"' + (i.key ? ' data-key="' + i.key + '" style="cursor:pointer"' : "") + '><div class="cv">' + lab + "</div>" +
         '<div class="cb' + (i.cls ? " " + i.cls : "") + '" style="height:' + h + '%"></div></div>';
     }).join("");
     var axis = items.map(function(i){ return "<span>" + esc(i.label) + "</span>"; }).join("");
     return '<div class="chart"><div style="min-width:' + minW + 'px"><div class="plot">' + cols +
-      '</div><div class="axis">' + axis + "</div></div></div>";
+      '</div><div class="axis">' + axis + "</div></div></div>" +
+      '<p class="hint" style="margin:9px 2px 0">柱上数字 = 实收金额，k = 千、万 = 万；点柱子可看那一天的明细</p>';
   }
 
   function renderStat(){
@@ -1847,15 +1882,29 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
     }
     $("statChartTitle").textContent = title2;
     $("statChart").innerHTML = items.length ? barChart(items) : "";
-    // 点柱子会整块重绘、横向滚动条会归零 → 把刚点的那根柱子滚回看得见的位置
-    if(chartFocusKey){
+    // ⑧ 自动锚点：看本月就定位到今天那根柱子；看往月就定位到最后一笔进账那天
+    var anchorKey = null;
+    if(curStat === "day" || curStat === "month"){
+      var am = pick.month || thisMonth();
+      var tds = todayStr();
+      if(am === tds.slice(0, 7)) anchorKey = tds.replace(/-/g, "");
+      else{
+        for(var q = items.length - 1; q >= 0; q--){ if(items[q].value > 0){ anchorKey = items[q].key; break; } }
+      }
+    }else if(curStat === "year"){
+      for(var q2 = items.length - 1; q2 >= 0; q2--){ if(items[q2].value > 0){ anchorKey = items[q2].key; break; } }
+    }
+    // 点柱子会整块重绘、横向滚动条会归零 → 把该看的那根柱子滚回可视区
+    var focusKey = chartFocusKey || (chartAutoAnchor ? anchorKey : null);
+    if(focusKey){
       var wc = $("statChart").querySelector(".chart");
-      var tg = wc ? wc.querySelector('[data-key="' + chartFocusKey + '"]') : null;
+      var tg = wc ? wc.querySelector('[data-key="' + focusKey + '"]') : null;
       if(wc && tg){
         var tr = tg.getBoundingClientRect(), wr = wc.getBoundingClientRect();
         wc.scrollLeft = Math.max(0, wc.scrollLeft + (tr.left - wr.left) - (wc.clientWidth - tr.width) / 2);
       }
       chartFocusKey = null;
+      chartAutoAnchor = false; // 只自动定位一次，之后页内改数据重绘不打扰
     }
 
     // 表格
@@ -1910,6 +1959,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
 
   function setStat(name){
     curStat = name;
+    chartAutoAnchor = true; // 换了维度 → 重新定位到该看的位置
     var all = $("segs").querySelectorAll("button");
     for(var i = 0; i < all.length; i++) all[i].classList.toggle("on", all[i].getAttribute("data-s") === name);
     renderStat();
@@ -1929,25 +1979,25 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
     if(k.length === 8){ pick.day = k.slice(0,4) + "-" + k.slice(4,6) + "-" + k.slice(6,8); setStat("day"); }
     else if(k.length === 6){ pick.month = k.slice(0,4) + "-" + k.slice(4,6); setStat("month"); }
   };
-  // 统计页导航
+  // 统计页导航（切月/切日/切年 → 重新自动定位到该看的位置）
   $("statCtrl").addEventListener("click", function(e){
     var b = e.target.closest("button");
     if(!b) return;
     var n = b.getAttribute("data-nav");
-    if(n){ pick.month = shiftMonth(pick.month || thisMonth(), parseInt(n,10)); renderStat(); return; }
+    if(n){ pick.month = shiftMonth(pick.month || thisMonth(), parseInt(n,10)); chartAutoAnchor = true; renderStat(); return; }
     var d = b.getAttribute("data-dnav");
     if(d){
       var dd = new Date((pick.day || todayStr()) + "T00:00:00");
       dd.setDate(dd.getDate() + parseInt(d,10));
       pick.day = dd.getFullYear() + "-" + pad(dd.getMonth()+1) + "-" + pad(dd.getDate());
-      renderStat(); return;
+      chartAutoAnchor = true; renderStat(); return;
     }
     var yv = b.getAttribute("data-ynav");
-    if(yv){ pick.year = String(parseInt(pick.year || thisYear(),10) + parseInt(yv,10)); renderStat(); }
+    if(yv){ pick.year = String(parseInt(pick.year || thisYear(),10) + parseInt(yv,10)); chartAutoAnchor = true; renderStat(); }
   });
   $("statCtrl").addEventListener("change", function(e){
-    if(e.target.id === "pk_month"){ pick.month = e.target.value; renderStat(); }
-    if(e.target.id === "pk_day"){ pick.day = e.target.value; renderStat(); }
+    if(e.target.id === "pk_month"){ pick.month = e.target.value; chartAutoAnchor = true; renderStat(); }
+    if(e.target.id === "pk_day"){ pick.day = e.target.value; chartAutoAnchor = true; renderStat(); }
   });
 
   /* ---------------- 标签切换 ---------------- */
@@ -1957,7 +2007,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
     for(var i = 0; i < btns.length; i++) btns[i].classList.toggle("on", btns[i].getAttribute("data-tab") === name);
     ["add","stat","more"].forEach(function(t){ $("pane-" + t).classList.toggle("on", t === name); });
     window.scrollTo({ top:0, behavior:"auto" });
-    if(name === "stat"){ renderStat(); renderList(); }
+    if(name === "stat"){ chartAutoAnchor = true; renderStat(); renderList(); }
     if(name === "more") renderBackupInfo();
   }
   document.querySelector(".tb-in").onclick = function(e){
@@ -2497,12 +2547,84 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
     var g = $("guideCard");
     if(g) g.style.display = db.orders.length ? "none" : "";
   }
-  function renderCustList(){
-    var dl = $("custList");
-    if(!dl) return;
-    var names = uniq(db.orders.map(function(o){ return o.customer; }).filter(Boolean)).sort();
-    dl.innerHTML = names.slice(0, 300).map(function(n){ return '<option value="' + esc(n) + '"></option>'; }).join("");
+  /* ① 客户快速输入：把历史客户整理成"最近来过"的索引（有称呼 或 有电话的都收进来） */
+  function custIndex(){
+    var seen = {}, out = [];
+    for(var i = db.orders.length - 1; i >= 0; i--){ // 从最新往回找，同一位客户只留最近那条
+      var o = db.orders[i];
+      var nm = (o.customer || "").trim(), ct = (o.contact || "").trim();
+      if(!nm && !ct) continue;
+      var key = nm ? "n:" + nm : "c:" + ct;
+      if(seen[key]) continue;
+      seen[key] = 1;
+      out.push({ name:nm, contact:ct, device:o.device || "", date:o.date || "" });
+      if(out.length >= 300) break;
+    }
+    return out;
   }
+  /* 输入 1 个字（称呼）或手机号任意几位 → 匹配；没输入就展示"最近来过" */
+  function custMatch(kw){
+    var all = custIndex();
+    kw = String(kw || "").trim().toLowerCase();
+    if(!kw) return all.slice(0, 8);
+    var digits = kw.replace(/\D/g, "");
+    var hit = all.filter(function(c){
+      if(c.name && c.name.toLowerCase().indexOf(kw) >= 0) return true;
+      if(digits && c.contact && c.contact.replace(/\D/g, "").indexOf(digits) >= 0) return true;
+      return false;
+    });
+    return hit.slice(0, 8);
+  }
+  function agoText(ds){
+    if(!ds) return "";
+    var d = new Date(ds + "T00:00:00"), now = new Date();
+    var n = Math.floor((new Date(now.getFullYear(), now.getMonth(), now.getDate()) - d) / 86400000);
+    if(n <= 0) return "今天";
+    if(n === 1) return "昨天";
+    if(n < 30) return n + " 天前";
+    if(n < 365) return Math.floor(n / 30) + " 个月前";
+    return Math.floor(n / 365) + " 年前";
+  }
+  function renderCustQuick(){
+    var box = $("custQuick");
+    if(!box) return;
+    var kw = $("f_customer").value.trim();
+    var list = custMatch(kw);
+    if(!list.length){ box.style.display = "none"; return; }
+    box.style.display = "";
+    box.innerHTML = '<div class="cq-hd">' +
+      (kw ? "匹配到 " + list.length + " 位老客户，点一下带出称呼和电话" : "最近来过（点一下带出称呼和电话）") +
+      "</div><div class=\"cq-row\">" + list.map(function(c){
+        var sub = [];
+        if(c.contact) sub.push(c.contact);
+        if(c.device) sub.push(c.device);
+        if(c.date) sub.push(agoText(c.date));
+        return '<button class="cq-item" data-cn="' + esc(c.name) + '" data-cc="' + esc(c.contact) + '">' +
+          "<b>" + (esc(c.name) || "（没记称呼）") + "</b><span>" + esc(sub.join(" · ") || "老客户") + "</span></button>";
+      }).join("") + "</div>";
+  }
+  /* 点候选：只填「称呼 + 联系方式」两项基础信息（设备/故障每次都不一样，不跟着带） */
+  $("custQuick").onclick = function(e){
+    var b = e.target.closest ? e.target.closest(".cq-item") : null;
+    if(!b) return;
+    var nm = b.getAttribute("data-cn") || "";
+    var ct = b.getAttribute("data-cc") || "";
+    if(nm) $("f_customer").value = nm;
+    if(ct) $("f_contact").value = ct;
+    renderCustQuick();
+    toast(nm ? ("已带出「" + nm + "」" + (ct ? "和电话" : "（这条没记电话）")) : "已带出电话");
+  };
+  /* 焦点进输入框就展示"最近来过"；离开时延时收起（延时是为了让"点候选"那一下先落下去） */
+  var cqHold = false;
+  $("custQuick").addEventListener("pointerdown", function(){ cqHold = true; });
+  $("f_customer").addEventListener("focus", renderCustQuick);
+  $("f_customer").addEventListener("input", renderCustQuick);
+  $("f_customer").addEventListener("blur", function(){
+    setTimeout(function(){
+      if(!cqHold){ var b = $("custQuick"); if(b) b.style.display = "none"; }
+      cqHold = false;
+    }, 230);
+  });
   /* 待跟进 = 订单状态「跟进中」，或恢复结果「进行中」（3 天没动静的都提醒） */
   function renderFollow(){
     var card = $("followCard"), box = $("followBox"), tag = $("followTag");
@@ -2572,6 +2694,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
       paintPick("p_pay", v);
       if(v === "已付清" || v === "已付定金"){
         if(form.status !== "已成交"){ form.status = "已成交"; paintPick("p_status", "已成交"); }
+        autoFillMoney(v);
       }else if(v === "未付款" && form.status === "已成交"){
         form.status = "跟进中";
         paintPick("p_status", "跟进中");
@@ -2581,10 +2704,51 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
     });
   };
 
+  /* ③ 选了收款情况 → 自动带出金额：已付定金按账单价一半，已付清按全额
+     （只在金额框还是空的时候填，绝不覆盖您已经手输的数字） */
+  function autoFillMoney(payKind){
+    var aEl = $("f_amount"), dEl = $("f_deposit");
+    if(!aEl || !dEl) return;
+    var a = inputMoney(aEl);
+    if(a <= 0){
+      if(form.pay === "未付款") return;
+      toast("先填「账单价」，会自动算" + (payKind === "已付清" ? "全额" : "一半"));
+      return;
+    }
+    if(dEl.value.trim()){ updateMoneyHint(); return; }
+    if(payKind === "已付定金"){
+      var half = Math.round(a / 2 * 100) / 100;
+      dEl.value = String(half);
+      toast("已按账单价一半填了定金 " + money(half) + "，可直接改");
+    }else if(payKind === "已付清"){
+      dEl.value = String(a);
+      toast("已按账单价全额填了 " + money(a));
+    }
+    updateMoneyHint();
+  }
+
   /* 金额框实时算尾款 / 毛利 */
+  var payAutoSet = false; // 「已付定金」是系统按定金金额自动点亮的，清空时要能退回去
   ["f_amount","f_deposit","f_cost","f_costmat"].forEach(function(id){
     $(id).addEventListener("input", function(){
       this.value = this.value.replace(/[^\d.]/g, "").replace(/(\..*)\./g, "$1");
+      // ④乙 定金框一填钱，「收款情况 / 订单状态」自动跟到位，界面上下不再自相矛盾
+      if(id === "f_deposit"){
+        var dv = inputMoney(this);
+        if(dv > 0){
+          if(form.pay === "未付款" || form.pay === "货到付款"){
+            form.pay = "已付定金";
+            paintPick("p_pay", "已付定金");
+            payAutoSet = true;
+            if(form.status !== "已成交"){ form.status = "已成交"; paintPick("p_status", "已成交"); }
+          }
+        }else if(payAutoSet && form.pay === "已付定金"){
+          form.pay = "未付款";
+          paintPick("p_pay", "未付款");
+          payAutoSet = false;
+          if(form.status === "已成交"){ form.status = "跟进中"; paintPick("p_status", "跟进中"); }
+        }
+      }
       updateMoneyHint();
     });
     $(id).addEventListener("change", updateMoneyHint);
@@ -3271,7 +3435,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
     renderGuide();
     renderFollow();
     renderUnpaid();
-    renderCustList();
+    renderCustQuick();
     renderNoteChips();
   }
 
